@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar__inner">
-      <div class="logo">🏋️‍♀️ <span class="brand">FitnessApp</span></div>
+      <div class="logo">🏋️‍♀️ <span class="brand">Kynetic</span></div>
 
       <button class="menu-btn" @click="toggleMenu" aria-label="Toggle menu">
         <span v-if="!menuOpen">☰</span>
@@ -10,6 +10,7 @@
 
       <ul :class="['nav-links', { open: menuOpen }]">
         <li><RouterLink to="/">Home</RouterLink></li>
+        <li><a href="#" @click.prevent="scrollToSection('about-us')">About Us</a></li>
         <li><RouterLink to="/exercises">Exercises</RouterLink></li>
         <li><RouterLink to="/meals">Meals</RouterLink></li>
         <li><RouterLink to="/progress">Progress</RouterLink></li>
@@ -24,6 +25,14 @@
 import { ref } from 'vue';
 const menuOpen = ref(false);
 const toggleMenu = () => (menuOpen.value = !menuOpen.value);
+
+const scrollToSection = (id) => {
+  const section = document.getElementById(id);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
 </script>
 
 <style scoped>
