@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExerciseController;
+
+
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -32,3 +35,11 @@ Route::prefix('users')->controller(UserController::class)->middleware('auth:api'
     Route::put('/{id}', 'update'); 
     Route::delete('/{id}', 'destroy'); 
 });
+
+Route::prefix('exercises')->controller(ExerciseController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::post('/', 'store');
+    Route::get('/{id}', 'show');
+    Route::delete('/{id}', 'destroy');
+});
+
