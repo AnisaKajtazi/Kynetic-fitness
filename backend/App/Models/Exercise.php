@@ -19,4 +19,10 @@ class Exercise extends Model
         'duration',
         'image',
     ];
+
+
+    public function favoritedBy()
+    {
+        return $this->hasMany(UserFavorite::class, 'exercise_id', 'ExerciseID');
+    }
 }

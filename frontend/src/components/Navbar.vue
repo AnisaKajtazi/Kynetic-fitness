@@ -13,26 +13,48 @@
         <li><a href="#" @click.prevent="scrollToSection('about-us')">About Us</a></li>
         <li><RouterLink to="/exercises">Exercises</RouterLink></li>
         <li><RouterLink to="/meals">Meals</RouterLink></li>
-        <li><RouterLink to="/progress">Progress</RouterLink></li>
         <li><RouterLink to="/contact">Contact</RouterLink></li>
-        <li><RouterLink to="/login">Login</RouterLink></li>
+
+        
+        <li v-if="isLoggedIn"><RouterLink to="/dashboard">My Zone</RouterLink></li>
+
+        <li v-if="!isLoggedIn"><RouterLink to="/login">Login</RouterLink></li>
+
+        <li v-if="isLoggedIn"><a href="#" @click.prevent="logout">Logout</a></li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { loggedIn, setLoggedIn } from '@/stores/auth';
+
 const menuOpen = ref(false);
 const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 
 const scrollToSection = (id) => {
   const section = document.getElementById(id);
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' });
-  }
+  if (section) section.scrollIntoView({ behavior: 'smooth' });
 };
 
+const router = useRouter();
+const isLoggedIn = computed(() => loggedIn.value);
+
+const logout = () => {
+  try {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setLoggedIn(false);
+
+ 
+    router.push("/");
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};
 </script>
 
 <style scoped>
@@ -111,7 +133,6 @@ const scrollToSection = (id) => {
 .nav-links a:hover {
   color: var(--accent);
 }
-
 
 @media (max-width: 880px) {
   .menu-btn {

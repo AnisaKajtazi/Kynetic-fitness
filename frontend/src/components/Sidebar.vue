@@ -3,24 +3,22 @@
     <div class="sidebar__logo">🏋️‍♀️ Kynetic</div>
     <ul class="sidebar__links">
       <li @click="$emit('changeSection', 'home')">Home</li>
-      <li @click="$emit('changeSection', 'exercises')">Exercises</li>
-      <li @click="$emit('changeSection', 'meals')">Meals</li>
-      <li @click="$emit('changeSection', 'progress')">Progress</li>
+      <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
+      <li @click="$emit('changeSection', 'meals')">Favorite Meals</li>
+      <li @click="$emit('changeSection', 'progress')">My Progress</li>
       <li @click="$emit('changeSection', 'profile')">Profile</li>
     </ul>
-
-    <button class="sidebar__logout" @click="logout">Logout</button>
   </aside>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { ref, watch } from 'vue';
+import { loggedIn } from '@/stores/auth';
 
-const logout = () => {
-  localStorage.removeItem('token');
-  router.push('/login');
-};
+
+watch(loggedIn, (val) => {
+  console.log("Login status changed:", val);
+});
 </script>
 
 <style scoped>
@@ -35,7 +33,7 @@ const logout = () => {
   padding: 2.5rem 1rem 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);
   z-index: 1000;
 }
@@ -52,7 +50,6 @@ const logout = () => {
   list-style: none;
   padding: 0;
   margin: 0;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -77,20 +74,5 @@ const logout = () => {
   color: #fff;
   font-weight: 600;
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
-}
-
-.sidebar__logout {
-  background: #ef4444;
-  border: none;
-  color: white;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.sidebar__logout:hover {
-  background: #dc2626;
 }
 </style>

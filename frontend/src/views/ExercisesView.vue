@@ -6,24 +6,14 @@
         Explore exercises for every body part and difficulty level.
       </p>
 
-
       <div class="search-bar">
-        <input
-          type="text"
-          placeholder="Search exercises..."
-          v-model="searchQuery"
-        />
+        <input type="text" placeholder="Search exercises..." v-model="searchQuery" />
       </div>
-
 
       <div class="filters">
         <select v-model="selectedCategory">
           <option value="">All Categories</option>
-          <option
-            v-for="cat in uniqueCategories"
-            :key="cat"
-            :value="cat"
-          >
+          <option v-for="cat in uniqueCategories" :key="cat" :value="cat">
             {{ cat }}
           </option>
         </select>
@@ -36,7 +26,6 @@
         </select>
       </div>
     </section>
-
 
     <section class="grid">
       <div
@@ -54,18 +43,24 @@
           <p>Category: {{ exercise.category }}</p>
           <p>Level: {{ exercise.level }}</p>
         </div>
+
         <button class="btn btn--blue" @click="viewDetails(exercise)">
           View Details
+        </button>
+
+
+        <button
+          v-if="isLoggedIn"
+          class="btn btn--red"
+          @click="toggleFavorite(exercise)"
+        >
+          <span v-if="exercise.is_favorite">💖</span>
+          <span v-else>🤍</span> Favorite
         </button>
       </div>
     </section>
 
-
-    <div
-      v-if="selectedExercise"
-      class="modal-overlay"
-      @click.self="closeDetails"
-    >
+    <div v-if="selectedExercise" class="modal-overlay" @click.self="closeDetails">
       <div class="modal-content">
         <h3>{{ selectedExercise.name }}</h3>
         <img
@@ -83,7 +78,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import { watch, computed } from "vue";
+import { loggedIn } from "../stores/auth";
+import api from "../services/axios";
 
 export default {
   name: "Exercises",
@@ -97,12 +94,14 @@ export default {
     };
   },
   computed: {
-    uniqueCategories() {
-      return [...new Set(this.exercises.map(e => e.category))].filter(Boolean);
+    isLoggedIn() {
+      return loggedIn.value;
     },
-
+    uniqueCategories() {
+      return [...new Set(this.exercises.map((e) => e.category))].filter(Boolean);
+    },
     filteredExercises() {
-      return this.exercises.filter(ex => {
+      return this.exercises.filter((ex) => {
         const matchesCategory = this.selectedCategory
           ? ex.category === this.selectedCategory
           : true;
@@ -119,32 +118,91 @@ export default {
   methods: {
     async fetchExercises() {
       try {
-        const res = await axios.get("http://localhost:8000/api/exercises");
-        this.exercises = res.data.map(ex => ({
+        // Merr të gjitha exercises nga backend
+        const res = await api.get("/exercises");
+        this.exercises = res.data.map((ex) => ({
           ...ex,
-
           category: ex.category || "Uncategorized",
-          // Siguro level default nëse nuk e ke
           level: ex.level || "Beginner",
+          is_favorite: false, // default
         }));
+
+       
+        if (this.isLoggedIn) {
+          await this.fetchFavorites();
+        }
       } catch (err) {
-        console.error("Error fetching exercises:", err);
+        console.error("Error fetching exercises:", err.response || err);
       }
     },
+
+    async fetchFavorites() {
+      try {
+        const res = await api.get("/favorites");
+        const favIds = res.data.map((f) => f.ExerciseID || f.exercise_id);
+        this.exercises = this.exercises.map((ex) => ({
+          ...ex,
+          is_favorite: favIds.includes(ex.ExerciseID),
+        }));
+      } catch (err) {
+        console.error("Error fetching favorites:", err.response || err);
+      }
+    },
+
+    async toggleFavorite(exercise) {
+      if (!this.isLoggedIn) return;
+
+      try {
+        if (exercise.is_favorite) {
+          await api.delete(`/favorites/${exercise.ExerciseID}`);
+          exercise.is_favorite = false;
+          this.$emit('remove-favorite', exercise);
+        } else {
+          const res = await api.post("/favorites", { exercise_id: exercise.ExerciseID });
+          exercise.is_favorite = true;
+          this.$emit('add-favorite', {
+            ExerciseID: exercise.ExerciseID,
+            name: exercise.name,
+            description: exercise.description,
+            image: exercise.image,
+            category: exercise.category,
+            level: exercise.level,
+          });
+        }
+      } catch (err) {
+        console.error("Error toggling favorite:", err.response || err);
+      }
+    },
+
     getImageUrl(image) {
       return image
-        ? `http://localhost:8000/uploads/${image}`
+        ? `http://127.0.0.1:8000/uploads/${image}`
         : "https://via.placeholder.com/300x200?text=No+Image";
     },
+
     viewDetails(exercise) {
       this.selectedExercise = exercise;
     },
+
     closeDetails() {
       this.selectedExercise = null;
     },
   },
   mounted() {
     this.fetchExercises();
+
+  
+    watch(loggedIn, async (newVal) => {
+      if (newVal) {
+        await this.fetchFavorites();
+      } else {
+        
+        this.exercises = this.exercises.map((ex) => ({
+          ...ex,
+          is_favorite: false,
+        }));
+      }
+    });
   },
 };
 </script>
@@ -181,12 +239,11 @@ export default {
   color: var(--text-light);
 }
 
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
-  justify-items: center; 
+  justify-items: center;
   align-items: start;
   width: 100%;
   margin: 0 auto;
@@ -199,15 +256,13 @@ export default {
   padding: 1rem;
   text-align: center;
   transition: all 0.3s ease;
-  width: 240px; 
+  width: 240px;
 }
 
 .exercise-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
-
-
 
 .exercise-img {
   width: 100%;
@@ -251,5 +306,4 @@ export default {
     width: 100%;
   }
 }
-
 </style>

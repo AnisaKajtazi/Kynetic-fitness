@@ -12,7 +12,6 @@ use Illuminate\Database\QueryException;
 
 class AuthController extends Controller
 {
-    
     public function login(Request $request)
     {
         $request->validate([
@@ -27,8 +26,7 @@ class AuthController extends Controller
         }
 
         try {
-            
-            $token = JWTAuth::fromUser($user, ['sub' => $user->username]);
+            $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
             return response()->json([
                 'message' => 'Failed to generate token',
@@ -44,7 +42,6 @@ class AuthController extends Controller
         ]);
     }
 
-    
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -80,7 +77,7 @@ class AuthController extends Controller
         }
 
         try {
-            $token = JWTAuth::fromUser($user, ['sub' => $user->username]);
+            $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
             return response()->json([
                 'message' => 'Failed to generate token',
@@ -96,7 +93,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    
+
     public function logout()
     {
         try {
@@ -110,7 +107,7 @@ class AuthController extends Controller
         }
     }
 
-    
+
     public function me()
     {
         try {
@@ -124,7 +121,7 @@ class AuthController extends Controller
         }
     }
 
-    
+
     public function forgotPassword(Request $request)
     {
         $request->validate([

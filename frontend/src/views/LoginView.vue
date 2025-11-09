@@ -13,33 +13,22 @@
         <form class="login-form" @submit.prevent="handleLogin">
           <div class="form-group">
             <label for="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              v-model="username"
-              placeholder="Enter your username"
-              required
-            />
+            <input type="text" id="username" v-model="username" placeholder="Enter your username" required />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              placeholder="Enter your password"
-              required
-            />
+            <input type="password" id="password" v-model="password" placeholder="Enter your password" required />
           </div>
 
           <div class="forgot-password">
-            <router-link to="/forgot-password" class="link">
-              Forgot your password?
-            </router-link>
+            <router-link to="/forgot-password" class="link">Forgot your password?</router-link>
           </div>
 
-          <button type="submit" class="btn btn--blue full-width">Login</button>
+          <button type="submit" class="btn btn--blue full-width" :disabled="loading">
+            <span v-if="loading">Logging in...</span>
+            <span v-else>Login</span>
+          </button>
         </form>
 
         <p class="signup-text">
@@ -53,6 +42,7 @@
 
 <script>
 import axios from "axios";
+import { loggedIn, setLoggedIn } from "@/stores/auth";
 
 const BASE_URL = "http://127.0.0.1:8000/api"; // Backend URL
 
@@ -80,11 +70,14 @@ export default {
           password: this.password,
         });
 
-        // Ruaj token dhe user në localStorage
+        
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        // Redirect në dashboard
+        
+        setLoggedIn(true);
+
+      
         this.$router.push("/dashboard");
       } catch (error) {
         console.error("Login error:", error);
@@ -114,7 +107,6 @@ export default {
 </script>
 
 <style scoped>
-/* Stilimi e lanë të njëjtë si më parë */
 .login-page {
   min-height: 100vh;
   width: 100%;
@@ -128,7 +120,6 @@ export default {
   overflow: hidden;
   position: relative;
 }
-
 .login-wrapper {
   display: flex;
   align-items: center;
@@ -139,14 +130,12 @@ export default {
   padding: 3rem 2rem;
   width: 100%;
 }
-
 .login-text {
   flex: 1 1 380px;
   color: var(--text-light);
   text-align: left;
   padding: 1rem;
 }
-
 .login-text h1 {
   font-size: 2.6rem;
   margin-bottom: 1rem;
@@ -157,14 +146,12 @@ export default {
   -webkit-text-fill-color: transparent;
   font-family: Lucida Handwriting;
 }
-
 .login-text p {
   font-size: 1.05rem;
   color: var(--text-light);
   opacity: 0.8;
   max-width: 420px;
 }
-
 .login-card {
   flex: 1 1 360px;
   padding: 3rem 2.5rem;
@@ -174,37 +161,31 @@ export default {
   text-align: center;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
-
 .login-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
-
 .login-title {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   color: var(--accent-blue);
   font-weight: 700;
 }
-
 .login-subtitle {
   color: var(--text-dim);
   font-size: 0.95rem;
   margin-bottom: 2rem;
 }
-
 .form-group {
   text-align: left;
   margin-bottom: 1.5rem;
 }
-
 label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.4rem;
   color: var(--text-muted);
 }
-
 input {
   width: 100%;
   padding: 1rem 1.2rem;
@@ -214,22 +195,18 @@ input {
   background: #1f2023;
   color: var(--text-light);
 }
-
 input::placeholder {
   color: #777;
 }
-
 .forgot-password {
   text-align: right;
   margin-bottom: 1.8rem;
 }
-
 .signup-text {
   margin-top: 1.8rem;
   color: var(--text-dim);
   font-size: 0.9rem;
 }
-
 .btn.full-width {
   width: 100%;
   padding: 1rem 0;
@@ -238,27 +215,22 @@ input::placeholder {
   border-radius: 50px;
   transition: all 0.3s ease;
 }
-
 .btn.full-width:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(26, 115, 232, 0.35);
 }
-
 @media (max-width: 768px) {
   .login-wrapper {
     flex-direction: column;
     text-align: center;
     padding: 2rem 1rem;
   }
-
   .login-text {
     text-align: center;
   }
-
   .login-text h1 {
     font-size: 2rem;
   }
-
   .login-card {
     width: 100%;
     max-width: 420px;
