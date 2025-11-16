@@ -4,7 +4,7 @@
     <ul class="sidebar__links">
       <li @click="$emit('changeSection', 'home')">Home</li>
       <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
-      <li @click="$emit('changeSection', 'meals')">Favorite Meals</li>
+      <li @click="$emit('changeSection', 'meals')">My Personalised Menu</li>
       <li @click="$emit('changeSection', 'progress')">My Progress</li>
       <li @click="$emit('changeSection', 'profile')">Profile</li>
     </ul>

@@ -126,7 +126,7 @@ const logout = () => {
 }
 
 .nav-links a.router-link-exact-active {
-  background: rgba(255,77,77,0.12);
+  background: rgba(185, 211, 241, 0.12);
   color: var(--accent);
 }
 

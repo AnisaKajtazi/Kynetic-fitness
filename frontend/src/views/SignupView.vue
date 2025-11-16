@@ -21,76 +21,39 @@
 
           <form class="signup-form" @submit.prevent="nextStep">
             
-            
+            <!-- Step 1 -->
             <div v-if="step === 1">
               <div class="form-group">
                 <label for="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  v-model="form.username"
-                  placeholder="Enter your username"
-                  required
-                />
+                <input type="text" id="username" v-model="form.username" placeholder="Enter your username" required />
               </div>
 
               <div class="form-group">
                 <label for="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  v-model="form.email"
-                  placeholder="Enter your email"
-                  required
-                />
+                <input type="email" id="email" v-model="form.email" placeholder="Enter your email" required />
               </div>
 
               <div class="form-group">
                 <label for="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  v-model="form.password"
-                  placeholder="Enter your password"
-                  required
-                />
+                <input type="password" id="password" v-model="form.password" placeholder="Enter your password" required />
               </div>
 
               <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  v-model="form.confirmPassword"
-                  placeholder="Confirm your password"
-                  required
-                />
+                <input type="password" id="confirmPassword" v-model="form.confirmPassword" placeholder="Confirm your password" required />
               </div>
             </div>
 
-            
-            
+            <!-- Step 2 -->
             <div v-if="step === 2">
               <div class="form-group">
                 <label for="name">First Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  v-model="form.name"
-                  placeholder="Enter your first name"
-                  required
-                />
+                <input type="text" id="name" v-model="form.name" placeholder="Enter your first name" required />
               </div>
 
               <div class="form-group">
                 <label for="surname">Last Name</label>
-                <input
-                  type="text"
-                  id="surname"
-                  v-model="form.surname"
-                  placeholder="Enter your last name"
-                  required
-                />
+                <input type="text" id="surname" v-model="form.surname" placeholder="Enter your last name" required />
               </div>
 
               <div class="form-group">
@@ -109,43 +72,30 @@
 
               <div class="form-group">
                 <label for="phone">Phone</label>
-                <input
-                  type="text"
-                  id="phone"
-                  v-model="form.phone"
-                  placeholder="Enter your phone"
-                  required
-                />
+                <input type="text" id="phone" v-model="form.phone" placeholder="Enter your phone" required />
               </div>
 
               <div class="form-group">
                 <label for="address">Address</label>
-                <input
-                  type="text"
-                  id="address"
-                  v-model="form.address"
-                  placeholder="Enter your address"
-                  required
-                />
+                <input type="text" id="address" v-model="form.address" placeholder="Enter your address" required />
               </div>
             </div>
 
-            
-            
+            <!-- Step 3 -->
             <div v-if="step === 3">
               <div class="form-group">
                 <label for="goal">Fitness Goal</label>
-                <select id="goal" v-model="form.goal" required>
+                <select id="goal" v-model="form.fitness_goal" required>
                   <option value="">Select your goal</option>
-                  <option value="lose_weight">Lose Weight</option>
-                  <option value="gain_muscle">Gain Muscle</option>
-                  <option value="stay_fit">Stay Fit</option>
+                  <option value="lose fat">Lose Weight</option>
+                  <option value="gain muscle">Gain Muscle</option>
+                  <option value="stay fit">Stay Fit</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="activity">Activity Level</label>
-                <select id="activity" v-model="form.activity" required>
+                <select id="activity" v-model="form.activity_level" required>
                   <option value="">Select your activity level</option>
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -155,55 +105,24 @@
 
               <div class="form-group">
                 <label for="days">Training Days per Week</label>
-                <input
-                  type="number"
-                  id="days"
-                  v-model="form.trainingDays"
-                  min="1"
-                  max="7"
-                  required
-                />
+                <input type="number" id="days" v-model="form.training_days" min="1" max="7" required />
               </div>
 
               <div class="form-group">
                 <label for="focus">Focus Area</label>
-                <select id="focus" v-model="form.focusArea" required>
+                <select id="focus" v-model="form.focus_area" required>
                   <option value="">Choose focus area</option>
-                  <option value="upper_body">Upper Body</option>
-                  <option value="lower_body">Lower Body</option>
+                  <option value="upper body">Upper Body</option>
+                  <option value="lower body">Lower Body</option>
                   <option value="cardio">Cardio</option>
                 </select>
               </div>
             </div>
 
-            
-            
             <div class="buttons">
-              <button
-                v-if="step > 1"
-                type="button"
-                class="btn btn--gray"
-                @click="prevStep"
-              >
-                Back
-              </button>
-
-              <button
-                v-if="step < 3"
-                type="button"
-                class="btn btn--blue"
-                @click="nextStep"
-              >
-                Next
-              </button>
-
-              <button
-                v-if="step === 3"
-                type="submit"
-                class="btn btn--gold full-width"
-              >
-                Create Account
-              </button>
+              <button v-if="step > 1" type="button" class="btn btn--gray" @click="prevStep">Back</button>
+              <button v-if="step < 3" type="button" class="btn btn--blue" @click="nextStep">Next</button>
+              <button v-if="step === 3" type="submit" class="btn btn--gold full-width">Create Account</button>
             </div>
           </form>
 
@@ -236,10 +155,10 @@ export default {
         dob: "",
         phone: "",
         address: "",
-        goal: "",
-        activity: "",
-        trainingDays: "",
-        focusArea: "",
+        fitness_goal: "",
+        activity_level: "",
+        training_days: "",
+        focus_area: "",
       },
     };
   },
@@ -272,7 +191,7 @@ export default {
     },
 
     async submitForm() {
-      if (!this.form.goal || !this.form.activity || !this.form.trainingDays || !this.form.focusArea) {
+      if (!this.form.fitness_goal || !this.form.activity_level || !this.form.training_days || !this.form.focus_area) {
         alert("Please complete all fitness details before submitting.");
         return;
       }
@@ -285,11 +204,15 @@ export default {
           email: this.form.email,
           password: this.form.password,
           password_confirmation: this.form.confirmPassword,
-          RoleID: 2, // 2 = client
+          RoleID: 2,
           phone: this.form.phone,
           address: this.form.address,
           dob: this.form.dob,
           gender: this.form.gender,
+          fitness_goal: this.form.fitness_goal,
+          activity_level: this.form.activity_level,
+          training_days: this.form.training_days,
+          focus_area: this.form.focus_area,
         });
 
         localStorage.setItem("token", response.data.access_token);
@@ -298,13 +221,20 @@ export default {
         alert("Account created successfully!");
         this.$router.push("/login");
       } catch (error) {
-        console.error(error);
-        alert(error.response?.data?.message || "Sign up failed.");
+        console.error("Signup error:", error.response?.data || error);
+        if (error.response?.data?.errors) {
+          console.log("Validation errors:", error.response.data.errors);
+          alert("Validation error: Check console for details.");
+        } else {
+          alert(error.response?.data?.message || "Sign up failed.");
+        }
       }
     },
   },
 };
 </script>
+
+
 
 
 <style scoped>

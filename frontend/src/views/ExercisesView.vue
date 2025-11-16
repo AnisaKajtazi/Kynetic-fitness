@@ -1,8 +1,8 @@
 <template>
   <main class="exercises-page">
     <section class="hero">
-      <h2 class="text-center">Discover Exercises</h2>
-      <p class="text-center text-muted">
+      <h2 class="hero-title">Discover Exercises</h2>
+      <p class="hero-subtitle">
         Explore exercises for every body part and difficulty level.
       </p>
 
@@ -215,6 +215,22 @@ export default {
 .hero {
   margin-bottom: 2rem;
   padding-top: 50px;
+}
+
+.hero-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #ffffffff;
+  font-family: Lucida Handwriting;
+  text-align:center;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #807e7eff;
+  text-align:center;
+  padding-bottom:40px;
 }
 
 .search-bar input {

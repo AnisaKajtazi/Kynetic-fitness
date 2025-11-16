@@ -6,11 +6,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\UserFavoriteController;
+use App\Http\Controllers\MealController;
 
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
-    Route::post('/', 'store')->middleware('jwt.auth'); // vetëm user të kyqur
+    Route::post('/', 'store')->middleware('jwt.auth');
     Route::get('/{id}', 'show'); 
     Route::put('/{id}', 'update')->middleware('jwt.auth'); 
     Route::delete('/{id}', 'destroy')->middleware('jwt.auth'); 
@@ -49,9 +50,17 @@ Route::prefix('exercises')->controller(ExerciseController::class)->group(functio
 });
 
 
-
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/favorites', [UserFavoriteController::class, 'index']);
     Route::post('/favorites', [UserFavoriteController::class, 'store']);
     Route::delete('/favorites/{exercise_id}', [UserFavoriteController::class, 'destroy']);
+});
+
+Route::get('/meals', [MealController::class, 'index']);
+
+// Vetëm për user të kyçur
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::get('/meals/user', [MealController::class, 'userMeals']);
+    Route::post('/meals/fav', [MealController::class, 'addFavorite']);
+    Route::post('/meals/personalise', [MealController::class, 'personaliseMeal']);
 });

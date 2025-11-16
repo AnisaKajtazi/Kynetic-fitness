@@ -45,34 +45,44 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'username' => 'required|string|unique:users,username|max:100',
-            'name'     => 'required|string|max:255',
-            'surname'  => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email|max:255',
-            'password' => 'required|string|min:6|confirmed',
-            'phone'    => 'nullable|string|max:255',
-            'address'  => 'nullable|string|max:255',
-            'dob'      => 'nullable|date',
-            'gender'   => 'nullable|in:male,female,other',
+            'username'       => 'required|string|unique:users,username|max:100',
+            'name'           => 'required|string|max:255',
+            'surname'        => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email|max:255',
+            'password'       => 'required|string|min:6|confirmed',
+            'phone'          => 'nullable|string|max:255',
+            'address'        => 'nullable|string|max:255',
+            'dob'            => 'nullable|date',
+            'gender'         => 'nullable|in:male,female,other',
+            'fitness_goal'   => 'nullable|in:lose fat,gain muscle,stay fit',
+            'activity_level' => 'nullable|in:low,medium,high',
+            'training_days'  => 'nullable|integer|min:0|max:7',
+            'focus_area'     => 'nullable|in:upper body,lower body,cardio',
         ]);
 
         try {
             $user = User::create([
-                'username' => $data['username'],
-                'name'     => $data['name'],
-                'surname'  => $data['surname'],
-                'email'    => $data['email'],
-                'password' => Hash::make($data['password']),
-                'RoleID'   => 2,
-                'phone'    => $data['phone'] ?? null,
-                'address'  => $data['address'] ?? null,
-                'dob'      => $data['dob'] ?? null,
-                'gender'   => $data['gender'] ?? null,
+                'username'       => $data['username'],
+                'name'           => $data['name'],
+                'surname'        => $data['surname'],
+                'email'          => $data['email'],
+                'password'       => Hash::make($data['password']),
+                'RoleID'         => 2,
+                'phone'          => $data['phone'] ?? null,
+                'address'        => $data['address'] ?? null,
+                'dob'            => $data['dob'] ?? null,
+                'gender'         => $data['gender'] ?? null,
+                'fitness_goal'   => $data['fitness_goal'] ?? null,
+                'activity_level' => $data['activity_level'] ?? null,
+                'training_days'  => $data['training_days'] ?? null,
+                'focus_area'     => $data['focus_area'] ?? null,
             ]);
         } catch (QueryException $e) {
             return response()->json([
                 'message' => 'Failed to create user',
-                'error'   => $e->getMessage()
+                'error'   => $e->getMessage(),
+                'sql'     => $e->getSql(),
+                'bindings'=> $e->getBindings()
             ], 500);
         }
 
