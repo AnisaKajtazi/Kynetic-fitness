@@ -58,7 +58,6 @@ Route::middleware(['jwt.auth'])->group(function () {
 
 Route::get('/meals', [MealController::class, 'index']);
 
-// Vetëm për user të kyçur
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/meals/user', [MealController::class, 'userMeals']);
     Route::post('/meals/fav', [MealController::class, 'addFavorite']);

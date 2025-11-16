@@ -20,6 +20,7 @@ import Sidebar from '@/components/Sidebar.vue';
 import DashboardHome from './DashboardHome.vue';
 import DashboardExercises from './DashboardExercises.vue';
 import DashboardProgress from './DashboardProgress.vue';
+import DashboardMeals from './DashboardMeals.vue';
 
 const activeSection = ref('home');
 
@@ -27,6 +28,7 @@ const sections = {
   home: DashboardHome,
   exercises: DashboardExercises,
   progress: DashboardProgress,
+  meals: DashboardMeals,
 };
 
 const currentSection = computed(() => sections[activeSection.value]);

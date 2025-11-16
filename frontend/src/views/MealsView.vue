@@ -1,7 +1,6 @@
 <template>
   <div class="meals-page">
 
-    <!-- HERO SECTION -->
     <div class="hero">
       <h1 class="hero-title">Discover Your Perfect Meal</h1>
       <p class="hero-subtitle">Healthy • Delicious • Personalized for your goals</p>
@@ -9,7 +8,7 @@
 
     <div v-if="loading" class="loading">Loading meals...</div>
 
-    <!-- CATEGORY ROWS -->
+ 
     <div 
       v-for="(cat, index) in meals"
       :key="cat.category"
@@ -19,7 +18,7 @@
 
       <div class="slider-wrapper">
 
-        <!-- Left arrow -->
+  
         <button 
           class="slide-btn left" 
           @click="scrollLeft(index)"
@@ -27,7 +26,7 @@
           ‹
         </button>
 
-        <!-- Scrollable slider -->
+ 
         <div class="slider" :ref="(el) => sliderRefs[index] = el">
           <div 
             class="meal-card"
@@ -40,10 +39,10 @@
               loading="lazy"
               @click="openPopup(meal)"
             />
-            <div class="meal-info">
-              <h3>{{ meal.name }}</h3>
 
-              <!-- Add to Cart button, only if logged in -->
+  
+            <div class="meal-footer">
+              <span class="meal-price">{{ meal.price ? `$${meal.price}` : '—' }}</span>
               <button
                 v-if="isLoggedIn"
                 class="add-to-cart-btn"
@@ -51,12 +50,12 @@
               >
                 ➕ Add to Cart
               </button>
-
             </div>
+
           </div>
         </div>
 
-        <!-- Right arrow -->
+  
         <button 
           class="slide-btn right" 
           @click="scrollRight(index)"
@@ -67,7 +66,7 @@
       </div>
     </div>
 
-    <!-- POPUP DETAILS -->
+
     <div v-if="selectedMeal" class="popup-overlay" @click.self="selectedMeal = null">
       <div class="popup-card">
         <button class="close-btn" @click="selectedMeal = null">✕</button>
@@ -91,8 +90,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watchEffect } from "vue";
 import axios from "axios";
+
+import { loggedIn } from "../stores/auth";
 
 const meals = ref([]);
 const loading = ref(false);
@@ -100,12 +101,13 @@ const selectedMeal = ref(null);
 const sliderRefs = ref([]);
 const defaultImage = "https://cdn-icons-png.flaticon.com/512/706/706195.png";
 
-// Kontrollo nëse useri është i kyçur
-const isLoggedIn = ref(false);
+
+const isLoggedIn = computed(() => loggedIn.value);
+
 onMounted(() => {
-  isLoggedIn.value = !!localStorage.getItem("token");
   fetchMeals();
 });
+
 
 const fetchMeals = async () => {
   loading.value = true;
@@ -125,25 +127,27 @@ const fetchMeals = async () => {
   loading.value = false;
 };
 
+
 const imageUrl = (meal) => {
   const cat = encodeURIComponent(meal.category || "");
   const img = encodeURIComponent(meal.image || "");
   return `http://127.0.0.1:8000/uploads/${cat}/${img}`;
 };
 
+
 const openPopup = (meal) => {
   selectedMeal.value = meal;
 };
 
+
 const scrollLeft = (index) => {
   sliderRefs.value[index].scrollBy({ left: -300, behavior: "smooth" });
 };
-
 const scrollRight = (index) => {
   sliderRefs.value[index].scrollBy({ left: 300, behavior: "smooth" });
 };
 
-// ADD TO CART function
+
 const addToCart = async (meal) => {
   if (!isLoggedIn.value) return;
   try {
@@ -162,18 +166,21 @@ const addToCart = async (meal) => {
     alert("Failed to add to cart");
   }
 };
+
+
+watchEffect(() => {
+  loggedIn.value = !!localStorage.getItem("token");
+});
 </script>
 
 <style scoped>
-/* ----- GENERAL PAGE ----- */
 .meals-page {
-  padding: 60px 20px;  /* Moved down for navbar */
+  padding: 60px 20px;
   max-width: 1300px;
   margin: auto;
   color: #222;
 }
 
-/* ----- HERO SECTION ----- */
 .hero {
   text-align: center;
   margin-top: 40px;
@@ -193,7 +200,6 @@ const addToCart = async (meal) => {
   color: #ccc;
 }
 
-/* ----- CATEGORY SECTION ----- */
 .category-section {
   margin-bottom: 50px;
 }
@@ -204,7 +210,6 @@ const addToCart = async (meal) => {
   font-weight: 700;
 }
 
-/* ----- SLIDER STYLING ----- */
 .slider-wrapper {
   position: relative;
 }
@@ -221,14 +226,12 @@ const addToCart = async (meal) => {
   display: none;
 }
 
-/* ----- MEAL CARD ----- */
 .meal-card {
   min-width: 230px;
-  height: 150px;
+  height: auto;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  cursor: pointer;
   flex-shrink: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -240,21 +243,24 @@ const addToCart = async (meal) => {
 
 .meal-card img {
   width: 100%;
-  height: 100%;
+  height: 150px;
   object-fit: cover;
+  display: block;
 }
 
-.meal-info {
-  position: absolute;
-  bottom: 0;
-  padding: 10px;
-  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-  color: white;
-  width: 100%;
+.meal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+}
+
+.meal-price {
+  font-weight: 700;
+  color: #ff5722;
 }
 
 .add-to-cart-btn {
-  margin-top: 6px;
   background: #ff5722;
   padding: 6px 12px;
   border: none;
@@ -268,13 +274,6 @@ const addToCart = async (meal) => {
   background: #e64a19;
 }
 
-.login-msg {
-  margin-top: 6px;
-  font-size: 13px;
-  color: #ddd;
-}
-
-/* ----- SLIDER BUTTONS ----- */
 .slide-btn {
   position: absolute;
   top: 50%;
@@ -302,7 +301,6 @@ const addToCart = async (meal) => {
   right: -10px;
 }
 
-/* ----- POPUP ----- */
 .popup-overlay {
   position: fixed;
   inset: 0;

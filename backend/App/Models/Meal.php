@@ -10,7 +10,7 @@ class Meal extends Model
     use HasFactory;
 
     protected $table = 'meals';
-    protected $primaryKey = 'MealID'; // sepse tabela ka MealID
+    protected $primaryKey = 'MealID'; 
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -24,16 +24,21 @@ class Meal extends Model
         'activity_level',
         'training_days',
         'focus_area',
+        'price',
     ];
 
-    // Relacionet me users
+    protected $casts = [
+        'price' => 'float',
+    ];
+
+
     public function favoritedBy()
     {
         return $this->belongsToMany(
             User::class,
             'user_favorite_meals',
-            'meal_id', // foreign key ne tabelen pivot per meal
-            'user_id'  // foreign key ne tabelen pivot per user
+            'meal_id',
+            'user_id'
         );
     }
 
