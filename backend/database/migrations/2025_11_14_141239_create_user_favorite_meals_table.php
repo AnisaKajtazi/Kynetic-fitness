@@ -8,12 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user_favorite_meals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('meal_id')->constrained('meals')->onDelete('cascade');
-            $table->timestamps();
-        });
+       Schema::create('user_favorite_meals', function (Blueprint $table) {
+    $table->id();
+
+    $table->unsignedBigInteger('user_id');
+    $table->unsignedInteger('meal_id');
+
+    $table->timestamps();
+
+    $table->foreign('user_id')->references('UserID')->on('users')->onDelete('cascade');
+    $table->foreign('meal_id')->references('MealID')->on('meals')->onDelete('cascade');
+});
+
     }
 
     public function down(): void

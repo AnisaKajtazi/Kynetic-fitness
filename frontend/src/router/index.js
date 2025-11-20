@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Dashboard from '../views/Dashboard.vue'
+import MyCart from '../views/MyCart.vue'
+
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -12,6 +14,7 @@ const routes = [
   { path: '/reset-password', name: 'ResetPassword', component: () => import('../views/ResetPassword.vue') },
   { path: '/signup', name: 'signup', component: () => import('../views/SignupView.vue') },
   { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/my-cart', name: 'my-cart', component: MyCart, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

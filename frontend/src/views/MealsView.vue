@@ -1,6 +1,5 @@
 <template>
   <div class="meals-page">
-
     <div class="hero">
       <h1 class="hero-title">Discover Your Perfect Meal</h1>
       <p class="hero-subtitle">Healthy • Delicious • Personalized for your goals</p>
@@ -8,91 +7,79 @@
 
     <div v-if="loading" class="loading">Loading meals...</div>
 
- 
-    <div 
-      v-for="(cat, index) in meals"
-      :key="cat.category"
-      class="category-section"
-    >
-      <h2 class="category-title">{{ cat.category }}</h2>
+    <div v-else>
+      <div 
+        v-for="(cat, index) in meals"
+        :key="cat.category"
+        class="category-section"
+      >
+        <h2 class="category-title">{{ cat.category }}</h2>
 
-      <div class="slider-wrapper">
+        <div class="slider-wrapper">
 
-  
-        <button 
-          class="slide-btn left" 
-          @click="scrollLeft(index)"
-        >
-          ‹
-        </button>
+          <button class="slide-btn left" @click="scrollLeft(index)">‹</button>
 
- 
-        <div class="slider" :ref="(el) => sliderRefs[index] = el">
-          <div 
-            class="meal-card"
-            v-for="meal in cat.items"
-            :key="meal.MealID"
-          >
-            <img 
-              :src="meal.image ? imageUrl(meal) : defaultImage"
-              :alt="meal.name"
-              loading="lazy"
-              @click="openPopup(meal)"
-            />
+          <div class="slider" :ref="(el) => sliderRefs[index] = el">
+            <div 
+              class="meal-card"
+              v-for="meal in cat.items"
+              :key="meal.MealID"
+            >
+              <img 
+                :src="meal.image ? imageUrl(meal) : defaultImage"
+                :alt="meal.name"
+                loading="lazy"
+                @click="openPopup(meal)"
+              />
 
-  
-            <div class="meal-footer">
-              <span class="meal-price">{{ meal.price ? `$${meal.price}` : '—' }}</span>
-              <button
-                v-if="isLoggedIn"
-                class="add-to-cart-btn"
-                @click.stop="addToCart(meal)"
-              >
-                ➕ Add to Cart
-              </button>
+              <div class="meal-footer">
+                <span class="meal-price">
+                  {{ meal.price != null ? `$${Number(meal.price).toFixed(2)}` : '—' }}
+                </span>
+
+                <button
+                  v-if="isLoggedIn"
+                  class="add-to-cart-btn"
+                  @click.stop="addToCart(meal)"
+                >
+                  ➕ Add to Cart
+                </button>
+              </div>
+
             </div>
+          </div>
 
+          <button class="slide-btn right" @click="scrollRight(index)">›</button>
+
+        </div>
+      </div>
+
+      <div v-if="selectedMeal" class="popup-overlay" @click.self="selectedMeal = null">
+        <div class="popup-card">
+          <button class="close-btn" @click="selectedMeal = null">✕</button>
+
+          <img 
+            :src="selectedMeal.image ? imageUrl(selectedMeal) : defaultImage"
+            :alt="selectedMeal.name"
+          />
+
+          <div class="popup-content">
+            <h2>{{ selectedMeal.name }}</h2>
+            <p><strong>Category:</strong> {{ selectedMeal.category }}</p>
+            <p><strong>Calories:</strong> {{ selectedMeal.calories ?? '—' }}</p>
+            <p><strong>Focus:</strong> {{ selectedMeal.focus_area ?? '—' }}</p>
+            <p class="desc">{{ selectedMeal.description }}</p>
           </div>
         </div>
-
-  
-        <button 
-          class="slide-btn right" 
-          @click="scrollRight(index)"
-        >
-          ›
-        </button>
-
       </div>
+
     </div>
-
-
-    <div v-if="selectedMeal" class="popup-overlay" @click.self="selectedMeal = null">
-      <div class="popup-card">
-        <button class="close-btn" @click="selectedMeal = null">✕</button>
-
-        <img 
-          :src="selectedMeal.image ? imageUrl(selectedMeal) : defaultImage"
-          :alt="selectedMeal.name"
-        />
-
-        <div class="popup-content">
-          <h2>{{ selectedMeal.name }}</h2>
-          <p><strong>Category:</strong> {{ selectedMeal.category }}</p>
-          <p><strong>Calories:</strong> {{ selectedMeal.calories ?? '—' }}</p>
-          <p><strong>Focus:</strong> {{ selectedMeal.focus_area ?? '—' }}</p>
-          <p class="desc">{{ selectedMeal.description }}</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, watchEffect } from "vue";
 import axios from "axios";
-
 import { loggedIn } from "../stores/auth";
 
 const meals = ref([]);
@@ -101,23 +88,23 @@ const selectedMeal = ref(null);
 const sliderRefs = ref([]);
 const defaultImage = "https://cdn-icons-png.flaticon.com/512/706/706195.png";
 
-
 const isLoggedIn = computed(() => loggedIn.value);
 
 onMounted(() => {
   fetchMeals();
 });
 
-
 const fetchMeals = async () => {
   loading.value = true;
   try {
     const res = await axios.get("http://127.0.0.1:8000/api/meals");
+    console.log("Meals API response:", res.data);
 
     meals.value = Object.keys(res.data).map((category) => ({
       category,
       items: res.data[category].map((meal) => ({
         ...meal,
+        meal_id: Number(meal.MealID),
         category,
       })),
     }));
@@ -127,18 +114,15 @@ const fetchMeals = async () => {
   loading.value = false;
 };
 
-
 const imageUrl = (meal) => {
   const cat = encodeURIComponent(meal.category || "");
   const img = encodeURIComponent(meal.image || "");
   return `http://127.0.0.1:8000/uploads/${cat}/${img}`;
 };
 
-
 const openPopup = (meal) => {
   selectedMeal.value = meal;
 };
-
 
 const scrollLeft = (index) => {
   sliderRefs.value[index].scrollBy({ left: -300, behavior: "smooth" });
@@ -147,22 +131,40 @@ const scrollRight = (index) => {
   sliderRefs.value[index].scrollBy({ left: 300, behavior: "smooth" });
 };
 
-
 const addToCart = async (meal) => {
   if (!isLoggedIn.value) return;
+
+
+  const mealId = Number(meal.MealID ?? meal.meal_id);
+  if (!mealId) {
+    console.error("Meal ID missing", meal);
+    alert("Meal ID not found!");
+    return;
+  }
+
+  const payload = {
+    meal_id: mealId,
+    item_name: meal.name,
+    price: Number(meal.price ?? 0),
+    quantity: 1
+  };
+
+  console.log("Adding to cart:", payload);
+
   try {
-    await axios.post(
-      "http://127.0.0.1:8000/api/add-to-cart",
-      { meal_id: meal.MealID },
+    const res = await axios.post(
+      "http://127.0.0.1:8000/api/my-cart",
+      payload,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
+    console.log("Add to cart response:", res.data);
     alert(`${meal.name} added to cart!`);
   } catch (err) {
-    console.error("Error adding to cart:", err);
+    console.error("Error adding to cart:", err.response?.data || err);
     alert("Failed to add to cart");
   }
 };
@@ -172,6 +174,9 @@ watchEffect(() => {
   loggedIn.value = !!localStorage.getItem("token");
 });
 </script>
+
+
+
 
 <style scoped>
 .meals-page {

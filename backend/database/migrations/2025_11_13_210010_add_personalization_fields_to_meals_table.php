@@ -11,10 +11,10 @@ return new class extends Migration
        Schema::table('meals', function (Blueprint $table) {
     $table->enum('fitness_goal', ['lose weight', 'gain muscle', 'stay fit'])->nullable()->after('calories');
     $table->enum('activity_level', ['low', 'medium', 'high'])->nullable()->after('fitness_goal');
-    $table->tinyInteger('training_days')->nullable()->after('focus_area'); 
     $table->enum('focus_area', ['upper body', 'lower body', 'cardio'])->nullable()->after('activity_level');
-
+    $table->tinyInteger('training_days')->nullable()->after('focus_area'); 
 });
+
     }
 
     public function down(): void

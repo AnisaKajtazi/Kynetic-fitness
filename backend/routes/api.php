@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\UserFavoriteController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\MyCartController;
 
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
@@ -62,4 +63,11 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/meals/user', [MealController::class, 'userMeals']);
     Route::post('/meals/fav', [MealController::class, 'addFavorite']);
     Route::post('/meals/personalise', [MealController::class, 'personaliseMeal']);
+});
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('/my-cart', [MyCartController::class, 'index']);
+    Route::post('/my-cart', [MyCartController::class, 'store']);
+    Route::patch('/my-cart/{meal_id}/quantity', [MyCartController::class, 'updateQuantity']);
+    Route::delete('/my-cart/{meal_id}', [MyCartController::class, 'destroy']);
 });

@@ -14,12 +14,9 @@
         <li><RouterLink to="/exercises">Exercises</RouterLink></li>
         <li><RouterLink to="/meals">Meals</RouterLink></li>
         <li><RouterLink to="/contact">Contact</RouterLink></li>
-
-        
         <li v-if="isLoggedIn"><RouterLink to="/dashboard">My Zone</RouterLink></li>
-
+        <li v-if="isLoggedIn"><RouterLink to="/my-cart">My Cart</RouterLink></li>
         <li v-if="!isLoggedIn"><RouterLink to="/login">Login</RouterLink></li>
-
         <li v-if="isLoggedIn"><a href="#" @click.prevent="logout">Logout</a></li>
       </ul>
     </div>
@@ -46,16 +43,14 @@ const logout = () => {
   try {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
     setLoggedIn(false);
-
- 
     router.push("/");
   } catch (error) {
     console.error("Logout failed:", error);
   }
 };
 </script>
+
 
 <style scoped>
 :root {
