@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\Role;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -16,7 +17,6 @@ class User extends Authenticatable implements JWTSubject
     public $incrementing = true;
     protected $keyType = 'int';
 
-    // Fushtat që mund të plotësohen me mass assignment
     protected $fillable = [
         'username',
         'name',
@@ -35,21 +35,13 @@ class User extends Authenticatable implements JWTSubject
         'focus_area',
     ];
 
-    // Fushat që nuk shfaqen në JSON
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    // Type casting
     protected $casts = [
         'email_verified_at' => 'datetime',
         'dob' => 'date',
     ];
 
-    /**
-     * JWT Methods
-     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -59,14 +51,19 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
     public function favorites()
-{
-    return $this->belongsToMany(Meal::class, 'user_favorite_meals', 'user_id', 'meal_id');
-}
+    {
+        return $this->belongsToMany(Meal::class, 'user_favorite_meals', 'user_id', 'meal_id');
+    }
 
-public function personalisedMeals()
-{
-    return $this->belongsToMany(Meal::class, 'user_personalised_meals', 'user_id', 'meal_id');
-}
+    public function personalisedMeals()
+    {
+        return $this->belongsToMany(Meal::class, 'user_personalised_meals', 'user_id', 'meal_id');
+    }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'RoleID');
+    }
 }

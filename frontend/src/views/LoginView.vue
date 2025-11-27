@@ -70,15 +70,19 @@ export default {
           password: this.password,
         });
 
-        
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        
+        localStorage.setItem("role", response.data.user.RoleID);
+
         setLoggedIn(true);
 
-      
-        this.$router.push("/dashboard");
+        if (response.data.user.RoleID === 1) {
+          this.$router.push("/admin-dashboard");
+        } else {
+          this.$router.push("/dashboard");
+        }
+
       } catch (error) {
         console.error("Login error:", error);
 
@@ -105,6 +109,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .login-page {

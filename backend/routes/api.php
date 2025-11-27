@@ -30,13 +30,13 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-
 Route::prefix('users')->controller(UserController::class)->middleware('jwt.auth')->group(function () {
+    Route::get('/dynamic', 'dynamic');
     Route::get('/', 'index');    
     Route::post('/', 'store');  
-    Route::get('/{id}', 'show'); 
-    Route::put('/{id}', 'update'); 
-    Route::delete('/{id}', 'destroy'); 
+    Route::get('/{UserID}', 'show'); 
+    Route::put('/{UserID}', 'update'); 
+    Route::delete('/{UserID}', 'destroy'); 
 });
 
 

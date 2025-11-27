@@ -87,7 +87,7 @@
                 <label for="goal">Fitness Goal</label>
                 <select id="goal" v-model="form.fitness_goal" required>
                   <option value="">Select your goal</option>
-                  <option value="lose fat">Lose Weight</option>
+                  <option value="lose fat">Lose Fat</option>
                   <option value="gain muscle">Gain Muscle</option>
                   <option value="stay fit">Stay Fit</option>
                 </select>
