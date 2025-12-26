@@ -51,7 +51,7 @@ class UserController extends Controller
         $data['phone'] = $data['phone'] ?? '';
         $data['address'] = $data['address'] ?? '';
         $data['password'] = Hash::make($data['password']);
-        $data['RoleID'] = $data['RoleID'] ?? 2;
+        $data['RoleID'] = 3;
 
         $user = User::create($data);
 
@@ -78,8 +78,14 @@ class UserController extends Controller
             'focus_area'     => 'sometimes|in:upper body,lower body,cardio',
         ]);
 
-        if(isset($data['password'])) {
+        if (isset($data['password']) && $data['password'] !== "") {
             $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        if(!$request->has('RoleID')) {
+            $data['RoleID'] = $user->RoleID ?? 2;
         }
 
         $user->update($data);

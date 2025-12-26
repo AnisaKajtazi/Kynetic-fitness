@@ -46,6 +46,7 @@ Route::prefix('exercises')->controller(ExerciseController::class)->group(functio
 
     Route::middleware('jwt.auth')->group(function () {
         Route::post('/', 'store'); 
+        Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
 });

@@ -1,25 +1,47 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar__logo">🏋️‍♀️ Kynetic</div>
+
     <ul class="sidebar__links">
-      <li @click="$emit('changeSection', 'home')">Home</li>
-      <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
-      <li @click="$emit('changeSection', 'meals')">My Personalised Menu</li>
-      <li @click="$emit('changeSection', 'progress')">My Progress</li>
-      <li @click="$emit('changeSection', 'profile')">Profile</li>
+
+      <template v-if="roleID === 2">
+        <li @click="$emit('changeSection', 'home')">Home</li>
+        <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
+        <li @click="$emit('changeSection', 'meals')">My Personalised Menu</li>
+        <li @click="$emit('changeSection', 'progress')">My Progress</li>
+        <li @click="$emit('changeSection', 'profile')">Profile</li>
+      </template>
+
+      <template v-else-if="roleID === 1">
+        <li @click="$emit('changeSection', 'admin-dashboard')">Dashboard</li>
+        <li @click="$emit('changeSection', 'users')">Users</li>
+        <li @click="$emit('changeSection', 'roles')">Roles</li>
+        <li @click="$emit('changeSection', 'exercises')">Exercises</li>
+        <li @click="$emit('changeSection', 'meals')">Meals</li>
+        <li @click="$emit('changeSection', 'subscriptions')">Subscriptions</li>
+      </template>
+
+      <template v-else-if="roleID === 3">
+        <li @click="$emit('changeSection', 'dashboard')">Dashboard</li>
+        <li @click="$emit('changeSection', 'exercises')">Exercises</li>
+        <li @click="$emit('changeSection', 'meals')">Meals</li>
+        <li @click="$emit('changeSection', 'clients')">Clients</li>
+      </template>
+
     </ul>
   </aside>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { loggedIn } from '@/stores/auth';
+import { ref, onMounted } from 'vue'
 
+const roleID = ref(null)
 
-watch(loggedIn, (val) => {
-  console.log("Login status changed:", val);
-});
+onMounted(() => {
+  roleID.value = Number(localStorage.getItem('role'))
+})
 </script>
+
 
 <style scoped>
 .sidebar {

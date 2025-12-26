@@ -21,7 +21,7 @@
 
           <form class="signup-form" @submit.prevent="nextStep">
             
-            <!-- Step 1 -->
+
             <div v-if="step === 1">
               <div class="form-group">
                 <label for="username">Username</label>
@@ -44,7 +44,7 @@
               </div>
             </div>
 
-            <!-- Step 2 -->
+ 
             <div v-if="step === 2">
               <div class="form-group">
                 <label for="name">First Name</label>
@@ -81,7 +81,7 @@
               </div>
             </div>
 
-            <!-- Step 3 -->
+
             <div v-if="step === 3">
               <div class="form-group">
                 <label for="goal">Fitness Goal</label>
@@ -204,7 +204,7 @@ export default {
           email: this.form.email,
           password: this.form.password,
           password_confirmation: this.form.confirmPassword,
-          RoleID: 2,
+          RoleID: 3,
           phone: this.form.phone,
           address: this.form.address,
           dob: this.form.dob,

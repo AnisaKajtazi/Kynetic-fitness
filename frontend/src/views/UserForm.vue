@@ -57,11 +57,14 @@ export default {
         email: "",
         password: "",
         dob: "",
-        RoleID: "",
+        RoleID: 2,  
         gender: "",
         fitness_goal: "",
         activity_level: "",
-        focus_area: ""
+        focus_area: "",
+        phone: "",
+        address: "",
+        training_days: 0
       },
 
       fields: [
@@ -73,12 +76,13 @@ export default {
         { label: "DOB", model: "dob", type: "date" },
         { label: "Role", model: "RoleID", type: "select", options: [
             { value: 1, label: "Admin" },
-            { value: 2, label: "Trainer" },
-            { value: 3, label: "Member" }
+            { value: 2, label: "Staff" },
+            { value: 3, label: "User" }
           ] },
         { label: "Gender", model: "gender", type: "select", options: [
             { value: "male", label: "Male" },
-            { value: "female", label: "Female" }
+            { value: "female", label: "Female" },
+            { value: "other", label: "Other" }
           ] },
         { label: "Fitness Goal", model: "fitness_goal", type: "select", options: [
             { label: "Lose Fat", value: "lose fat" },
@@ -94,7 +98,10 @@ export default {
             { label: "Upper Body", value: "upper body" },
             { label: "Lower Body", value: "lower body" },
             { label: "Cardio", value: "cardio" }
-        ] }
+        ] },
+        { label: "Phone", model: "phone", type: "text" },
+        { label: "Address", model: "address", type: "text" },
+        { label: "Training Days", model: "training_days", type: "number" }
       ]
     };
   },
@@ -114,11 +121,14 @@ export default {
       this.formData = {
         ...this.user,
         dob: this.user.dob ? this.user.dob.split("T")[0] : "",
-        RoleID: this.user.RoleID || "",
+        RoleID: this.user.RoleID || 2,
         gender: this.user.gender || "",
         fitness_goal: this.user.fitness_goal || "",
         activity_level: this.user.activity_level || "",
         focus_area: this.user.focus_area || "",
+        phone: this.user.phone || "",
+        address: this.user.address || "",
+        training_days: this.user.training_days || 0
       };
       this.formData.password = "";
     }
@@ -126,32 +136,33 @@ export default {
 
   methods: {
     async handleSubmit() {
-  try {
-    let dataToSend = { ...this.formData };
-    if (!dataToSend.password) delete dataToSend.password;
+      try {
+        let dataToSend = { ...this.formData };
+        if (!dataToSend.password) delete dataToSend.password;
+        dataToSend.RoleID = dataToSend.RoleID || 2;
+        dataToSend.phone = dataToSend.phone || "";
+        dataToSend.address = dataToSend.address || "";
+        dataToSend.training_days = dataToSend.training_days || 0;
 
-    const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
+        const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
 
-    if (this.user && this.user.UserID) {
-      // Edit existing user
-      await axios.put(`${BASE_URL}/users/${this.user.UserID}`, dataToSend, { headers });
-    } else {
-      // Create new user (admin)
-      await axios.post(`${BASE_URL}/users`, dataToSend, { headers });
+        if (this.user && this.user.UserID) {
+          await axios.put(`${BASE_URL}/users/${this.user.UserID}`, dataToSend, { headers });
+        } else {
+          await axios.post(`${BASE_URL}/users`, dataToSend, { headers });
+        }
+
+        this.$emit("saved");
+        this.$emit("close");
+      } catch (error) {
+        if (error.response && error.response.data) {
+          console.error("Error saving user:", error.response.data);
+          alert(JSON.stringify(error.response.data.errors || error.response.data.message));
+        } else {
+          console.error("Error saving user:", error);
+        }
+      }
     }
-
-    this.$emit("saved"); // rifreskon listën
-    this.$emit("close"); // mbyll formën
-  } catch (error) {
-    if (error.response && error.response.data) {
-      console.error("Error saving user:", error.response.data);
-      alert(JSON.stringify(error.response.data.errors || error.response.data.message));
-    } else {
-      console.error("Error saving user:", error);
-    }
-  }
-}
-
   }
 };
 </script>
@@ -166,25 +177,32 @@ export default {
   align-items: center;
   justify-content: center;
   z-index: 1050;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 .modal-content {
   background: white;
   padding: 25px;
-  width: 700px;
-  max-width: 95%;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
   border-radius: 12px;
+  overflow-y: auto;
 }
 
 .form-row {
   display: flex;
   gap: 20px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
 .form-group {
-  flex: 1;
+  flex: 1 1 45%;
   display: flex;
   flex-direction: column;
+  min-width: 200px;
 }
+
 </style>

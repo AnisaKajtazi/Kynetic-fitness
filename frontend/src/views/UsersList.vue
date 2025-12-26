@@ -13,8 +13,8 @@
       />
 
       <div class="table-responsive mt-3">
-        <table class="table table-striped table-bordered align-middle">
-          <thead class="table-dark text-center">
+        <table class="table table-striped table-bordered align-middle text-center">
+          <thead class="table-dark">
             <tr>
               <th>Username</th>
               <th>Name</th>
@@ -24,6 +24,7 @@
               <th>Goal</th>
               <th>Activity</th>
               <th>Focus</th>
+              <th>Training Days</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -33,12 +34,13 @@
               <td>{{ u.username }}</td>
               <td>{{ u.name }} {{ u.surname }}</td>
               <td>{{ u.email }}</td>
-              <td>{{ u.RoleID }}</td>
+              <td>{{ getRoleName(u.RoleID) }}</td>
               <td>{{ u.gender }}</td>
               <td>{{ u.fitness_goal }}</td>
               <td>{{ u.activity_level }}</td>
               <td>{{ u.focus_area }}</td>
-              <td class="text-center">
+              <td>{{ u.training_days }}</td>
+              <td>
                 <button @click="editUser(u)" class="btn btn-warning btn-sm me-2">Edit</button>
                 <button @click="deleteUser(u.UserID)" class="btn btn-danger btn-sm">Delete</button>
               </td>
@@ -62,7 +64,12 @@ export default {
     return {
       users: [],
       showForm: false,
-      selectedUser: null
+      selectedUser: null,
+      roles: {
+        1: "Admin",
+        2: "Staff",
+        3: "User"
+      }
     };
   },
 
@@ -71,6 +78,10 @@ export default {
   },
 
   methods: {
+    getRoleName(roleId) {
+      return this.roles[roleId] || "Unknown";
+    },
+
     async fetchUsers() {
       try {
         const res = await axios.get(`${BASE_URL}/users`, {
@@ -120,12 +131,11 @@ export default {
 }
 
 table {
-  background-color: #02143aff;;
+  background-color: #02143aff;
   border-radius:10px;
   width:100%;
-  height:100%;
   padding:20px;
-  margin:25px;
+  margin:25px 0;
 }
 
 .table-dark th {
