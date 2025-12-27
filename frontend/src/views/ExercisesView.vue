@@ -117,24 +117,23 @@ export default {
   },
   methods: {
     async fetchExercises() {
-      try {
-        // Merr të gjitha exercises nga backend
-        const res = await api.get("/exercises");
-        this.exercises = res.data.map((ex) => ({
-          ...ex,
-          category: ex.category || "Uncategorized",
-          level: ex.level || "Beginner",
-          is_favorite: false, // default
-        }));
+  try {
+    const res = await api.get("/exercises");
+    this.exercises = res.data.data.map((ex) => ({
+      ...ex,
+      category: ex.category || "Uncategorized",
+      level: ex.level || "Beginner",
+      is_favorite: false, // default
+    }));
 
-       
-        if (this.isLoggedIn) {
-          await this.fetchFavorites();
-        }
-      } catch (err) {
-        console.error("Error fetching exercises:", err.response || err);
-      }
-    },
+    if (this.isLoggedIn) {
+      await this.fetchFavorites();
+    }
+  } catch (err) {
+    console.error("Error fetching exercises:", err.response || err);
+  }
+},
+
 
     async fetchFavorites() {
       try {

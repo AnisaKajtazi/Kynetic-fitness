@@ -12,7 +12,17 @@
         @saved="fetchRoles"
       />
 
-      <div class="table-responsive mt-3">
+      <div class="d-flex justify-content-end mb-2">
+        <input
+          type="text"
+          v-model="searchQuery"
+          @input="fetchRoles"
+          class="form-control w-50"
+          placeholder="Search by role name..."
+        />
+      </div>
+
+      <div class="table-responsive mt-2">
         <table class="table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
@@ -39,6 +49,25 @@
         </table>
       </div>
 
+      <div v-if="pagination" class="d-flex justify-content-center align-items-center mt-3">
+        <button 
+          class="btn btn-secondary btn-sm me-2" 
+          :disabled="!pagination.prev_page_url"
+          @click="fetchRoles(pagination.current_page - 1)"
+        >
+          Previous
+        </button>
+
+        <span class="mx-2">{{ pagination.current_page }} of {{ pagination.last_page }}</span>
+
+        <button 
+          class="btn btn-secondary btn-sm ms-2" 
+          :disabled="!pagination.next_page_url"
+          @click="fetchRoles(pagination.current_page + 1)"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +86,9 @@ export default {
       roles: [],
       showForm: false,
       selectedRole: null,
+      searchQuery: "",
+      perPage: 10,
+      pagination: null
     };
   },
 
@@ -65,19 +97,6 @@ export default {
   },
 
   methods: {
-    async fetchRoles() {
-      try {
-        const res = await axios.get(`${BASE_URL}/roles`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        this.roles = res.data;
-      } catch (e) {
-        console.error("Error loading roles:", e);
-      }
-    },
-
     openModal() {
       this.selectedRole = null;
       this.showForm = true;
@@ -96,14 +115,30 @@ export default {
       if (!confirm("Delete this role?")) return;
 
       await axios.delete(`${BASE_URL}/roles/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       this.fetchRoles();
     },
-  },
+
+    async fetchRoles(page = 1) {
+      try {
+        const res = await axios.get(`${BASE_URL}/roles`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          params: {
+            search: this.searchQuery,
+            per_page: this.perPage,
+            page
+          }
+        });
+
+        this.roles = res.data.data;
+        this.pagination = res.data;
+      } catch (e) {
+        console.error("Error loading roles:", e);
+      }
+    }
+  }
 };
 </script>
 
@@ -125,5 +160,13 @@ table {
 
 .table-dark th {
   color: white;
+}
+
+td button {
+  margin-bottom: 4px;
+}
+
+.form-control {
+  max-width: 300px;
 }
 </style>

@@ -1,26 +1,24 @@
 <template>
-  <div class="exercises-wrapper">
+  <div class="meals-wrapper">
     <div class="p-4 shadow rounded">
-      <h2 class="text-center mb-4">Exercises List</h2>
+      <h2 class="text-center mb-4">Meals List</h2>
 
-      <button class="btn btn-primary mb-3" @click="openModal">
-        Add Exercise
-      </button>
+      <button class="btn btn-primary mb-3" @click="openModal()">Add Meal</button>
 
-      <ExerciseForm
+      <MealForm
         v-if="showForm"
-        :exercise="selectedExercise"
+        :meal="selectedMeal"
         @close="closeForm"
-        @saved="fetchExercises"
+        @saved="fetchMeals"
       />
 
       <div class="d-flex justify-content-end mb-2">
         <input
           type="text"
           v-model="searchQuery"
-          @input="fetchExercises"
+          @input="fetchMeals"
           class="form-control w-50"
-          placeholder="Search by exercise name..."
+          placeholder="Search by meal name..."
         />
       </div>
 
@@ -28,35 +26,45 @@
         <table class="table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
+              <th>ID</th>
               <th>Name</th>
-              <th>Category</th>
-              <th>Level</th>
-              <th>Duration (sec)</th>
               <th>Description</th>
+              <th>Category</th>
               <th>Image</th>
+              <th>Price</th>
+              <th>Calories</th>
+              <th>Fitness Goal</th>
+              <th>Activity Level</th>
+              <th>Focus Area</th>
+              <th>Training Days</th>
               <th>Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="e in exercises" :key="e.id">
-              <td>{{ e.name }}</td>
-              <td>{{ e.category }}</td>
-              <td>{{ e.level }}</td>
-              <td>{{ e.duration }}</td>
-              <td>{{ e.description }}</td>
+            <tr v-for="m in meals" :key="m.MealID">
+              <td>{{ m.MealID }}</td>
+              <td>{{ m.name }}</td>
+              <td>{{ m.description }}</td>
+              <td>{{ m.category }}</td>
               <td>
-                <img
-                  v-if="e.image"
-                  :src="`http://127.0.0.1:8000/uploads/${e.image}`"
-                  width="60"
-                />
+               <img 
+                    v-if="m.image && m.category"
+                    :src="`http://127.0.0.1:8000/uploads/${m.category}/${m.image}`" 
+                    width="60" 
+                    />
               </td>
+              <td>{{ m.price }}</td>
+              <td>{{ m.calories }}</td>
+              <td>{{ m.fitness_goal }}</td>
+              <td>{{ m.activity_level }}</td>
+              <td>{{ m.focus_area }}</td>
+              <td>{{ m.training_days }}</td>
               <td>
-                <button class="btn btn-warning btn-sm me-2" @click="editExercise(e)">
+                <button @click="editMeal(m)" class="btn btn-warning btn-sm me-2">
                   Edit
                 </button>
-                <button class="btn btn-danger btn-sm" @click="deleteExercise(e.id)">
+                <button @click="deleteMeal(m.MealID)" class="btn btn-danger btn-sm">
                   Delete
                 </button>
               </td>
@@ -69,7 +77,7 @@
         <button 
           class="btn btn-secondary btn-sm me-2" 
           :disabled="!pagination.prev_page_url"
-          @click="fetchExercises(pagination.current_page - 1)"
+          @click="fetchMeals(pagination.current_page - 1)"
         >
           Previous
         </button>
@@ -79,7 +87,7 @@
         <button 
           class="btn btn-secondary btn-sm ms-2" 
           :disabled="!pagination.next_page_url"
-          @click="fetchExercises(pagination.current_page + 1)"
+          @click="fetchMeals(pagination.current_page + 1)"
         >
           Next
         </button>
@@ -90,18 +98,18 @@
 
 <script>
 import axios from "axios";
-import ExerciseForm from "./ExerciseForm.vue";
+import MealForm from "./MealForm.vue";
 
 const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
-  components: { ExerciseForm },
+  components: { MealForm },
 
   data() {
     return {
-      exercises: [],
+      meals: [],
       showForm: false,
-      selectedExercise: null,
+      selectedMeal: null,
       searchQuery: "",
       perPage: 10,
       pagination: null
@@ -109,17 +117,17 @@ export default {
   },
 
   mounted() {
-    this.fetchExercises();
+    this.fetchMeals();
   },
 
   methods: {
     openModal() {
-      this.selectedExercise = null;
+      this.selectedMeal = null;
       this.showForm = true;
     },
 
-    editExercise(exercise) {
-      this.selectedExercise = { ...exercise };
+    editMeal(meal) {
+      this.selectedMeal = { ...meal };
       this.showForm = true;
     },
 
@@ -127,19 +135,19 @@ export default {
       this.showForm = false;
     },
 
-    async deleteExercise(id) {
-      if (!confirm("Delete this exercise?")) return;
+    async deleteMeal(id) {
+      if (!confirm("Delete this meal?")) return;
 
-      await axios.delete(`${BASE_URL}/exercises/${id}`, {
+      await axios.delete(`${BASE_URL}/meals/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      this.fetchExercises();
+      this.fetchMeals();
     },
 
-    async fetchExercises(page = 1) {
+    async fetchMeals(page = 1) {
       try {
-        const res = await axios.get(`${BASE_URL}/exercises`, {
+        const res = await axios.get(`${BASE_URL}/meals`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           params: {
             search: this.searchQuery,
@@ -148,10 +156,10 @@ export default {
           }
         });
 
-        this.exercises = res.data.data;
+        this.meals = res.data.data;
         this.pagination = res.data;
       } catch (e) {
-        console.error("Error loading exercises:", e);
+        console.error("Error loading meals:", e);
       }
     }
   }
@@ -159,7 +167,7 @@ export default {
 </script>
 
 <style scoped>
-.exercises-wrapper {
+.meals-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;

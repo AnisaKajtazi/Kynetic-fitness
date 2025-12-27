@@ -97,19 +97,26 @@ onMounted(() => {
 const fetchMeals = async () => {
   loading.value = true;
   try {
-    const res = await axios.get("http://127.0.0.1:8000/api/meals");
+    const res = await axios.get("http://127.0.0.1:8000/api/meals/all"); // endpoint i ri pa pagination
     console.log("Meals API response:", res.data);
 
-    meals.value = Object.keys(res.data).map((category) => ({
-      category,
-      items: res.data[category].map((meal) => ({
-        ...meal,
-        meal_id: Number(meal.MealID),
+    if (res.data && typeof res.data === "object") {
+      meals.value = Object.entries(res.data).map(([category, items]) => ({
         category,
-      })),
-    }));
+        items: Array.isArray(items)
+          ? items.map((meal) => ({
+              ...meal,
+              meal_id: Number(meal.MealID),
+              category,
+            }))
+          : [],
+      }));
+    } else {
+      meals.value = [];
+    }
   } catch (e) {
     console.error("Error loading meals:", e);
+    meals.value = [];
   }
   loading.value = false;
 };
@@ -125,15 +132,18 @@ const openPopup = (meal) => {
 };
 
 const scrollLeft = (index) => {
-  sliderRefs.value[index].scrollBy({ left: -300, behavior: "smooth" });
+  if (sliderRefs.value[index]) {
+    sliderRefs.value[index].scrollBy({ left: -300, behavior: "smooth" });
+  }
 };
 const scrollRight = (index) => {
-  sliderRefs.value[index].scrollBy({ left: 300, behavior: "smooth" });
+  if (sliderRefs.value[index]) {
+    sliderRefs.value[index].scrollBy({ left: 300, behavior: "smooth" });
+  }
 };
 
 const addToCart = async (meal) => {
   if (!isLoggedIn.value) return;
-
 
   const mealId = Number(meal.MealID ?? meal.meal_id);
   if (!mealId) {
@@ -148,8 +158,6 @@ const addToCart = async (meal) => {
     price: Number(meal.price ?? 0),
     quantity: 1
   };
-
-  console.log("Adding to cart:", payload);
 
   try {
     const res = await axios.post(
@@ -169,14 +177,10 @@ const addToCart = async (meal) => {
   }
 };
 
-
 watchEffect(() => {
   loggedIn.value = !!localStorage.getItem("token");
 });
 </script>
-
-
-
 
 <style scoped>
 .meals-page {

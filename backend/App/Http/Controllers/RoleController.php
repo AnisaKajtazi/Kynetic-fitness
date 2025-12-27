@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::all();
+        $query = Role::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $roles = $query->paginate($request->per_page ?? 10);
+
         return response()->json($roles);
     }
 
@@ -27,7 +35,7 @@ class RoleController extends Controller
         return response()->json($role, 201);
     }
 
-    
+   
     public function show($id)
     {
         $role = Role::find($id);
@@ -39,7 +47,6 @@ class RoleController extends Controller
         return response()->json($role);
     }
 
-   
     public function update(Request $request, $id)
     {
         $role = Role::find($id);
@@ -72,4 +79,3 @@ class RoleController extends Controller
         return response()->json(['message' => 'Role deleted successfully']);
     }
 }
-

@@ -59,8 +59,11 @@ Route::middleware(['jwt.auth'])->group(function () {
 });
 
 Route::get('/meals', [MealController::class, 'index']);
-
+Route::get('/meals/all', [MealController::class, 'allMeals']);
 Route::middleware(['jwt.auth'])->group(function () {
+     Route::post('/meals', [MealController::class, 'store']);
+    Route::put('/meals/{id}', [MealController::class, 'update']);
+    Route::delete('/meals/{id}', [MealController::class, 'destroy']);
     Route::get('/meals/user', [MealController::class, 'userMeals']);
     Route::post('/meals/fav', [MealController::class, 'addFavorite']);
     Route::post('/meals/personalise', [MealController::class, 'personaliseMeal']);

@@ -12,7 +12,17 @@
         @saved="fetchUsers"
       />
 
-      <div class="table-responsive mt-3">
+      <div class="d-flex justify-content-end mb-2">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          @input="fetchUsers" 
+          class="form-control w-50"
+          placeholder="Search by username or name..."
+        />
+      </div>
+
+      <div class="table-responsive mt-2">
         <table class="table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
@@ -48,6 +58,26 @@
           </tbody>
         </table>
       </div>
+
+      <div v-if="pagination" class="d-flex justify-content-center align-items-center mt-3">
+        <button 
+          class="btn btn-secondary btn-sm me-2" 
+          :disabled="!pagination.prev_page_url"
+          @click="fetchUsers(pagination.current_page - 1)"
+        >
+          Previous
+        </button>
+
+        <span class="mx-2">{{ pagination.current_page }} of {{ pagination.last_page }}</span>
+
+        <button 
+          class="btn btn-secondary btn-sm ms-2" 
+          :disabled="!pagination.next_page_url"
+          @click="fetchUsers(pagination.current_page + 1)"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -65,11 +95,10 @@ export default {
       users: [],
       showForm: false,
       selectedUser: null,
-      roles: {
-        1: "Admin",
-        2: "Staff",
-        3: "User"
-      }
+      roles: { 1: "Admin", 2: "Staff", 3: "User" },
+      searchQuery: "",
+      perPage: 10,
+      pagination: null
     };
   },
 
@@ -80,19 +109,6 @@ export default {
   methods: {
     getRoleName(roleId) {
       return this.roles[roleId] || "Unknown";
-    },
-
-    async fetchUsers() {
-      try {
-        const res = await axios.get(`${BASE_URL}/users`, {
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem("token")}` 
-          }
-        });
-        this.users = res.data;
-      } catch (e) {
-        console.error("Error loading users:", e);
-      }
     },
 
     openModal() {
@@ -117,6 +133,23 @@ export default {
       });
 
       this.fetchUsers();
+    },
+
+    async fetchUsers(page = 1) {
+      try {
+        const res = await axios.get(`${BASE_URL}/users`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          params: {
+            search: this.searchQuery,
+            per_page: this.perPage,
+            page
+          }
+        });
+        this.users = res.data.data;
+        this.pagination = res.data;
+      } catch (e) {
+        console.error("Error loading users:", e);
+      }
     }
   }
 };
@@ -144,5 +177,9 @@ table {
 
 td button {
   margin-bottom: 4px;
+}
+
+.form-control {
+  max-width: 300px;
 }
 </style>

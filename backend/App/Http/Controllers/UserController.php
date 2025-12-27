@@ -9,83 +9,99 @@ use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
-    public function index() {
-        return User::all();
+    public function index(Request $request)
+    {
+        $search   = $request->query('search');
+        $perPage  = $request->query('per_page', 10);
+
+        $users = User::when($search, function ($query) use ($search) {
+                $query->where('name', 'LIKE', $search . '%')
+                      ->orWhere('surname', 'LIKE', $search . '%')
+                      ->orWhere('username', 'LIKE', $search . '%');
+            })
+            ->orderBy('name')
+            ->paginate($perPage);
+
+        return response()->json($users);
     }
 
-    public function show($UserID) {
-    return User::findOrFail($UserID);
-}
+    public function show($UserID)
+    {
+        return response()->json(
+            User::findOrFail($UserID)
+        );
+    }
 
-    public function dynamic() {
-        $columns = Schema::getColumnListing('users');
-
-        $columns = array_filter($columns, fn($col) => $col !== 'password');
-
-        $users = User::all();
+    public function dynamic()
+    {
+        $columns = array_filter(
+            Schema::getColumnListing('users'),
+            fn ($col) => $col !== 'password'
+        );
 
         return response()->json([
-            'columns' => $columns,
-            'users' => $users
+            'columns' => array_values($columns),
         ]);
     }
 
-    public function store(Request $request) {
-        $data = $request->validate([
-    'username'       => 'sometimes|string|unique:users,username',
-    'name'           => 'sometimes|string|max:255',
-    'surname'        => 'sometimes|string|max:255',
-    'email'          => 'sometimes|email|unique:users,email',
-    'password'       => 'sometimes|string|min:6',
-    'RoleID'         => 'sometimes|integer',
-    'phone'          => 'sometimes|string|max:255',
-    'address'        => 'sometimes|string|max:255',
-    'dob'            => 'sometimes|date',
-    'gender'         => 'sometimes|in:male,female,other',
-    'fitness_goal'   => 'sometimes|in:lose fat,gain muscle,stay fit',
-    'activity_level' => 'sometimes|in:low,medium,high',
-    'training_days'  => 'sometimes|integer|min:0|max:7',
-    'focus_area'     => 'sometimes|in:upper body,lower body,cardio',
-]);
 
-        $data['phone'] = $data['phone'] ?? '';
-        $data['address'] = $data['address'] ?? '';
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'username'       => 'required|string|unique:users,username',
+            'name'           => 'required|string|max:255',
+            'surname'        => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email',
+            'password'       => 'required|string|min:6',
+            'phone'          => 'nullable|string|max:255',
+            'address'        => 'nullable|string|max:255',
+            'dob'            => 'nullable|date',
+            'gender'         => 'nullable|in:male,female,other',
+            'fitness_goal'   => 'nullable|in:lose fat,gain muscle,stay fit',
+            'activity_level' => 'nullable|in:low,medium,high',
+            'training_days'  => 'nullable|integer|min:0|max:7',
+            'focus_area'     => 'nullable|in:upper body,lower body,cardio',
+            'RoleID'         => 'nullable|integer',
+        ]);
+
         $data['password'] = Hash::make($data['password']);
-        $data['RoleID'] = 3;
+        $data['RoleID']   = $data['RoleID'] ?? 3;
 
         $user = User::create($data);
 
         return response()->json($user, 201);
     }
 
-    public function update(Request $request, $UserID) {
-    $user = User::findOrFail($UserID);
+   
+    public function update(Request $request, $UserID)
+    {
+        $user = User::findOrFail($UserID);
 
         $data = $request->validate([
             'username'       => 'sometimes|string|unique:users,username,' . $UserID . ',UserID',
             'name'           => 'sometimes|string|max:255',
             'surname'        => 'sometimes|string|max:255',
             'email'          => 'sometimes|email|unique:users,email,' . $UserID . ',UserID',
-            'password'       => 'sometimes|string|min:6',
-            'RoleID'         => 'sometimes|integer',
-            'phone'          => 'sometimes|string|max:255',
-            'address'        => 'sometimes|string|max:255',
-            'dob'            => 'sometimes|date',
-            'gender'         => 'sometimes|in:male,female,other',
-            'fitness_goal'   => 'sometimes|in:lose fat,gain muscle,stay fit',
-            'activity_level' => 'sometimes|in:low,medium,high',
-            'training_days'  => 'sometimes|integer|min:0|max:7',
-            'focus_area'     => 'sometimes|in:upper body,lower body,cardio',
+            'password'       => 'nullable|string|min:6',
+            'RoleID'         => 'nullable|integer',
+            'phone'          => 'nullable|string|max:255',
+            'address'        => 'nullable|string|max:255',
+            'dob'            => 'nullable|date',
+            'gender'         => 'nullable|in:male,female,other',
+            'fitness_goal'   => 'nullable|in:lose fat,gain muscle,stay fit',
+            'activity_level' => 'nullable|in:low,medium,high',
+            'training_days'  => 'nullable|integer|min:0|max:7',
+            'focus_area'     => 'nullable|in:upper body,lower body,cardio',
         ]);
 
-        if (isset($data['password']) && $data['password'] !== "") {
+        if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
 
-        if(!$request->has('RoleID')) {
-            $data['RoleID'] = $user->RoleID ?? 2;
+        if (!array_key_exists('RoleID', $data)) {
+            $data['RoleID'] = $user->RoleID;
         }
 
         $user->update($data);
@@ -93,9 +109,13 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function destroy($UserID) {
-        $user = User::findOrFail($UserID);
-        $user->delete();
-        return response()->json(['message' => 'User deleted']);
+    
+    public function destroy($UserID)
+    {
+        User::findOrFail($UserID)->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
     }
 }
