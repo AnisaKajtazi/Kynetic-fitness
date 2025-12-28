@@ -72,16 +72,19 @@ export default {
 
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-
         localStorage.setItem("role", response.data.user.RoleID);
 
         setLoggedIn(true);
 
-        if (response.data.user.RoleID === 1) {
-          this.$router.push("/admin-dashboard");
-        } else {
-          this.$router.push("/dashboard");
-        }
+        const role = response.data.user.RoleID;
+
+      if (role === 1) {
+            this.$router.push("/admin-dashboard");
+          } else if (role === 2) {
+            this.$router.push("/dashboard");
+          } else if (role === 3) {
+            this.$router.push("/staff-dashboard");
+          }
 
       } catch (error) {
         console.error("Login error:", error);

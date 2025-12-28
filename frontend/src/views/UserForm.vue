@@ -4,8 +4,15 @@
       <h3 class="mb-3">{{ user ? "Edit User" : "Add User" }}</h3>
 
       <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label for="RoleID">Role</label>
+          <select id="RoleID" v-model="formData.RoleID" class="form-control">
+            <option disabled value="">Select Role</option>
+            <option v-for="role in roles" :value="role.value" :key="role.value">{{ role.label }}</option>
+          </select>
+        </div>
 
-        <div class="form-row" v-for="row in fieldRows" :key="row[0].model">
+        <div class="form-row" v-for="row in visibleFieldRows" :key="row[0].model">
           <div class="form-group" v-for="field in row" :key="field.model">
             <label :for="field.model">{{ field.label }}</label>
 
@@ -50,6 +57,12 @@ export default {
 
   data() {
     return {
+      roles: [
+        { value: 1, label: "Admin" },
+        { value: 2, label: "User" },
+        { value: 3, label: "Staff" }
+      ],
+
       formData: {
         username: "",
         name: "",
@@ -57,7 +70,7 @@ export default {
         email: "",
         password: "",
         dob: "",
-        RoleID: 2,  
+        RoleID: 2,
         gender: "",
         fitness_goal: "",
         activity_level: "",
@@ -74,43 +87,42 @@ export default {
         { label: "Email", model: "email", type: "email" },
         { label: "Password", model: "password", type: "password" },
         { label: "DOB", model: "dob", type: "date" },
-        { label: "Role", model: "RoleID", type: "select", options: [
-            { value: 1, label: "Admin" },
-            { value: 2, label: "Staff" },
-            { value: 3, label: "User" }
-          ] },
         { label: "Gender", model: "gender", type: "select", options: [
             { value: "male", label: "Male" },
             { value: "female", label: "Female" },
             { value: "other", label: "Other" }
           ] },
+        { label: "Phone", model: "phone", type: "text" },
+        { label: "Address", model: "address", type: "text" },
         { label: "Fitness Goal", model: "fitness_goal", type: "select", options: [
             { label: "Lose Fat", value: "lose fat" },
             { label: "Gain Muscle", value: "gain muscle" },
             { label: "Stay Fit", value: "stay fit" }
-        ] },
+        ], role: 2 },
         { label: "Activity Level", model: "activity_level", type: "select", options: [
             { label: "Low", value: "low" },
             { label: "Medium", value: "medium" },
             { label: "High", value: "high" }
-          ] },
+        ], role: 2 },
         { label: "Focus Area", model: "focus_area", type: "select", options: [
             { label: "Upper Body", value: "upper body" },
             { label: "Lower Body", value: "lower body" },
             { label: "Cardio", value: "cardio" }
-        ] },
-        { label: "Phone", model: "phone", type: "text" },
-        { label: "Address", model: "address", type: "text" },
-        { label: "Training Days", model: "training_days", type: "number" }
+        ], role: 2 },
+        { label: "Training Days", model: "training_days", type: "number", role: 2 }
       ]
     };
   },
 
   computed: {
-    fieldRows() {
+    visibleFields() {
+      return this.fields.filter(f => !f.role || f.role === this.formData.RoleID);
+    },
+    visibleFieldRows() {
       const rows = [];
-      for (let i = 0; i < this.fields.length; i += 2) {
-        rows.push(this.fields.slice(i, i + 2));
+      const fields = this.visibleFields;
+      for (let i = 0; i < fields.length; i += 2) {
+        rows.push(fields.slice(i, i + 2));
       }
       return rows;
     }
@@ -204,5 +216,4 @@ export default {
   flex-direction: column;
   min-width: 200px;
 }
-
 </style>

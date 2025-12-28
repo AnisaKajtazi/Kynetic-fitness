@@ -95,7 +95,7 @@ export default {
       users: [],
       showForm: false,
       selectedUser: null,
-      roles: { 1: "Admin", 2: "Staff", 3: "User" },
+      roles: { 1: "Admin", 2: "User", 3: "Staff" },
       searchQuery: "",
       perPage: 10,
       pagination: null

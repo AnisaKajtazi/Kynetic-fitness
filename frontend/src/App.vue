@@ -1,11 +1,15 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
+import { computed } from 'vue'
 import Navbar from './components/Navbar.vue'
+
+const route = useRoute()
+const showNavbar = computed(() => !route.path.startsWith('/admin'))
 </script>
 
 <template>
   <div id="app">
-    <Navbar />
+    <Navbar v-if="showNavbar" />
     <main>
       <RouterView />
     </main>
@@ -13,7 +17,6 @@ import Navbar from './components/Navbar.vue'
 </template>
 
 <style>
-/* Stilim global për body */
 body {
   margin: 0;
   min-height: 100vh;
@@ -22,14 +25,12 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Kontejneri kryesor */
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Main ku shfaqet përmbajtja */
 main {
   flex: 1;
   padding: 2rem;

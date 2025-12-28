@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import Dashboard from '../views/Dashboard.vue'
 import AdminDashboard from '../views/AdminDashboard.vue'
 import MyCart from '../views/MyCart.vue'
+import StaffSchedule from '../views/StaffSchedule.vue'
+import StaffDashboard from '../views/StaffDashboard.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -14,8 +16,10 @@ const routes = [
   { path: '/reset-password', name: 'ResetPassword', component: () => import('../views/ResetPassword.vue') },
   { path: '/signup', name: 'signup', component: () => import('../views/SignupView.vue') },
   { path: '/admin-dashboard', name: 'admin-dashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 1 } },
-  { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true, role: [2, 3] } },
   { path: '/my-cart', name: 'my-cart', component: MyCart, meta: { requiresAuth: true } },
+  { path: '/staff-dashboard', name: 'staff-dashboard', component: StaffDashboard, meta: { requiresAuth: true, role: 3 } },
+  { path: '/my-schedule', name: 'my-schedule', component: StaffSchedule, meta: { requiresAuth: true, role: 3 } },
 ]
 
 const router = createRouter({
@@ -31,8 +35,12 @@ router.beforeEach((to, from, next) => {
     return next('/login')
   }
 
-  if (to.meta.role && to.meta.role !== role) {
-    return next('/')
+  if (to.meta.role) {
+    if (Array.isArray(to.meta.role)) {
+      if (!to.meta.role.includes(role)) return next('/')
+    } else {
+      if (to.meta.role !== role) return next('/')
+    }
   }
 
   next()

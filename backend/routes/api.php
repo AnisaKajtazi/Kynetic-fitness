@@ -8,7 +8,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\UserFavoriteController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\MyCartController;
-
+use App\Http\Controllers\StaffScheduleController;
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -74,4 +74,9 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('/my-cart', [MyCartController::class, 'store']);
     Route::patch('/my-cart/{meal_id}/quantity', [MyCartController::class, 'updateQuantity']);
     Route::delete('/my-cart/{meal_id}', [MyCartController::class, 'destroy']);
+});
+
+Route::prefix('staff-schedule')->controller(StaffScheduleController::class)->middleware('jwt.auth')->group(function () {
+    Route::get('/my-schedule', 'mySchedule');
+    Route::get('/', 'index');
 });
