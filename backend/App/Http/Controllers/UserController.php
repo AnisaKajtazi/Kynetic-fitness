@@ -44,7 +44,6 @@ class UserController extends Controller
         ]);
     }
 
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -62,7 +61,12 @@ class UserController extends Controller
             'training_days'  => 'nullable|integer|min:0|max:7',
             'focus_area'     => 'nullable|in:upper body,lower body,cardio',
             'RoleID'         => 'nullable|integer',
+            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
+        }
 
         $data['password'] = Hash::make($data['password']);
         $data['RoleID']   = $data['RoleID'] ?? 3;
@@ -72,7 +76,6 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-   
     public function update(Request $request, $UserID)
     {
         $user = User::findOrFail($UserID);
@@ -92,12 +95,17 @@ class UserController extends Controller
             'activity_level' => 'nullable|in:low,medium,high',
             'training_days'  => 'nullable|integer|min:0|max:7',
             'focus_area'     => 'nullable|in:upper body,lower body,cardio',
+            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
         if (!array_key_exists('RoleID', $data)) {
@@ -109,7 +117,6 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    
     public function destroy($UserID)
     {
         User::findOrFail($UserID)->delete();

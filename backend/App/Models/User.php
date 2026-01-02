@@ -33,6 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'activity_level',
         'training_days',
         'focus_area',
+        'photo',
     ];
 
     protected $hidden = ['password', 'remember_token'];

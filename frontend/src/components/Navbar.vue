@@ -14,41 +14,30 @@
         <li><RouterLink to="/exercises">Exercises</RouterLink></li>
         <li><RouterLink to="/meals">Meals</RouterLink></li>
         <li><RouterLink to="/contact">Contact</RouterLink></li>
-        <li v-if="isLoggedIn"><RouterLink to="/dashboard">My Zone</RouterLink></li>
-        <li v-if="isLoggedIn"><RouterLink to="/my-cart">My Cart</RouterLink></li>
-        <li v-if="!isLoggedIn"><RouterLink to="/login">Login</RouterLink></li>
-        <li v-if="isLoggedIn"><a href="#" @click.prevent="logout">Logout</a></li>
+
+        <li v-if="isUser"><RouterLink to="/dashboard">My Zone</RouterLink></li>
+        <li v-if="isUser"><RouterLink to="/my-cart">My Cart</RouterLink></li>
+
+        <li v-if="isStaff"><RouterLink to="/staff-dashboard">Staff Zone</RouterLink></li>
+
+        <li v-if="isGuest"><RouterLink to="/login">Login</RouterLink></li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { loggedIn, setLoggedIn } from '@/stores/auth';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { isUser, isStaff, isGuest } from '@/stores/auth'
 
-const menuOpen = ref(false);
-const toggleMenu = () => (menuOpen.value = !menuOpen.value);
+const menuOpen = ref(false)
+const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
 const scrollToSection = (id) => {
-  const section = document.getElementById(id);
-  if (section) section.scrollIntoView({ behavior: 'smooth' });
-};
-
-const router = useRouter();
-const isLoggedIn = computed(() => loggedIn.value);
-
-const logout = () => {
-  try {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setLoggedIn(false);
-    router.push("/");
-  } catch (error) {
-    console.error("Logout failed:", error);
-  }
-};
+  const section = document.getElementById(id)
+  if (section) section.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 

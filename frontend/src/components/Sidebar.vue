@@ -19,7 +19,8 @@
         <li @click="$emit('changeSection', 'roles')">Roles</li>
         <li @click="$emit('changeSection', 'exercises')">Exercises</li>
         <li @click="$emit('changeSection', 'meals')">Meals</li>
-        <li @click="logout" class="logout-btn">Logout</li>
+        <li @click="$emit('changeSection', 'schedule')">Schedule</li>
+        <li class="logout-btn" @click="logout">Logout</li>
       </template>
 
       <template v-else-if="roleID === 2">
@@ -28,6 +29,7 @@
         <li @click="$emit('changeSection', 'meals')">My Personalised Menu</li>
         <li @click="$emit('changeSection', 'progress')">My Progress</li>
         <li @click="$emit('changeSection', 'profile')">Profile</li>
+        <li class="logout-btn" @click="logout">Logout</li>
       </template>
 
     </ul>
@@ -37,6 +39,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { setLoggedIn } from '@/stores/auth'
 
 const router = useRouter()
 const roleID = ref(null)
@@ -50,6 +53,7 @@ onMounted(() => {
 
 const logout = () => {
   localStorage.clear()
+  setLoggedIn(false)
   router.push('/login')
 }
 </script>
@@ -106,7 +110,6 @@ const logout = () => {
   font-weight: 600;
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
 }
-
 
 .logout-btn {
   margin-top: auto;

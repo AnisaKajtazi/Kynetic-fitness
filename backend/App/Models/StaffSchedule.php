@@ -24,6 +24,12 @@ class StaffSchedule extends Model
         'isAvailable',
     ];
 
+    protected $casts = [
+        'isAvailable' => 'boolean',
+        'start_time' => 'string',
+        'end_time' => 'string',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'UserID', 'UserID');
@@ -32,5 +38,10 @@ class StaffSchedule extends Model
     public function role()
     {
         return $this->belongsTo(Role::class, 'RoleID', 'RoleID');
+    }
+
+    public static function daysOfWeek()
+    {
+        return ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
     }
 }

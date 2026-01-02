@@ -76,7 +76,12 @@ Route::middleware('jwt.auth')->group(function () {
     Route::delete('/my-cart/{meal_id}', [MyCartController::class, 'destroy']);
 });
 
-Route::prefix('staff-schedule')->controller(StaffScheduleController::class)->middleware('jwt.auth')->group(function () {
-    Route::get('/my-schedule', 'mySchedule');
-    Route::get('/', 'index');
-});
+Route::prefix('staff-schedule') ->middleware('jwt.auth')->controller(StaffScheduleController::class)->group(function () {
+        Route::get('/my-schedule', 'mySchedule');
+        Route::get('/', 'index');
+        Route::get('/staff-list', 'staffList');
+        Route::get('/staff/{userId}', 'showStaffSchedule');
+        Route::post('/staff/{userId}', 'setWeeklySchedule');
+        Route::post('/reset-week', 'resetWeek');
+    });
+

@@ -74,7 +74,7 @@ export default {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("role", response.data.user.RoleID);
 
-        setLoggedIn(true);
+        setLoggedIn(true, response.data.user.RoleID);
 
         const role = response.data.user.RoleID;
 

@@ -21,6 +21,7 @@ import UsersList from './UsersList.vue'
 import RolesList from './RolesList.vue'
 import ExercisesList from './ExercisesList.vue'
 import MealsList from './MealsList.vue'
+import AdminSchedule from './AdminSchedule.vue'
 
 export default {
   name: 'AdminDashboard',
@@ -29,7 +30,8 @@ export default {
     UsersList,
     RolesList,
     ExercisesList,
-    MealsList
+    MealsList, 
+    AdminSchedule
   },
   data() {
     return {
@@ -50,6 +52,7 @@ export default {
         roles: RolesList,
         exercises: ExercisesList,
         meals: MealsList,
+        schedule: AdminSchedule,
       }
 
       return sections[this.activeSection] || UsersList
