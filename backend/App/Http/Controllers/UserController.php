@@ -11,13 +11,13 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $search   = $request->query('search');
-        $perPage  = $request->query('per_page', 10);
+        $search  = $request->query('search');
+        $perPage = $request->query('per_page', 10);
 
         $users = User::when($search, function ($query) use ($search) {
-                $query->where('name', 'LIKE', $search . '%')
-                      ->orWhere('surname', 'LIKE', $search . '%')
-                      ->orWhere('username', 'LIKE', $search . '%');
+                $query->where('name', 'LIKE', "%$search%")
+                      ->orWhere('surname', 'LIKE', "%$search%")
+                      ->orWhere('username', 'LIKE', "%$search%");
             })
             ->orderBy('name')
             ->paginate($perPage);
@@ -27,9 +27,7 @@ class UserController extends Controller
 
     public function show($UserID)
     {
-        return response()->json(
-            User::findOrFail($UserID)
-        );
+        return response()->json(User::findOrFail($UserID));
     }
 
     public function dynamic()
@@ -61,15 +59,24 @@ class UserController extends Controller
             'training_days'  => 'nullable|integer|min:0|max:7',
             'focus_area'     => 'nullable|in:upper body,lower body,cardio',
             'RoleID'         => 'nullable|integer',
-            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'staff_type'     => 'nullable|in:trainer,maintenance,service_staff',
+            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
         ]);
 
+        $data['RoleID'] = $data['RoleID'] ?? 2;
+
+        if ($data['RoleID'] != 3) {
+            $data['staff_type'] = null;
+        }
+
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+            $file = $request->file('photo');
+            $filename = $file->getClientOriginalName();
+            $file->move(public_path('uploads/profilephotos'), $filename);
+            $data['photo'] = $filename;
         }
 
         $data['password'] = Hash::make($data['password']);
-        $data['RoleID']   = $data['RoleID'] ?? 3;
 
         $user = User::create($data);
 
@@ -95,7 +102,8 @@ class UserController extends Controller
             'activity_level' => 'nullable|in:low,medium,high',
             'training_days'  => 'nullable|integer|min:0|max:7',
             'focus_area'     => 'nullable|in:upper body,lower body,cardio',
-            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'staff_type'     => 'nullable|in:trainer,maintenance,service_staff',
+            'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
         ]);
 
         if (!empty($data['password'])) {
@@ -104,8 +112,25 @@ class UserController extends Controller
             unset($data['password']);
         }
 
+        $roleId = $data['RoleID'] ?? $user->RoleID;
+        if ($roleId != 3) {
+            $data['staff_type'] = null;
+        }
+
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+            $file = $request->file('photo');
+            $filename = $file->getClientOriginalName();
+
+            if (
+                $user->photo &&
+                $user->photo !== $filename &&
+                file_exists(public_path('uploads/profilephotos/' . $user->photo))
+            ) {
+                unlink(public_path('uploads/profilephotos/' . $user->photo));
+            }
+
+            $file->move(public_path('uploads/profilephotos'), $filename);
+            $data['photo'] = $filename;
         }
 
         if (!array_key_exists('RoleID', $data)) {
@@ -119,7 +144,16 @@ class UserController extends Controller
 
     public function destroy($UserID)
     {
-        User::findOrFail($UserID)->delete();
+        $user = User::findOrFail($UserID);
+
+        if (
+            $user->photo &&
+            file_exists(public_path('uploads/profilephotos/' . $user->photo))
+        ) {
+            unlink(public_path('uploads/profilephotos/' . $user->photo));
+        }
+
+        $user->delete();
 
         return response()->json([
             'message' => 'User deleted successfully'

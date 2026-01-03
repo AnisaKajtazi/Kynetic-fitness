@@ -1,9 +1,10 @@
 <template>
-  <div class="modal-overlay">
+  <div class="modal-overlay" @click.self="$emit('close')">
     <div class="modal-content">
       <h3 class="mb-3">{{ user ? "Edit User" : "Add User" }}</h3>
 
       <form @submit.prevent="handleSubmit">
+        <!-- Role Selector -->
         <div class="form-group">
           <label for="RoleID">Role</label>
           <select id="RoleID" v-model="formData.RoleID" class="form-control">
@@ -12,10 +13,19 @@
           </select>
         </div>
 
+        <!-- Staff Type Dropdown ONLY if RoleID = 3 -->
+        <div class="form-group" v-if="formData.RoleID === 3">
+          <label for="staff_type">Staff Type</label>
+          <select id="staff_type" v-model="formData.staff_type" class="form-control">
+            <option disabled value="">Select Staff Type</option>
+            <option v-for="type in staffTypes" :value="type.value" :key="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+
+        <!-- Other fields dynamically -->
         <div class="form-row" v-for="row in visibleFieldRows" :key="row[0].model">
           <div class="form-group" v-for="field in row" :key="field.model">
             <label :for="field.model">{{ field.label }}</label>
-
             <input
               v-if="field.type !== 'select'"
               :type="field.type"
@@ -24,7 +34,6 @@
               v-model="formData[field.model]"
               :placeholder="field.label"
             />
-
             <select
               v-else
               class="form-control"
@@ -38,11 +47,22 @@
           </div>
         </div>
 
-        <div class="d-flex justify-content-end mt-4">
-          <button type="button" class="btn btn-secondary me-2" @click="$emit('close')">Cancel</button>
-          <button type="submit" class="btn btn-primary">{{ user ? "Update" : "Create" }}</button>
+        <!-- Photo upload -->
+        <div class="form-group">
+          <label for="photo">Photo</label>
+          <input type="file" id="photo" class="form-control" @change="handlePhotoChange" />
+          <div v-if="photoPreview" class="mt-2">
+            <img :src="photoPreview" alt="Photo Preview" class="photo-preview" />
+          </div>
+          <div v-else-if="formData.photo" class="mt-2">
+            <img :src="BASE_URL_IMG + formData.photo" alt="Current Photo" class="photo-preview" />
+          </div>
         </div>
 
+        <div class="d-flex justify-content-end mt-4 flex-wrap gap-2">
+          <button type="button" class="btn btn-secondary" @click="$emit('close')">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{ user ? "Update" : "Create" }}</button>
+        </div>
       </form>
     </div>
   </div>
@@ -50,19 +70,23 @@
 
 <script>
 import axios from "axios";
-const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
   props: ["user"],
-
   data() {
     return {
+      BASE_URL: "http://127.0.0.1:8000/api",
+      BASE_URL_IMG: "http://127.0.0.1:8000/",
       roles: [
         { value: 1, label: "Admin" },
         { value: 2, label: "User" },
         { value: 3, label: "Staff" }
       ],
-
+      staffTypes: [
+        { value: "trainer", label: "Trainer" },
+        { value: "maintenance", label: "Maintenance" },
+        { value: "service_staff", label: "Service Staff" }
+      ],
       formData: {
         username: "",
         name: "",
@@ -71,15 +95,18 @@ export default {
         password: "",
         dob: "",
         RoleID: 2,
+        staff_type: "",
         gender: "",
         fitness_goal: "",
         activity_level: "",
         focus_area: "",
         phone: "",
         address: "",
-        training_days: 0
+        training_days: 0,
+        photo: null
       },
-
+      photoFile: null,
+      photoPreview: null,
       fields: [
         { label: "Username", model: "username", type: "text" },
         { label: "Name", model: "name", type: "text" },
@@ -113,7 +140,6 @@ export default {
       ]
     };
   },
-
   computed: {
     visibleFields() {
       return this.fields.filter(f => !f.role || f.role === this.formData.RoleID);
@@ -127,41 +153,56 @@ export default {
       return rows;
     }
   },
-
   mounted() {
     if (this.user) {
       this.formData = {
         ...this.user,
         dob: this.user.dob ? this.user.dob.split("T")[0] : "",
         RoleID: this.user.RoleID || 2,
+        staff_type: this.user.staff_type || "",
         gender: this.user.gender || "",
         fitness_goal: this.user.fitness_goal || "",
         activity_level: this.user.activity_level || "",
         focus_area: this.user.focus_area || "",
         phone: this.user.phone || "",
         address: this.user.address || "",
-        training_days: this.user.training_days || 0
+        training_days: this.user.training_days || 0,
+        photo: this.user.photo || null
       };
       this.formData.password = "";
+      this.photoPreview = this.user.photo ? this.BASE_URL_IMG + this.user.photo : null;
     }
   },
-
   methods: {
+    handlePhotoChange(e) {
+      const file = e.target.files[0];
+      if (file) {
+        this.photoFile = file;
+        this.photoPreview = URL.createObjectURL(file);
+      } else {
+        this.photoFile = null;
+        this.photoPreview = this.formData.photo ? this.BASE_URL_IMG + this.formData.photo : null;
+      }
+    },
     async handleSubmit() {
       try {
-        let dataToSend = { ...this.formData };
-        if (!dataToSend.password) delete dataToSend.password;
-        dataToSend.RoleID = dataToSend.RoleID || 2;
-        dataToSend.phone = dataToSend.phone || "";
-        dataToSend.address = dataToSend.address || "";
-        dataToSend.training_days = dataToSend.training_days || 0;
+        const dataToSend = new FormData();
+        for (const key in this.formData) {
+          if (key === "photo") continue;
+          dataToSend.append(key, this.formData[key] || "");
+        }
+        if (this.photoFile) dataToSend.append("photo", this.photoFile);
+        if (this.formData.RoleID !== 3) dataToSend.set("staff_type", null);
 
-        const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
+        const headers = {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data"
+        };
 
         if (this.user && this.user.UserID) {
-          await axios.put(`${BASE_URL}/users/${this.user.UserID}`, dataToSend, { headers });
+          await axios.post(`${this.BASE_URL}/users/${this.user.UserID}?_method=PUT`, dataToSend, { headers });
         } else {
-          await axios.post(`${BASE_URL}/users`, dataToSend, { headers });
+          await axios.post(`${this.BASE_URL}/users`, dataToSend, { headers });
         }
 
         this.$emit("saved");
@@ -188,7 +229,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  z-index: 2000;
   overflow-y: auto;
   padding: 20px;
 }
@@ -196,11 +237,13 @@ export default {
 .modal-content {
   background: white;
   padding: 25px;
-  width: 90%;
+  width: 95%;
   max-width: 1000px;
   max-height: 90vh;
   border-radius: 12px;
   overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .form-row {
@@ -215,5 +258,24 @@ export default {
   display: flex;
   flex-direction: column;
   min-width: 200px;
+}
+
+.photo-preview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .form-group {
+    flex: 1 1 100%;
+  }
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

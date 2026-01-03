@@ -13,7 +13,7 @@ class StaffScheduleController extends Controller
         try {
             $userId = auth()->user()->UserID;
 
-            $schedule = StaffSchedule::with('role')
+            $schedule = StaffSchedule::with(['user', 'role'])
                 ->where('UserID', $userId)
                 ->where('isAvailable', true)
                 ->orderBy('day')
@@ -43,63 +43,63 @@ class StaffScheduleController extends Controller
     public function showStaffSchedule($userId)
     {
         try {
-            $schedule = StaffSchedule::with(['role'])
+            $schedule = StaffSchedule::with(['user', 'role'])
                 ->where('UserID', $userId)
                 ->orderBy('day')
                 ->orderBy('start_time')
                 ->get();
 
-            return response()->json($schedule ?? []);
+            return response()->json($schedule);
         } catch (\Exception $e) {
             \Log::error("showStaffSchedule error: ".$e->getMessage());
             return response()->json([]);
         }
     }
 
-public function setWeeklySchedule(Request $request, $userId)
-{
-    try {
-        $data = $request->input('schedule'); 
-        if (!is_array($data)) {
-            return response()->json(['error' => 'Invalid schedule data'], 400);
-        }
+    public function setWeeklySchedule(Request $request, $userId)
+    {
+        try {
+            $data = $request->input('schedule');
+            if (!is_array($data)) {
+                return response()->json(['error' => 'Invalid schedule data'], 400);
+            }
 
-        foreach ($data as $daySchedule) {
-            StaffSchedule::updateOrCreate(
-                [
-                    'UserID' => $userId,
-                    'day' => $daySchedule['day'],
-                ],
-                [
-                    'start_time'   => $daySchedule['start_time'] ?? null,
-                    'end_time'     => $daySchedule['end_time'] ?? null,
-                    'isAvailable'  => $daySchedule['isAvailable'] ?? false,
-                    'RoleID'       => $daySchedule['RoleID'] ?? 3
-                ]
-            );
-        }
+            foreach ($data as $daySchedule) {
+                StaffSchedule::updateOrCreate(
+                    [
+                        'UserID' => $userId,
+                        'day' => $daySchedule['day'],
+                    ],
+                    [
+                        'start_time'   => $daySchedule['start_time'] ?? null,
+                        'end_time'     => $daySchedule['end_time'] ?? null,
+                        'isAvailable'  => $daySchedule['isAvailable'] ?? false,
+                        'RoleID'       => $daySchedule['RoleID'] ?? 3
+                    ]
+                );
+            }
 
-        return response()->json([
-            'message' => 'Weekly schedule updated successfully.'
-        ]);
-    } catch (\Exception $e) {
-        \Log::error("setWeeklySchedule error: ".$e->getMessage());
-        return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Weekly schedule updated successfully.'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("setWeeklySchedule error: ".$e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-}
-
 
     public function staffList()
     {
         try {
             $staff = User::where('RoleID', 3)
-                ->get(['UserID', 'name', 'surname']);
+                ->get(['UserID', 'name', 'surname', 'staff_type']);
 
             $staff = $staff->map(function ($item) {
                 return [
                     'UserID' => $item->UserID,
                     'first_name' => $item->name,
-                    'last_name' => $item->surname
+                    'last_name' => $item->surname,
+                    'staff_type' => $item->staff_type
                 ];
             });
 

@@ -30,11 +30,13 @@
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
+              <th>Staff Type</th>
               <th>Gender</th>
               <th>Goal</th>
               <th>Activity</th>
               <th>Focus</th>
               <th>Training Days</th>
+              <th>Photo</th> <!-- new photo column -->
               <th>Actions</th>
             </tr>
           </thead>
@@ -45,11 +47,20 @@
               <td>{{ u.name }} {{ u.surname }}</td>
               <td>{{ u.email }}</td>
               <td>{{ getRoleName(u.RoleID) }}</td>
+              <td>{{ u.RoleID === 3 ? u.staff_type : "" }}</td>
               <td>{{ u.gender }}</td>
               <td>{{ u.fitness_goal }}</td>
               <td>{{ u.activity_level }}</td>
               <td>{{ u.focus_area }}</td>
               <td>{{ u.training_days }}</td>
+              <td>
+                <img 
+                  v-if="u.photo" 
+                  :src="`http://127.0.0.1:8000/uploads/profilephotos/${u.photo}`" 
+                  alt="User Photo" 
+                  style="max-width:60px; border-radius:6px;"
+                />
+              </td>
               <td>
                 <button @click="editUser(u)" class="btn btn-warning btn-sm me-2">Edit</button>
                 <button @click="deleteUser(u.UserID)" class="btn btn-danger btn-sm">Delete</button>
@@ -145,7 +156,13 @@ export default {
             page
           }
         });
-        this.users = res.data.data;
+
+        this.users = res.data.data.map(u => ({
+          ...u,
+          staff_type: u.staff_type || "",
+          photo: u.photo || null
+        }));
+
         this.pagination = res.data;
       } catch (e) {
         console.error("Error loading users:", e);

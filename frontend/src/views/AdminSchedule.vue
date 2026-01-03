@@ -7,12 +7,14 @@
         <thead>
           <tr>
             <th class="staff-col">Staff</th>
+            <th class="staff-col">Type</th>
             <th v-for="day in weekDays" :key="day">{{ day }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="staff in staffList" :key="staff.UserID">
             <td class="staff-name">{{ staff.first_name }} {{ staff.last_name }}</td>
+            <td class="staff-type">{{ staff.staff_type || 'N/A' }}</td>
             <td v-for="(_, index) in weekDays" :key="index">
               <div
                 v-if="!weeklySchedule[staff.UserID][index].editing"
@@ -20,8 +22,8 @@
                 @click="editTime(staff.UserID, index)"
               >
                 <div class="times">
-                  <div>{{ formatTime(weeklySchedule[staff.UserID][index].start_time) || '--:-- --' }}</div>
-                  <div>{{ formatTime(weeklySchedule[staff.UserID][index].end_time) || '--:-- --' }}</div>
+                  <div>{{ formatTime(weeklySchedule[staff.UserID][index].start_time) || '--:--' }}</div>
+                  <div>{{ formatTime(weeklySchedule[staff.UserID][index].end_time) || '--:--' }}</div>
                 </div>
                 <button
                   v-if="weeklySchedule[staff.UserID][index].start_time || weeklySchedule[staff.UserID][index].end_time"
@@ -78,6 +80,7 @@ onMounted(async () => {
         }
       })
     }
+
     allSchedulesLoaded.value = true
   } catch (err) {
     console.error('Error loading schedules:', err)
@@ -127,16 +130,13 @@ const formatTime = t => {
 .admin-schedule {
   padding: 1.5rem;
 }
-
 .table-wrapper {
   overflow-x: auto;
 }
-
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .schedule-table th,
 .schedule-table td {
   border: 1px solid #e5e7eb;
@@ -144,21 +144,17 @@ const formatTime = t => {
   text-align: center;
   vertical-align: middle;
 }
-
 .staff-col {
   width: 200px;
 }
-
 .staff-name {
   font-weight: 600;
   white-space: nowrap;
 }
-
-.schedule-cell {
-  min-width: 160px;
-  max-width: 1fr;
+.staff-type {
+  font-style: italic;
+  color: #2563eb;
 }
-
 .display-box {
   display: flex;
   justify-content: space-between;
@@ -166,33 +162,28 @@ const formatTime = t => {
   gap: 6px;
   cursor: pointer;
 }
-
 .times {
   display: flex;
   flex-direction: column;
   gap: 2px;
   font-size: 0.85rem;
 }
-
 .edit-row {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
 }
-
 .time-column {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-
 .time-column input[type='time'] {
   width: 120px;
   padding: 4px;
   font-size: 0.85rem;
 }
-
 .edit-btn {
   font-size: 0.75rem;
   padding: 3px 8px;
@@ -200,7 +191,6 @@ const formatTime = t => {
   border: 1px solid #ccc;
   background: #f3f4f6;
 }
-
 .set-btn {
   font-size: 0.75rem;
   padding: 5px 12px;
@@ -209,11 +199,9 @@ const formatTime = t => {
   background: #2563eb;
   color: white;
 }
-
 .set-btn:hover {
   background: #1d4ed8;
 }
-
 .loading {
   padding: 1rem;
   font-style: italic;
