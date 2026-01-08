@@ -37,6 +37,9 @@
         <div class="total-price">
           <strong>Total: ${{ totalPrice.toFixed(2) }}</strong>
         </div>
+        <div class="checkout-button-wrapper" v-if="cartItems.length > 0">
+ <button @click="$router.push('/checkout')" class="checkout-btn">Checkout</button>
+</div>
       </div>
     </div>
   </div>
@@ -108,6 +111,26 @@ const totalPrice = computed(() => {
 });
 
 onMounted(fetchCart);
+
+const checkout = async () => {
+  if (!confirm('Are you sure you want to proceed to checkout?')) return;
+
+  try {
+    const res = await axios.post(
+      'http://127.0.0.1:8000/api/checkout',
+      {},
+      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+    );
+
+    alert(`Checkout successful! Your order ID: ${res.data.order_id}`);
+
+    cartItems.value = [];
+  } catch (err) {
+    console.error('Checkout error:', err);
+    alert(err.response?.data?.message || 'Checkout failed');
+  }
+};
+
 </script>
 
 <style scoped>
@@ -154,7 +177,7 @@ onMounted(fetchCart);
   height: 32px;
   border-radius: 50%;
   border: none;
-  background-color: #3490dc; /* theme blue */
+  background-color: #2563eb;
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -162,7 +185,7 @@ onMounted(fetchCart);
 }
 
 .meal-quantity button:hover {
-  background-color: #2779bd;
+  background-color: #2563eb;
 }
 
 .meal-price {
@@ -172,7 +195,7 @@ onMounted(fetchCart);
 }
 
 .remove-btn {
-  background: #e3342f; /* red theme */
+  background: #e3342f;
   color: white;
   border: none;
   border-radius: 6px;
@@ -191,4 +214,25 @@ onMounted(fetchCart);
   font-size: 1.2rem;
   font-weight: 700;
 }
+.checkout-button-wrapper {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.checkout-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.checkout-btn:hover{
+  background-color: #293442ff;
+}
+
 </style>

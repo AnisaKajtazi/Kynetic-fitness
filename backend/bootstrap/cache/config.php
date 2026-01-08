@@ -88,7 +88,7 @@
   'app' => 
   array (
     'name' => 'Laravel',
-    'env' => 'production',
+    'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost',
     'frontend_url' => 'http://localhost:3000',
@@ -779,6 +779,11 @@
         'bot_user_oauth_token' => NULL,
         'channel' => NULL,
       ),
+    ),
+    'stripe' => 
+    array (
+      'key' => 'pk_test_51Sm2FlLdHoP7SKg3L0Pm63HluZ6rcgEbA9BMNMyysLWp950FOnnek4DGR1SOFLh39rL4X1kba66CWIXXrPJkoeg700tFWeZLqV',
+      'secret' => 'sk_test_51Sm2FlLdHoP7SKg3CtifTtPT7IHJy8781JzWJYSmE3KAmuNKQvbRYz1MFRoyuELNpgIo06WigfkfTvIjI3yswRsa00ERgUVYTD',
     ),
   ),
   'session' => 

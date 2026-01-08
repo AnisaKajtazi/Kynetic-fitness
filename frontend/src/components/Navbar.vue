@@ -15,8 +15,7 @@
         <li><RouterLink to="/meals">Meals</RouterLink></li>
         <li><RouterLink to="/contact">Contact</RouterLink></li>
 
-        <li v-if="isUser"><RouterLink to="/dashboard">My Zone</RouterLink></li>
-        <li v-if="isUser"><RouterLink to="/my-cart">My Cart</RouterLink></li>
+        <li v-if="isUser"><RouterLink to="/dashboard">My Zone</RouterLink></li>   
 
         <li v-if="isStaff"><RouterLink to="/staff-dashboard">Staff Zone</RouterLink></li>
 

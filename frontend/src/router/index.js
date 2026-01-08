@@ -6,6 +6,9 @@ import MyCart from '../views/MyCart.vue'
 import StaffSchedule from '../views/StaffSchedule.vue'
 import StaffDashboard from '../views/StaffDashboard.vue'
 import AdminSchedule from '../views/AdminSchedule.vue'
+import Checkout from '../views/Checkout.vue'
+import OrderSuccess from '../views/OrderSuccess.vue'
+import OrderError from '../views/OrderError.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -22,6 +25,9 @@ const routes = [
   { path: '/staff-dashboard', name: 'staff-dashboard', component: StaffDashboard, meta: { requiresAuth: true, role: 3 } },
   { path: '/my-schedule', name: 'my-schedule', component: StaffSchedule, meta: { requiresAuth: true, role: 3 } },
   { path: '/staff-schedule', name: 'staff-schedule', component: AdminSchedule, meta: { requiresAuth: true, role: 1 } },
+  { path: '/checkout', name: 'checkout', component: Checkout, meta: { requiresAuth: true } },
+  { path: '/orders/success', name: 'order-success', component: OrderSuccess, meta: { requiresAuth: true } },
+  { path: '/orders/error', name: 'order-error', component: OrderError, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

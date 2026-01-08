@@ -9,6 +9,8 @@ use App\Http\Controllers\UserFavoriteController;
 use App\Http\Controllers\MealController;
 use App\Http\Controllers\MyCartController;
 use App\Http\Controllers\StaffScheduleController;
+use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\CheckoutController;
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -85,3 +87,17 @@ Route::prefix('staff-schedule') ->middleware('jwt.auth')->controller(StaffSchedu
         Route::post('/reset-week', 'resetWeek');
     });
 
+Route::prefix('progress')->middleware('jwt.auth')->controller(ProgressController::class)->group(function () {
+    Route::get('/stats', 'getStats');
+    Route::post('/consumed', 'markConsumed');
+});
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::post('/checkout/stripe', [CheckoutController::class, 'createStripeCheckout']);
+    Route::get('/my-orders', [CheckoutController::class, 'myOrders']);
+    Route::get('/orders/{order}', [CheckoutController::class, 'show']);
+});
+
+
+Route::get('/checkout/success', [CheckoutController::class, 'success']);
+Route::get('/checkout/cancel', [CheckoutController::class, 'cancel']);

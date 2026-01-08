@@ -5,7 +5,6 @@
       @changeSection="activeSection = $event"
     />
 
-   
     <main class="dashboard__main">
       <component :is="currentSection" />
     </main>
@@ -13,23 +12,46 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Sidebar from '@/components/Sidebar.vue';
-
 
 import DashboardHome from './DashboardHome.vue';
 import DashboardExercises from './DashboardExercises.vue';
 import DashboardProgress from './DashboardProgress.vue';
 import DashboardMeals from './DashboardMeals.vue';
-
-const activeSection = ref('home');
+import ProgressView from './ProgressView.vue';
+import MyCart from './MyCart.vue';
+import OrderSuccess from './OrderSuccess.vue';
 
 const sections = {
   home: DashboardHome,
   exercises: DashboardExercises,
   progress: DashboardProgress,
   meals: DashboardMeals,
+  mycart: MyCart,
+  ordersuccess: OrderSuccess,
 };
+
+const route = useRoute();
+const router = useRouter();
+const activeSection = ref('home');
+
+onMounted(() => {
+  const section = route.query.activeSection;
+  if (section && sections[section]) {
+    activeSection.value = section;
+  }
+});
+
+watch(
+  () => route.query.activeSection,
+  (val) => {
+    if (val && sections[val]) {
+      activeSection.value = val;
+    }
+  }
+);
 
 const currentSection = computed(() => sections[activeSection.value]);
 </script>
@@ -43,7 +65,6 @@ const currentSection = computed(() => sections[activeSection.value]);
   background: var(--bg-dark);
 }
 
-
 .dashboard :deep(.sidebar) {
   position: fixed;
   top: 0;
@@ -52,7 +73,6 @@ const currentSection = computed(() => sections[activeSection.value]);
   height: 100vh;
   z-index: 1000;
 }
-
 
 .dashboard__main {
   flex: 1;
@@ -66,13 +86,11 @@ const currentSection = computed(() => sections[activeSection.value]);
   border-left: 1px solid var(--border-dark);
 }
 
-
 .dashboard__main > * {
   width: 100%;
   max-width: 100%;
   height: auto;
 }
-
 
 @media (max-width: 1024px) {
   .dashboard__main {

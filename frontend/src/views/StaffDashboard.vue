@@ -111,21 +111,34 @@ const photoFile = ref(null);
 const defaultPhoto = "/assets/default-avatar.png";
 const photoInput = ref(null);
 
-
 const emailIcon = new URL('../icons/email.png', import.meta.url).href;
-const phoneIcon = new URL('../icons/phone-call.png', import.meta.url).href;
+const phoneIcon = new URL('../icons/telephone.png', import.meta.url).href;
 const locationIcon = new URL('../icons/location.png', import.meta.url).href;
 const calendarIcon = new URL('../icons/birthday.png', import.meta.url).href;
 const genderIcon = new URL('../icons/gender.png', import.meta.url).href;
 
-onMounted(() => {
+onMounted(loadUser);
+
+async function loadUser() {
   const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    user.value = JSON.parse(storedUser);
-  } else {
+  if (!storedUser) {
+    router.push("/login");
+    return;
+  }
+
+  const localUser = JSON.parse(storedUser);
+
+  try {
+    const res = await axios.get(`http://127.0.0.1:8000/api/users/${localUser.UserID}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    user.value = res.data;
+    localStorage.setItem("user", JSON.stringify(res.data));
+  } catch (error) {
+    console.error("Error loading user:", error);
     router.push("/login");
   }
-});
+}
 
 const toggleEdit = () => {
   editing.value = !editing.value;
@@ -157,6 +170,8 @@ const imageUrl = (user) => {
 
 const saveProfile = async () => {
   const formData = new FormData();
+  formData.append("_method", "PUT"); // MUST for Laravel PUT with multipart
+
   formData.append("email", user.value.email);
   formData.append("phone", user.value.phone || "");
   formData.append("address", user.value.address || "");
@@ -168,7 +183,7 @@ const saveProfile = async () => {
   }
 
   try {
-    const res = await axios.put(
+    const res = await axios.post(
       `http://127.0.0.1:8000/api/users/${user.value.UserID}`,
       formData,
       {
@@ -187,7 +202,7 @@ const saveProfile = async () => {
     alert("Profile updated successfully!");
   } catch (error) {
     console.error("Error updating profile:", error);
-    alert("Failed to update profile");
+    alert("Failed to update profile.");
   }
 };
 
@@ -196,6 +211,7 @@ const formatDate = (dateStr) => {
   return new Date(dateStr).toLocaleDateString();
 };
 </script>
+
 
 <style scoped>
 .staff-dashboard {
