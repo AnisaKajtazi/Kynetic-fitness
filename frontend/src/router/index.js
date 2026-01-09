@@ -9,6 +9,7 @@ import AdminSchedule from '../views/AdminSchedule.vue'
 import Checkout from '../views/Checkout.vue'
 import OrderSuccess from '../views/OrderSuccess.vue'
 import OrderError from '../views/OrderError.vue'
+import Progress from '../views/ProgressView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -28,6 +29,7 @@ const routes = [
   { path: '/checkout', name: 'checkout', component: Checkout, meta: { requiresAuth: true } },
   { path: '/orders/success', name: 'order-success', component: OrderSuccess, meta: { requiresAuth: true } },
   { path: '/orders/error', name: 'order-error', component: OrderError, meta: { requiresAuth: true } },
+  { path: '/progress', name: 'progress', component: Progress, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

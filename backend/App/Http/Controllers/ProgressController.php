@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -12,63 +12,49 @@ class ProgressController extends Controller
     public function getStats(Request $request)
     {
         $user = $request->user();
-
         if (!$user) {
-            return response()->json([
-                'error' => 'User not authenticated'
-            ], 401);
+            return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $userId = $user->id;
+        $userId = $user->UserID;
+        $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $endOfWeek   = Carbon::now()->endOfWeek(Carbon::SUNDAY);
 
         try {
-            $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-            $endOfWeek   = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-
-            $cartItems = DB::table('my_cart')
-                ->join('meals', 'meals.MealID', '=', 'my_cart.meal_id')
-                ->where('my_cart.user_id', $userId)
-                ->whereBetween('my_cart.created_at', [$startOfWeek, $endOfWeek])
-                ->select(
-                    'my_cart.cart_id',
-                    'my_cart.meal_id',
-                    'my_cart.item_name',
-                    'my_cart.price',
-                    'my_cart.quantity',
-                    'meals.category',
-                    'meals.calories',
-                    DB::raw('DATE(my_cart.created_at) as date')
-                )
+            $cartItems = OrderItem::with('meal', 'order')
+                ->whereHas('order', function ($query) use ($userId, $startOfWeek, $endOfWeek) {
+                    $query->where('user_id', $userId)
+                          ->where('status', 'completed')
+                          ->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                })
                 ->get();
 
-            if ($cartItems->isEmpty()) {
-                return response()->json([
-                    'totalCalories' => 0,
-                    'byCategory'    => [],
-                    'byDay'         => [],
-                    'cartItems'     => []
-                ]);
-            }
+            $formattedItems = $cartItems->map(function ($item) {
+                return [
+                    'cart_id' => $item->OrderItemID,
+                    'item_name' => $item->meal->name ?? 'Unknown Meal',
+                    'category' => $item->meal->category ?? 'Other',
+                    'calories' => $item->meal->calories ?? 0,
+                    'quantity' => $item->quantity,
+                    'consumed' => $item->consumed ? 1 : 0,
+                    'date' => $item->order->created_at->format('Y-m-d'),
+                ];
+            });
 
-
-            $categoryTotals = [];
-            $totalCalories = 0;
-
-            foreach ($cartItems as $item) {
-                $category = $item->category ?? 'Other';
-                $calories = ($item->calories ?? 0) * ($item->quantity ?? 0);
-
-                $totalCalories += $calories;
-
-                if (!isset($categoryTotals[$category])) {
-                    $categoryTotals[$category] = 0;
+            $categoryCounts = [];
+            $totalConsumed = 0;
+            foreach ($formattedItems as $item) {
+                if ($item['consumed']) {
+                    $cat = $item['category'];
+                    $categoryCounts[$cat] = ($categoryCounts[$cat] ?? 0) + 1;
+                    $totalConsumed++;
                 }
-
-                $categoryTotals[$category] += $calories;
-
-                $item->consumed = 0;
             }
 
+            $categoryPercentages = [];
+            foreach ($categoryCounts as $cat => $count) {
+                $categoryPercentages[$cat] = round(($count / max($totalConsumed, 1)) * 100, 1);
+            }
 
             $daysOfWeek = [];
             for ($i = 0; $i < 7; $i++) {
@@ -76,34 +62,52 @@ class ProgressController extends Controller
                 $daysOfWeek[$date] = 0;
             }
 
-            foreach ($cartItems as $item) {
-                $date = $item->date;
-                if (isset($daysOfWeek[$date])) {
-                    $daysOfWeek[$date] += ($item->calories ?? 0) * ($item->quantity ?? 0);
+            foreach ($formattedItems as $item) {
+                if ($item['consumed']) {
+                    $daysOfWeek[$item['date']] += $item['calories'] * $item['quantity'];
                 }
             }
 
             $formattedDays = [];
             foreach ($daysOfWeek as $date => $calories) {
                 $formattedDays[] = [
-                    'day'      => Carbon::parse($date)->format('D'),
+                    'day' => Carbon::parse($date)->format('D'),
                     'calories' => $calories
                 ];
             }
 
             return response()->json([
-                'totalCalories' => $totalCalories,
-                'byCategory'    => $categoryTotals,
-                'byDay'         => $formattedDays,
-                'cartItems'     => $cartItems
+                'cartItems' => $formattedItems,
+                'byCategory' => $categoryPercentages,
+                'byDay' => $formattedDays,
             ]);
 
         } catch (\Exception $e) {
             Log::error("ProgressController error: " . $e->getMessage());
             return response()->json([
-                'error'   => 'Server error',
+                'error' => 'Server error',
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function markConsumed(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|array',
+            'items.*' => 'integer'
+        ]);
+
+        OrderItem::whereIn('OrderItemID', $request->items)
+            ->update([
+                'consumed' => 1,
+                'consumed_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Meals marked as consumed successfully'
+        ]);
     }
 }
