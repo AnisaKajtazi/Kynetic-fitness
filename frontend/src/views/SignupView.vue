@@ -204,7 +204,7 @@ export default {
           email: this.form.email,
           password: this.form.password,
           password_confirmation: this.form.confirmPassword,
-          RoleID: 3,
+          RoleID: 2,
           phone: this.form.phone,
           address: this.form.address,
           dob: this.form.dob,

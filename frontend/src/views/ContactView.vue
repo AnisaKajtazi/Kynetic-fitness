@@ -3,77 +3,32 @@
     <div class="contact-overlay">
       <div class="contact-card-local">
         <h1 style="color: grey; font-family: Lucida Handwriting;">Contact Us</h1>
-        <p>Choose your role and fill the form below.</p>
+        <p>Fill the form below to send us a message.</p>
 
         <form @submit.prevent="handleSubmit">
-          <label for="role">I am a:</label>
           <div class="input-group">
-            <select id="role" v-model="role">
-              <option value="" disabled>Select role</option>
-              <option value="client">Client</option>
-              <option value="staff">Staff</option>
-            </select>
-            <span v-if="roleError" class="error-text">Please select a role!</span>
+            <input type="text" v-model="form.name" placeholder="Name" />
+            <span v-if="errors.name" class="error-text">{{ errors.name }}</span>
           </div>
 
-          <!-- CLIENT -->
-          <div v-if="role === 'client'" class="fields">
-            <div class="input-row">
-              <div class="input-group">
-                <input type="text" v-model="form.client.name" placeholder="Name" />
-                <span v-if="errors.name" class="error-text">{{ errors.name }}</span>
-              </div>
-              <div class="input-group">
-                <input type="text" v-model="form.client.surname" placeholder="Surname" />
-                <span v-if="errors.surname" class="error-text">{{ errors.surname }}</span>
-              </div>
-            </div>
-            <div class="input-row">
-              <div class="input-group">
-                <input type="email" v-model="form.client.email" placeholder="Email" />
-                <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
-              </div>
-              <div class="input-group">
-                <input type="tel" v-model="form.client.phone" placeholder="Phone Number" />
-                <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <textarea v-model="form.client.comment" placeholder="Write your comment"></textarea>
-              <span v-if="errors.comment" class="error-text">{{ errors.comment }}</span>
-            </div>
+          <div class="input-group">
+            <input type="text" v-model="form.surname" placeholder="Surname" />
+            <span v-if="errors.surname" class="error-text">{{ errors.surname }}</span>
           </div>
 
-          <!-- STAFF -->
-          <div v-if="role === 'staff'" class="fields">
-            <div class="input-row">
-              <div class="input-group">
-                <input type="text" v-model="form.staff.name" placeholder="Name" />
-                <span v-if="errors.name" class="error-text">{{ errors.name }}</span>
-              </div>
-              <div class="input-group">
-                <input type="text" v-model="form.staff.surname" placeholder="Surname" />
-                <span v-if="errors.surname" class="error-text">{{ errors.surname }}</span>
-              </div>
-              <div class="input-group">
-                <select v-model="form.staff.position">
-                  <option value="" disabled>Select position</option>
-                  <option value="Manager">Manager</option>
-                  <option value="Trainer">Trainer</option>
-                  <option value="Shankist">Shankist</option>
-                  <option value="Maintenance">Maintenance</option>
-                </select>
-                <span v-if="errors.position" class="error-text">{{ errors.position }}</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <input type="email" v-model="form.staff.email" placeholder="Email" />
-              <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
-            </div>
-            <div class="input-group">
-              <textarea v-model="form.staff.comment" placeholder="Write your comment"></textarea>
-              <span v-if="errors.comment" class="error-text">{{ errors.comment }}</span>
-            </div>
+          <div class="input-group">
+            <input type="email" v-model="form.email" placeholder="Email" />
+            <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
+          </div>
+
+          <div class="input-group">
+            <input type="text" v-model="form.phone" placeholder="Phone Number" />
+            <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
+          </div>
+
+          <div class="input-group">
+            <textarea v-model="form.comment" placeholder="Write your comment"></textarea>
+            <span v-if="errors.comment" class="error-text">{{ errors.comment }}</span>
           </div>
 
           <button type="submit" class="btn-local">Send Message</button>
@@ -84,15 +39,18 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import '@/assets/global.css';
+import { reactive, ref, onMounted } from 'vue';
+import api from '../services/axios';
 
-const role = ref('');
-const roleError = ref(false);
+const roleId = ref(null);
+const staffType = ref('');
 
 const form = reactive({
-  client: { name: '', surname: '', email: '', phone: '', comment: '' },
-  staff: { name: '', surname: '', position: '', email: '', comment: '' },
+  name: '',
+  surname: '',
+  email: '',
+  phone: '',
+  comment: ''
 });
 
 const errors = reactive({
@@ -100,90 +58,63 @@ const errors = reactive({
   surname: '',
   email: '',
   phone: '',
-  comment: '',
-  position: '',
+  comment: ''
 });
 
-const handleSubmit = () => {
-  // Reset errors
-  Object.keys(errors).forEach((key) => (errors[key] = ''));
-  roleError.value = false;
+onMounted(async () => {
+  try {
+    const { data } = await api.get('/auth/me');
+    roleId.value = data.role_id;
 
-  if (!role.value) {
-    roleError.value = true;
-    return;
+    if (roleId.value === 3) {
+      staffType.value = data.staff_type; // staff marrin pozicionin automatik
+    }
+  } catch(err) {
+    console.error('Error fetching user info:', err.response || err);
   }
+});
+
+const handleSubmit = async () => {
+  Object.keys(errors).forEach(k => errors[k]='');
 
   let valid = true;
+  if (!form.name) { errors.name='Please enter name'; valid=false; }
+  if (!form.surname) { errors.surname='Please enter surname'; valid=false; }
+  if (!form.email) { errors.email='Please enter email'; valid=false; }
+  if (!form.comment) { errors.comment='Please write a comment'; valid=false; }
 
-  if (role.value === 'client') {
-    if (!form.client.name) {
-      errors.name = 'Please enter your name.';
-      valid = false;
-    }
-    if (!form.client.surname) {
-      errors.surname = 'Please enter your surname.';
-      valid = false;
-    }
-    if (!form.client.email) {
-      errors.email = 'Please enter your email.';
-      valid = false;
-    }
-    if (!form.client.comment) {
-      errors.comment = 'Please write a comment.';
-      valid = false;
-    }
-  }
+  if (!valid) return;
 
-  if (role.value === 'staff') {
-    if (!form.staff.name) {
-      errors.name = 'Please enter your name.';
-      valid = false;
-    }
-    if (!form.staff.surname) {
-      errors.surname = 'Please enter your surname.';
-      valid = false;
-    }
-    if (!form.staff.position) {
-      errors.position = 'Please select your position.';
-      valid = false;
-    }
-    if (!form.staff.email) {
-      errors.email = 'Please enter your email.';
-      valid = false;
-    }
-    if (!form.staff.comment) {
-      errors.comment = 'Please write a comment.';
-      valid = false;
-    }
-  }
+  try {
+    await api.post('/contact-us', {
+      ...form,
+      role: roleId.value === 3 ? 'staff' : 'client',
+      position: roleId.value === 3 ? staffType.value : null
+    });
 
-  if (valid) {
-    alert('Form submitted successfully ✅');
-    console.log('Data sent:', form[role.value]);
+    alert('Message sent successfully ✅');
 
-    // Reset all fields
-    form.client = { name: '', surname: '', email: '', phone: '', comment: '' };
-    form.staff = { name: '', surname: '', position: '', email: '', comment: '' };
+    Object.keys(form).forEach(k => form[k]='');
 
-    // Reset role to go back to the start
-    role.value = '';
+  } catch(err) {
+    console.error('Error submitting contact:', err.response || err);
+    alert('Failed to send message!');
   }
 };
 </script>
 
 <style scoped>
 .contact-us-page {
-  position: fixed !important;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: url('@/img/contactus.jpg') center/cover no-repeat !important;
+  width: 100vw;
+  height: 100vh;
+  background: url('@/img/contactus.jpg') center/cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden !important;
+  overflow: hidden;
   z-index: 1000;
 }
 
@@ -202,36 +133,21 @@ const handleSubmit = () => {
   padding: 2rem 3rem;
   border-radius: 1.5rem;
   width: 90%;
-  max-width: 700px;
+  max-width: 600px;
   text-align: center;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   display: flex;
   flex-direction: column;
-}
-
-.input-row {
-  display: flex;
-  gap: 1rem;
 }
 
 .input-group {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-}
-
-.error-text {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
-  text-align: left;
+  margin-bottom: 1rem;
   width: 100%;
 }
 
-select,
-input,
-textarea {
+input, textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 999px;
@@ -241,16 +157,21 @@ textarea {
 }
 
 textarea {
-  min-height: 80px;
+  min-height: 100px;
   border-radius: 1rem;
   resize: none;
 }
 
-select:focus,
-input:focus,
-textarea:focus {
+input:focus, textarea:focus {
   border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+  box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+}
+
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  text-align: left;
 }
 
 .btn-local {

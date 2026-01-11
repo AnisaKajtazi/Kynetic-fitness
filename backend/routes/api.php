@@ -11,6 +11,7 @@ use App\Http\Controllers\MyCartController;
 use App\Http\Controllers\StaffScheduleController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ContactUsController;
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -43,9 +44,10 @@ Route::prefix('users')->controller(UserController::class)->middleware('jwt.auth'
 
 
 Route::prefix('exercises')->controller(ExerciseController::class)->group(function () {
-    Route::get('/', 'index');
+    Route::get('/all', 'publicExercises');
+    Route::get('/', 'index');                
     Route::get('/{id}', 'show');
-
+    
     Route::middleware('jwt.auth')->group(function () {
         Route::post('/', 'store'); 
         Route::put('/{id}', 'update');
@@ -101,3 +103,7 @@ Route::middleware('jwt.auth')->group(function () {
 
 Route::get('/checkout/success', [CheckoutController::class, 'success']);
 Route::get('/checkout/cancel', [CheckoutController::class, 'cancel']);
+
+Route::prefix('contact-us')->middleware('jwt.auth')->controller(ContactUsController::class)->group(function () {
+    Route::post('/', 'submit');
+});

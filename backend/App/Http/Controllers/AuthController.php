@@ -67,7 +67,7 @@ class AuthController extends Controller
                 'surname'        => $data['surname'],
                 'email'          => $data['email'],
                 'password'       => Hash::make($data['password']),
-                'RoleID'         => 3,
+                'RoleID'         => 2,
                 'phone'          => $data['phone'] ?? null,
                 'address'        => $data['address'] ?? null,
                 'dob'            => $data['dob'] ?? null,
@@ -118,18 +118,27 @@ class AuthController extends Controller
     }
 
 
-    public function me()
-    {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            return response()->json($user);
-        } catch (JWTException $e) {
-            return response()->json([
-                'message' => 'Token not valid',
-                'error'   => $e->getMessage()
-            ], 401);
-        }
+    public function me(Request $request)
+{
+    try {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return response()->json([
+            'id' => $user->id,
+            'role_id' => $user->RoleID,
+            'staff_type' => $user->staff_type,
+            'name' => $user->name,
+            'surname' => $user->surname,
+            'email' => $user->email,
+        ]);
+
+    } catch (JWTException $e) {
+        return response()->json([
+            'message' => 'Token not valid',
+            'error'   => $e->getMessage()
+        ], 401);
     }
+}
 
 
     public function forgotPassword(Request $request)

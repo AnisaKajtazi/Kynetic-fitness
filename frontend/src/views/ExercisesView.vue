@@ -48,7 +48,6 @@
           View Details
         </button>
 
-
         <button
           v-if="isLoggedIn"
           class="btn btn--red"
@@ -117,23 +116,22 @@ export default {
   },
   methods: {
     async fetchExercises() {
-  try {
-    const res = await api.get("/exercises");
-    this.exercises = res.data.data.map((ex) => ({
-      ...ex,
-      category: ex.category || "Uncategorized",
-      level: ex.level || "Beginner",
-      is_favorite: false, // default
-    }));
+      try {
+        const res = await api.get("/exercises/all");
+        this.exercises = res.data.map((ex) => ({
+          ...ex,
+          category: ex.category || "Uncategorized",
+          level: ex.level || "Beginner",
+          is_favorite: false,
+        }));
 
-    if (this.isLoggedIn) {
-      await this.fetchFavorites();
-    }
-  } catch (err) {
-    console.error("Error fetching exercises:", err.response || err);
-  }
-},
-
+        if (this.isLoggedIn) {
+          await this.fetchFavorites();
+        }
+      } catch (err) {
+        console.error("Error fetching exercises:", err.response || err);
+      }
+    },
 
     async fetchFavorites() {
       try {
@@ -155,18 +153,9 @@ export default {
         if (exercise.is_favorite) {
           await api.delete(`/favorites/${exercise.ExerciseID}`);
           exercise.is_favorite = false;
-          this.$emit('remove-favorite', exercise);
         } else {
-          const res = await api.post("/favorites", { exercise_id: exercise.ExerciseID });
+          await api.post("/favorites", { exercise_id: exercise.ExerciseID });
           exercise.is_favorite = true;
-          this.$emit('add-favorite', {
-            ExerciseID: exercise.ExerciseID,
-            name: exercise.name,
-            description: exercise.description,
-            image: exercise.image,
-            category: exercise.category,
-            level: exercise.level,
-          });
         }
       } catch (err) {
         console.error("Error toggling favorite:", err.response || err);
@@ -190,12 +179,10 @@ export default {
   mounted() {
     this.fetchExercises();
 
-  
     watch(loggedIn, async (newVal) => {
       if (newVal) {
         await this.fetchFavorites();
       } else {
-        
         this.exercises = this.exercises.map((ex) => ({
           ...ex,
           is_favorite: false,

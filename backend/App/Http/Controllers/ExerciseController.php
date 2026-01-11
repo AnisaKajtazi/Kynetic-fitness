@@ -22,7 +22,23 @@ class ExerciseController extends Controller
 
         return response()->json($exercises);
     }
+    
+    public function publicExercises()
+    {
+        $exercises = Exercise::select(
+            'ExerciseID',
+            'name',
+            'description',
+            'duration',
+            'image',
+            'category',
+            'level'
+        )->get();
 
+        return response()->json($exercises);
+    }
+
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -35,7 +51,6 @@ class ExerciseController extends Controller
         ]);
 
         $imageName = null;
-
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads'), $imageName);
@@ -92,7 +107,6 @@ class ExerciseController extends Controller
     {
         return response()->json(Exercise::findOrFail($id));
     }
-
 
     public function destroy($id)
     {
