@@ -18,7 +18,7 @@ import Sidebar from '@/components/Sidebar.vue';
 
 import DashboardHome from './DashboardHome.vue';
 import DashboardExercises from './DashboardExercises.vue';
-import DashboardMeals from './DashboardMeals.vue';
+import ExercisesOfTheWeek from './ExercisesOfTheWeek.vue';
 import ProgressView from './ProgressView.vue';
 import MyCart from './MyCart.vue';
 import OrderSuccess from './OrderSuccess.vue';
@@ -26,8 +26,8 @@ import OrderSuccess from './OrderSuccess.vue';
 const sections = {
   home: DashboardHome,
   exercises: DashboardExercises,
+  exercisesoftheweek: ExercisesOfTheWeek,
   progress: ProgressView,
-  meals: DashboardMeals,
   mycart: MyCart,
   ordersuccess: OrderSuccess,
 };

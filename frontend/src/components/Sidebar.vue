@@ -26,7 +26,7 @@
       <template v-else-if="roleID === 2">
         <li @click="$emit('changeSection', 'home')">Dashboard</li>
         <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
-        <li @click="$emit('changeSection', 'meals')">My Personalised Menu</li>
+        <li @click="$emit('changeSection', 'exercisesoftheweek')">Exercises Of The Week</li>
         <li @click="$emit('changeSection', 'progress')">My Progress</li>
         <li @click="$emit('changeSection', 'mycart')">My Cart</li>
         <li class="logout-btn" @click="logout">Logout</li>

@@ -12,6 +12,8 @@ use App\Http\Controllers\StaffScheduleController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\ExerciseProgressController;
+use App\Http\Controllers\ExercisesOfTheWeekController;
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -106,4 +108,24 @@ Route::get('/checkout/cancel', [CheckoutController::class, 'cancel']);
 
 Route::prefix('contact-us')->middleware('jwt.auth')->controller(ContactUsController::class)->group(function () {
     Route::post('/', 'submit');
+});
+
+Route::prefix('exercise-progress')
+    ->middleware('jwt.auth')
+    ->controller(ExerciseProgressController::class)
+    ->group(function () {
+
+        Route::get('/stats', 'getStats');
+        Route::post('/store', 'store');
+        Route::get('/history', 'history');
+        Route::delete('/{id}', 'delete');
+
+    });
+    Route::prefix('exercise-week')->middleware('jwt.auth')->group(function () {
+    Route::get('/', [ExercisesOfTheWeekController::class, 'getWeek']);
+    Route::post('/add', [ExercisesOfTheWeekController::class, 'addExercise']);
+    Route::post('/toggle/{id}', [ExercisesOfTheWeekController::class, 'toggleComplete']);
+    Route::post('/complete-all', [ExercisesOfTheWeekController::class, 'completeAll']);
+    Route::delete('/{id}', [ExercisesOfTheWeekController::class, 'delete']);
+    Route::post('/update-reps/{id}', [ExercisesOfTheWeekController::class, 'updateReps']);
 });

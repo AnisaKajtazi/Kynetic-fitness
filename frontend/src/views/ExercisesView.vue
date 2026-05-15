@@ -56,6 +56,13 @@
           <span v-if="exercise.is_favorite">💖</span>
           <span v-else>🤍</span> Favorite
         </button>
+        <button
+          v-if="isLoggedIn"
+          class="btn btn--green"
+          @click="addToDay(exercise)"
+        >
+          + Day
+        </button>
       </div>
     </section>
 
@@ -77,12 +84,13 @@
 </template>
 
 <script>
-import { watch, computed } from "vue";
+import { watch } from "vue";
 import { loggedIn } from "../stores/auth";
 import api from "../services/axios";
 
 export default {
   name: "Exercises",
+
   data() {
     return {
       searchQuery: "",
@@ -92,32 +100,40 @@ export default {
       exercises: [],
     };
   },
+
   computed: {
     isLoggedIn() {
       return loggedIn.value;
     },
+
     uniqueCategories() {
       return [...new Set(this.exercises.map((e) => e.category))].filter(Boolean);
     },
+
     filteredExercises() {
       return this.exercises.filter((ex) => {
         const matchesCategory = this.selectedCategory
           ? ex.category === this.selectedCategory
           : true;
+
         const matchesLevel = this.selectedLevel
           ? ex.level === this.selectedLevel
           : true;
+
         const matchesSearch = this.searchQuery
           ? ex.name.toLowerCase().includes(this.searchQuery.toLowerCase())
           : true;
+
         return matchesCategory && matchesLevel && matchesSearch;
       });
     },
   },
+
   methods: {
     async fetchExercises() {
       try {
         const res = await api.get("/exercises/all");
+
         this.exercises = res.data.map((ex) => ({
           ...ex,
           category: ex.category || "Uncategorized",
@@ -136,7 +152,11 @@ export default {
     async fetchFavorites() {
       try {
         const res = await api.get("/favorites");
-        const favIds = res.data.map((f) => f.ExerciseID || f.exercise_id);
+
+        const favIds = res.data.map(
+          (f) => f.ExerciseID || f.exercise_id
+        );
+
         this.exercises = this.exercises.map((ex) => ({
           ...ex,
           is_favorite: favIds.includes(ex.ExerciseID),
@@ -154,13 +174,38 @@ export default {
           await api.delete(`/favorites/${exercise.ExerciseID}`);
           exercise.is_favorite = false;
         } else {
-          await api.post("/favorites", { exercise_id: exercise.ExerciseID });
+          await api.post("/favorites", {
+            exercise_id: exercise.ExerciseID,
+          });
           exercise.is_favorite = true;
         }
       } catch (err) {
         console.error("Error toggling favorite:", err.response || err);
       }
     },
+
+    async addToDay(exercise) {
+      try {
+        const today = new Date().toLocaleDateString("en-US", {
+          weekday: "long",
+        });
+
+      const res = await api.post("/exercise-week/add", {
+        exercise_id: exercise.ExerciseID,
+        day_of_week: today,
+        reps: 3,
+      });
+
+      if (res.data.already_exists) {
+        alert("Already added ⚠️ (reps updated)");
+      } else {
+        alert("Added to today's plan ✅");
+      }
+
+      } catch (err) {
+        console.error("Error adding to day:", err.response || err);
+      }
+},
 
     getImageUrl(image) {
       return image
@@ -176,6 +221,7 @@ export default {
       this.selectedExercise = null;
     },
   },
+
   mounted() {
     this.fetchExercises();
 
