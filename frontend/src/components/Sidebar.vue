@@ -7,28 +7,29 @@
       <template v-if="roleID === 3">
         <li @click="router.push('/staff-dashboard')">Dashboard</li>
         <li @click="router.push('/my-schedule')">My Schedule</li>
-        <li v-if="isTrainer" @click="router.push('/trainer-appointments')">
-          Trainer Appointments
+        <li @click="router.push('/trainer-appointments')">
+          My Clients
         </li>
         <li class="logout-btn" @click="logout">Logout</li>
       </template>
 
       <template v-else-if="roleID === 1">
-        <li @click="$emit('changeSection', 'admin-dashboard')">Dashboard</li>
-        <li @click="$emit('changeSection', 'users')">Users</li>
-        <li @click="$emit('changeSection', 'roles')">Roles</li>
-        <li @click="$emit('changeSection', 'exercises')">Exercises</li>
-        <li @click="$emit('changeSection', 'meals')">Meals</li>
-        <li @click="$emit('changeSection', 'schedule')">Schedule</li>
+        <li @click="navigate('users','/admin-dashboard')">Dashboard</li>
+        <li @click="navigate('users','/admin-dashboard')">Users</li>
+        <li @click="navigate('roles','/admin-dashboard')">Roles</li>
+        <li @click="navigate('exercises','/admin-dashboard')">Exercises</li>
+        <li @click="navigate('meals','/admin-dashboard')">Meals</li>
+        <li @click="navigate('schedule','/admin-dashboard')">Schedule</li>
         <li class="logout-btn" @click="logout">Logout</li>
       </template>
 
       <template v-else-if="roleID === 2">
-        <li @click="$emit('changeSection', 'home')">Dashboard</li>
-        <li @click="$emit('changeSection', 'exercises')">Workout Highlights</li>
-        <li @click="$emit('changeSection', 'exercisesoftheweek')">Exercises Of The Week</li>
-        <li @click="$emit('changeSection', 'progress')">My Progress</li>
-        <li @click="$emit('changeSection', 'mycart')">My Cart</li>
+        <li @click="navigate('home','/dashboard')">Dashboard</li>
+        <li @click="navigate('exercises','/dashboard')">Workout Highlights</li>
+        <li @click="navigate('exercisesoftheweek','/dashboard')">Exercises Of The Week</li>
+        <li @click="navigate('progress','/dashboard')">My Progress</li>
+        <li @click="navigate('mycart','/dashboard')">My Cart</li>
+        <li @click="navigate(null,'/trainers')">Trainers</li>
         <li class="logout-btn" @click="logout">Logout</li>
       </template>
     </ul>
@@ -37,10 +38,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { setLoggedIn } from '@/stores/auth'
 
+const emit = defineEmits(['changeSection'])
 const router = useRouter()
+const route = useRoute()
 const roleID = ref(null)
 const isTrainer = ref(false)
 
@@ -49,6 +52,15 @@ onMounted(() => {
   const user = JSON.parse(localStorage.getItem('user'))
   isTrainer.value = user?.roleName === 'Trainer'
 })
+
+const navigate = (section, path) => {
+  // emit for parent dashboards that listen
+  try { emit('changeSection', section) } catch (e) {}
+  // always try to push route so standalone pages work
+  if (path) {
+    router.push({ path, query: { activeSection: section } })
+  }
+}
 
 const logout = () => {
   localStorage.clear()

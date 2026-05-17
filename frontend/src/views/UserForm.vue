@@ -26,8 +26,11 @@
         <div class="form-row" v-for="row in visibleFieldRows" :key="row[0].model">
           <div class="form-group" v-for="field in row" :key="field.model">
             <label :for="field.model">{{ field.label }}</label>
+            <template v-if="field.type === 'textarea'">
+              <textarea class="form-control" :id="field.model" v-model="formData[field.model]" :placeholder="field.label" rows="4"></textarea>
+            </template>
             <input
-              v-if="field.type !== 'select'"
+              v-else-if="field.type !== 'select'"
               :type="field.type"
               class="form-control"
               :id="field.model"
@@ -103,6 +106,7 @@ export default {
         phone: "",
         address: "",
         training_days: 0,
+        description: "",
         photo: null
       },
       photoFile: null,
@@ -136,7 +140,8 @@ export default {
             { label: "Lower Body", value: "lower body" },
             { label: "Cardio", value: "cardio" }
         ], role: 2 },
-        { label: "Training Days", model: "training_days", type: "number", role: 2 }
+        { label: "Training Days", model: "training_days", type: "number", role: 2 },
+        { label: "Description", model: "description", type: "textarea", role: 3 }
       ]
     };
   },
@@ -167,6 +172,7 @@ export default {
         phone: this.user.phone || "",
         address: this.user.address || "",
         training_days: this.user.training_days || 0,
+        description: this.user.description || '',
         photo: this.user.photo || null
       };
       this.formData.password = "";

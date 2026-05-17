@@ -1,0 +1,392 @@
+<template>
+  <div class="trainer-selection-layout">
+    <Sidebar />
+
+    <main class="page-container">
+      <div class="page-header">
+        <h1>Trainers</h1>
+        <p>Choose one trainer to support your workouts. You can update your selection later, but only one trainer can be active at a time.</p>
+      </div>
+
+      <div v-if="loading" class="state-message">Loading trainers...</div>
+
+      <div v-else>
+        <section class="selected-trainer" v-if="selectedTrainer">
+          <div class="section-head">
+            <h2>Your selected trainer</h2>
+            <button class="secondary-btn" @click="clearSelection">Clear selection</button>
+          </div>
+
+          <article class="trainer-card featured">
+            <img :src="photoUrl(selectedTrainer)" :alt="selectedTrainer.name" class="trainer-photo" />
+            <div class="trainer-copy">
+              <h3>{{ selectedTrainer.name }} {{ selectedTrainer.surname }}</h3>
+              <h4>{{ trainerSpecialty(selectedTrainer) }}</h4>
+              <p v-if="selectedTrainer.description">{{ selectedTrainer.description }}</p>
+              <p v-else>{{ trainerBio(selectedTrainer) }}</p>
+              <div class="featured-actions">
+                <button class="primary-btn" disabled>Selected</button>
+                <button class="chat-btn" @click.prevent="openChat(selectedTrainer.UserID)">Chat <span v-if="unreadMap[selectedTrainer.UserID]" class="badge">{{ unreadMap[selectedTrainer.UserID] }}</span></button>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="trainer-list">
+          <h2>Available trainers</h2>
+          <div class="trainers-grid">
+            <article
+              v-for="trainer in trainers"
+              :key="trainer.UserID"
+              :class="['trainer-card', selectedTrainer && selectedTrainer.UserID === trainer.UserID ? 'active' : '']"
+            >
+              <img :src="photoUrl(trainer)" :alt="trainer.name" class="trainer-photo" />
+              <h3>{{ trainer.name }} {{ trainer.surname }}</h3>
+              <h4>{{ trainerSpecialty(trainer) }}</h4>
+              <p v-if="trainer.description">{{ trainer.description }}</p>
+              <p v-else>{{ trainerBio(trainer) }}</p>
+              <button
+                class="select-btn"
+                :disabled="selectedTrainer && selectedTrainer.UserID === trainer.UserID"
+                @click="chooseTrainer(trainer)"
+              >
+                {{ selectedTrainer && selectedTrainer.UserID === trainer.UserID ? 'Selected' : 'Choose Trainer' }}
+              </button>
+              <button class="chat-btn" @click.prevent="openChat(trainer.UserID)">Chat <span v-if="unreadMap[trainer.UserID]" class="badge">{{ unreadMap[trainer.UserID] }}</span></button>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import Sidebar from '@/components/Sidebar.vue'
+import api from '@/services/axios'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const trainers = ref([])
+const selectedTrainer = ref(null)
+const loading = ref(true)
+const user = ref(null)
+
+const loadTrainers = async () => {
+  loading.value = true
+
+  const storedUser = localStorage.getItem('user')
+  if (!storedUser) {
+    router.push('/login')
+    return
+  }
+
+  user.value = JSON.parse(storedUser)
+
+  try {
+    const res = await api.get('users', {
+      params: {
+        role: 'trainer',
+        per_page: 100,
+      },
+    })
+
+    trainers.value = Array.isArray(res.data.data) ? res.data.data : []
+    selectedTrainer.value = trainers.value.find(
+      (trainer) => trainer.UserID === user.value.preferred_trainer_id
+    ) || null
+    await loadConversations()
+  } catch (error) {
+    console.error('Error loading trainers:', error)
+    trainers.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+const unreadMap = ref({})
+
+const loadConversations = async () => {
+  try {
+    const res = await api.get('chat/conversations')
+    const conv = res.data || []
+    const map = {}
+    conv.forEach(c => { map[c.user.UserID] = c.unread_count || 0 })
+    unreadMap.value = map
+  } catch (e) {
+    console.error('Error loading conversations', e)
+  }
+}
+
+const openChat = (userId) => {
+  router.push({ path: '/chats', query: { peer: userId } })
+}
+
+const photoUrl = (trainer) => {
+  if (!trainer || !trainer.photo) {
+    return 'https://via.placeholder.com/500x360?text=Trainer'
+  }
+
+  if (trainer.photo.startsWith('http')) {
+    return trainer.photo
+  }
+
+  return `http://127.0.0.1:8000/uploads/profilephotos/${trainer.photo}`
+}
+
+const trainerSpecialty = (trainer) => {
+  if (trainer.staff_type) {
+    return trainer.staff_type.replace('_', ' ').replace(/\b\w/g, (ch) => ch.toUpperCase())
+  }
+
+  if (trainer.focus_area) {
+    return trainer.focus_area
+  }
+
+  return 'Personal Trainer'
+}
+
+const trainerBio = (trainer) => {
+  if (trainer.fitness_goal) {
+    return `Specializes in ${trainer.fitness_goal} programs and helps clients stay consistent.`
+  }
+
+  return 'Experienced coach helping clients reach their best with personalized training and motivation.'
+}
+
+const chooseTrainer = async (trainer) => {
+  if (selectedTrainer.value && selectedTrainer.value.UserID === trainer.UserID) {
+    return
+  }
+
+  try {
+    const res = await api.put(`users/${user.value.UserID}`, {
+      preferred_trainer_id: trainer.UserID,
+    })
+
+    user.value = res.data
+    localStorage.setItem('user', JSON.stringify(user.value))
+    selectedTrainer.value = trainer
+    alert('Trainer selected successfully.')
+  } catch (error) {
+    console.error('Error choosing trainer:', error)
+    alert('Could not select this trainer. Please try again.')
+  }
+}
+
+const clearSelection = async () => {
+  if (!user.value || !user.value.preferred_trainer_id) return
+
+  try {
+    const res = await api.put(`users/${user.value.UserID}`, {
+      preferred_trainer_id: null,
+    })
+
+    user.value = res.data
+    localStorage.setItem('user', JSON.stringify(user.value))
+    selectedTrainer.value = null
+    alert('Trainer selection cleared.')
+  } catch (error) {
+    console.error('Error clearing selection:', error)
+    alert('Could not clear selection. Please try again.')
+  }
+}
+
+onMounted(loadTrainers)
+</script>
+
+<style scoped>
+.trainer-selection-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-dark);
+}
+
+.page-container {
+  margin-left: 240px;
+  padding: 2rem;
+  width: calc(100% - 240px);
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  color: #f9fafb;
+}
+
+.page-header p {
+  color: #d1d5db;
+  max-width: 760px;
+}
+
+.state-message {
+  color: #d1d5db;
+}
+
+.selected-trainer,
+.trainer-list {
+  margin-bottom: 2rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-head h2 {
+  font-size: 1.5rem;
+  color: #f9fafb;
+}
+
+.trainers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.trainer-card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trainer-card.active {
+  border-color: #2563eb;
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.18);
+}
+
+.trainer-card.featured {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.trainer-photo {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+}
+
+.chat-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #d1d5db;
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.chat-btn .badge {
+  background: #ef4444;
+  color: #fff;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.trainer-card.featured .trainer-photo {
+  width: 360px;
+  height: 320px;
+  flex-shrink: 0;
+}
+
+.trainer-copy {
+  flex: 1;
+}
+
+.trainer-card h3 {
+  margin-bottom: 0.5rem;
+  color: #f9fafb;
+}
+
+.trainer-card h4 {
+  margin-bottom: 1rem;
+  color: #93c5fd;
+}
+
+.trainer-card p {
+  color: #d1d5db;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+.primary-btn,
+.secondary-btn,
+.select-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.primary-btn {
+  background: #2563eb;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+
+.select-btn {
+  background: #10b981;
+  color: #fff;
+}
+
+.primary-btn:disabled,
+.select-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.primary-btn:hover:not(:disabled),
+.secondary-btn:hover,
+.select-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .trainer-selection-layout {
+    flex-direction: column;
+  }
+
+  .page-container {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .trainer-card.featured {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trainer-card.featured .trainer-photo {
+    width: 100%;
+    height: 260px;
+  }
+}
+</style>

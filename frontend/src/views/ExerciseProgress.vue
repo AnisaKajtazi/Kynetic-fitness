@@ -312,7 +312,10 @@ export default {
   flex: 1 1 300px;
   max-width: 420px;
 }
-
+.chart-box canvas {
+  width: 100% !important;
+  min-height: 420px;
+}
 .chart-box h3 {
   text-align: center;
   margin-bottom: 1rem;

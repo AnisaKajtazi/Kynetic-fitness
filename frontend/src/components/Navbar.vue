@@ -3,6 +3,7 @@
     <div class="navbar__inner">
       <div class="logo">🏋️‍♀️ <span class="brand">Kynetic</span></div>
 
+      
       <button class="menu-btn" @click="toggleMenu" aria-label="Toggle menu">
         <span v-if="!menuOpen">☰</span>
         <span v-else>✕</span>
@@ -20,15 +21,23 @@
         <li v-if="isStaff"><RouterLink to="/staff-dashboard">Staff Zone</RouterLink></li>
 
         <li v-if="isGuest"><RouterLink to="/login">Login</RouterLink></li>
+        <li v-else>
+          <RouterLink to="/chats" class="chat-link">
+            <img :src="chatIcon" alt="Chats" class="chat-icon" />
+            <span v-if="totalUnread" class="chat-badge">{{ totalUnread }}</span>
+          </RouterLink>
+        </li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { isUser, isStaff, isGuest } from '@/stores/auth'
+import api from '@/services/axios'
+import chatIcon from '@/icons/conversation.png'
 
 const menuOpen = ref(false)
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
@@ -37,6 +46,24 @@ const scrollToSection = (id) => {
   const section = document.getElementById(id)
   if (section) section.scrollIntoView({ behavior: 'smooth' })
 }
+
+const totalUnread = ref(0)
+
+const loadUnread = async () => {
+  try {
+    const res = await api.get('chat/conversations')
+    const conv = res.data || []
+    const total = conv.reduce((acc, c) => acc + (c.unread_count || 0), 0)
+    totalUnread.value = total
+  } catch (e) {
+    console.error('Error loading unread', e)
+  }
+}
+
+onMounted(() => {
+  loadUnread()
+  setInterval(loadUnread, 5000)
+})
 </script>
 
 
@@ -138,4 +165,8 @@ const scrollToSection = (id) => {
     display: flex;
   }
 }
+
+.chat-link { position: relative; color: var(--text); font-size: 1.1rem; }
+.chat-badge { position: absolute; top: -6px; right: -10px; background: #ef4444; color: #fff; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; }
+.chat-icon { width: 20px; height: 20px; display: inline-block; }
 </style>

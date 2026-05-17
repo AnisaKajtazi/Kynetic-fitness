@@ -11,10 +11,26 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $search  = $request->query('search');
-        $perPage = $request->query('per_page', 10);
+        $search             = $request->query('search');
+        $role               = $request->query('role');
+        $preferredTrainerId = $request->query('preferred_trainer_id');
+        $perPage            = $request->query('per_page', 10);
 
-        $users = User::when($search, function ($query) use ($search) {
+        $users = User::when($role, function ($query) use ($role) {
+                if ($role === 'trainer') {
+                    return $query->where('RoleID', 3);
+                }
+
+                if (is_numeric($role)) {
+                    return $query->where('RoleID', $role);
+                }
+
+                return $query;
+            })
+            ->when($preferredTrainerId, function ($query) use ($preferredTrainerId) {
+                return $query->where('preferred_trainer_id', $preferredTrainerId);
+            })
+            ->when($search, function ($query) use ($search) {
                 $query->where('name', 'LIKE', "%$search%")
                       ->orWhere('surname', 'LIKE', "%$search%")
                       ->orWhere('username', 'LIKE', "%$search%");
@@ -61,6 +77,7 @@ class UserController extends Controller
             'RoleID'         => 'nullable|integer',
             'staff_type'     => 'nullable|in:trainer,maintenance,service_staff',
             'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
+            'description'    => 'nullable|string|max:1000',
         ]);
 
         $data['RoleID'] = $data['RoleID'] ?? 2;
@@ -103,13 +120,22 @@ class UserController extends Controller
             'training_days'  => 'nullable|integer|min:0|max:7',
             'focus_area'     => 'nullable|in:upper body,lower body,cardio',
             'staff_type'     => 'nullable|in:trainer,maintenance,service_staff',
+            'preferred_trainer_id' => 'nullable|integer|exists:users,UserID',
             'photo'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:2048',
+            'description'    => 'nullable|string|max:1000',
         ]);
 
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
+        }
+
+        if (array_key_exists('preferred_trainer_id', $data) && $data['preferred_trainer_id']) {
+            $trainer = User::find($data['preferred_trainer_id']);
+            if (!$trainer || $trainer->RoleID !== 3) {
+                return response()->json(['message' => 'Preferred trainer must be a valid trainer.'], 422);
+            }
         }
 
         $roleId = $data['RoleID'] ?? $user->RoleID;

@@ -82,6 +82,13 @@ Route::middleware('jwt.auth')->group(function () {
     Route::delete('/my-cart/{meal_id}', [MyCartController::class, 'destroy']);
 });
 
+Route::prefix('chat')->middleware('jwt.auth')->controller(\App\Http\Controllers\ChatController::class)->group(function () {
+    Route::get('/conversations', 'conversations');
+    Route::get('/conversations/{userId}/messages', 'messages');
+    Route::post('/conversations/{userId}/messages', 'send');
+    Route::post('/conversations/{userId}/read', 'markRead');
+});
+
 Route::prefix('staff-schedule') ->middleware('jwt.auth')->controller(StaffScheduleController::class)->group(function () {
         Route::get('/my-schedule', 'mySchedule');
         Route::get('/', 'index');
