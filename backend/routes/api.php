@@ -35,6 +35,10 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+Route::get('/trainers', [UserController::class, 'trainers']);
+
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search']);
+
 Route::prefix('users')->controller(UserController::class)->middleware('jwt.auth')->group(function () {
     Route::get('/dynamic', 'dynamic');
     Route::get('/', 'index');    

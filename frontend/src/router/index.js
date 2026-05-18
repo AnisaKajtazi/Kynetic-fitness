@@ -18,6 +18,7 @@ const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/exercises', name: 'exercises', component: () => import('../views/ExercisesView.vue') },
   { path: '/meals', name: 'meals', component: () => import('../views/MealsView.vue') },
+  { path: '/trainers-browse', name: 'trainers-browse', component: () => import('../views/TrainersView.vue') },
   { path: '/contact', name: 'contact', component: () => import('../views/ContactView.vue') },
   { path: '/login', name: 'login', component: () => import('../views/LoginView.vue') },
   { path: '/forgot-password', name: 'forgot-password', component: () => import('../views/ForgotPassword.vue') },

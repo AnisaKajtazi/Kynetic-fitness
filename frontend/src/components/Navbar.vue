@@ -34,17 +34,33 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { isUser, isStaff, isGuest } from '@/stores/auth'
 import api from '@/services/axios'
 import chatIcon from '@/icons/conversation.png'
 
+const router = useRouter()
+const route = useRoute()
 const menuOpen = ref(false)
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
-const scrollToSection = (id) => {
-  const section = document.getElementById(id)
-  if (section) section.scrollIntoView({ behavior: 'smooth' })
+const scrollToSection = async (id) => {
+  // Close menu if open
+  menuOpen.value = false
+
+  // If not on home page, navigate to home first
+  if (route.path !== '/') {
+    await router.push('/')
+    // Wait for page to render before scrolling
+    setTimeout(() => {
+      const section = document.getElementById(id)
+      if (section) section.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
+  } else {
+    // Already on home page, just scroll
+    const section = document.getElementById(id)
+    if (section) section.scrollIntoView({ behavior: 'smooth' })
+  }
 }
 
 const totalUnread = ref(0)

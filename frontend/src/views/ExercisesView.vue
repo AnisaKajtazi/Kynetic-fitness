@@ -85,6 +85,7 @@
 
 <script>
 import { watch } from "vue";
+import { useRoute } from "vue-router";
 import { loggedIn } from "../stores/auth";
 import api from "../services/axios";
 
@@ -143,6 +144,18 @@ export default {
 
         if (this.isLoggedIn) {
           await this.fetchFavorites();
+        }
+
+        // If id in query string, show that exercise
+        const route = useRoute();
+        const exerciseId = route.query.id;
+        if (exerciseId) {
+          const exercise = this.exercises.find(
+            (e) => e.ExerciseID === parseInt(exerciseId)
+          );
+          if (exercise) {
+            this.selectedExercise = exercise;
+          }
         }
       } catch (err) {
         console.error("Error fetching exercises:", err.response || err);

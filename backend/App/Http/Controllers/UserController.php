@@ -46,6 +46,15 @@ class UserController extends Controller
         return response()->json(User::findOrFail($UserID));
     }
 
+    public function trainers()
+    {
+        $trainers = User::where('RoleID', 3)
+            ->orderBy('name')
+            ->get([ 'UserID', 'name', 'surname', 'photo', 'description', 'focus_area', 'staff_type' ]);
+
+        return response()->json($trainers);
+    }
+
     public function dynamic()
     {
         $columns = array_filter(

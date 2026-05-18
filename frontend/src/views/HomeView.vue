@@ -7,18 +7,24 @@
           Track exercises, plan meals, and visualize your progress — all in one place.
         </p>
 
-        <form class="search" role="search" @submit.prevent>
-          <input
-            type="text"
-            placeholder="Search exercises, meals, or trainers..."
-            aria-label="Search"
-          />
-          <button class="btn btn--blue" type="submit">Search</button>
+        <form class="search" role="search" @submit.prevent="handleSearch">
+          <div class="search-field">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search exercises, meals, or trainers..."
+              aria-label="Search"
+              @keydown.enter="handleSearch"
+            />
+            <button type="submit" class="search-btn" aria-label="Search">
+              <img :src="searchIcon" alt="Search" class="search-icon-img" />
+            </button>
+          </div>
         </form>
 
         <div class="hero__cta">
-          <router-link class="btn btn--primary" to="/exercises">Explore Exercises</router-link>
-          <router-link class="btn btn--blue" to="/login">Get Started</router-link>
+          <router-link class="btn btn--primary btn--lg" to="/exercises">Explore Exercises</router-link>
+          <router-link class="btn btn--blue btn--lg" to="/login">Get Started</router-link>
         </div>
       </div>
     </header>
@@ -44,7 +50,8 @@
           </div>
           <div class="sidebar slider-box">
             <h3>Push Your Limits!</h3>
-            <p>Track your progress daily and discover exercises that challenge and grow your strength.</p>
+            <p>Discover dynamic training sessions designed to build strength, mobility, and confidence. Every workout is crafted to help you lift heavier, move smarter, and stay consistent while tracking real progress.</p>
+            <p>From focused strength circuits to recovery-friendly mobility flows, our routines adapt to your fitness level and keep you moving forward. Expect more energy, better posture, and a stronger body with every session.</p>
           </div>
         </div>
       </article>
@@ -66,7 +73,8 @@
           </div>
           <div class="sidebar slider-box">
             <h3>Fuel Your Body!</h3>
-            <p>Healthy meal plans to complement your workouts and optimize recovery.</p>
+            <p>Enjoy balanced meal plans that power your workouts, speed recovery, and keep energy high throughout the day. Smart nutrition, delicious recipes, and performance-focused fuel for every goal.</p>
+            <p>Personalized macros, easy-to-follow menus, and nutrient-dense meals make healthy eating feel effortless. Whether you're training hard or recovering strong, we help you eat better without sacrificing flavor.</p>
           </div>
         </div>
       </article>
@@ -87,16 +95,46 @@
     </section>
 
     
-    <section id="about-us" class="about full-width" aria-label="About us">
+    <section id="about-us" ref="aboutSection" class="about full-width" aria-label="About us">
       <div class="about-wrapper">
         <h2 class="section-title text-center">About Us</h2>
-        <p class="about-text">
-          At Kynetic, we believe that everyone deserves a healthy and active lifestyle. Our mission is to empower you with the tools, guidance, and community support to reach your fitness goals efficiently.
-           From personalized workout routines and meal plans to progress tracking and motivation, we bring everything you need under one roof. Join our growing community and experience a holistic approach to fitness, wellness, and personal growth.
-        </p>
-        <p class="about-text">
-          Whether you are a beginner or a seasoned athlete, Kynetic adapts to your journey and helps you challenge yourself in a safe and enjoyable way. Together, we make fitness a habit, not just a goal.
-        </p>
+        <div class="about-top">
+          <div class="about-copy">
+            <p class="about-text">
+              At Kynetic, we blend science-backed training, expert nutrition, and smart tracking into one seamless fitness experience. Our platform is built for busy people who want real results without guesswork.
+            </p>
+            <p class="about-text">
+              From guided workouts and meal plans to habit-building tools and progress insights, Kynetic helps you move with purpose every day. Your program adapts to your pace, goals, and lifestyle so you can stay motivated from week one.
+            </p>
+            <p class="about-text">
+              Every feature is designed to simplify your journey: intelligent workout scheduling, recovery reminders, clear progress charts, and motivational milestones that keep you engaged. We believe fitness should fit into your life, not interrupt it.
+            </p>
+            <p class="about-text">
+              This is the place where planning, performance, and recovery come together in a clean experience that evolves with you. Your routine becomes easier to follow, your energy stays consistent, and progress feels natural.
+            </p>
+            <p class="about-text">
+              Kynetic keeps every part of your routine connected, so you can focus on getting stronger without extra complexity.
+            </p>
+          </div>
+
+          <div class="about-highlights">
+            <article :class="['about-card', 'about-card--enter-left', { 'about-card--active': aboutVisible }]">
+              <span class="about-card-icon">⚡</span>
+              <h4>Fast results without burnout</h4>
+              <p>Programs that deliver strength, mobility and endurance gains through smart progression, not random workouts.</p>
+            </article>
+            <article :class="['about-card', 'about-card--enter-right', { 'about-card--active': aboutVisible }]">
+              <span class="about-card-icon">🥗</span>
+              <h4>Nutrition that feels effortless</h4>
+              <p>Simple meal suggestions, quick prep options, and energy-first fuel designed for active lifestyles.</p>
+            </article>
+            <article :class="['about-card', 'about-card--enter-left', { 'about-card--active': aboutVisible }]">
+              <span class="about-card-icon">📈</span>
+              <h4>Progress you can see</h4>
+              <p>Clear habit tracking, weekly performance summaries, and motivating milestones that keep you moving forward.</p>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -104,12 +142,15 @@
     <section class="trainers full-width" aria-label="Our trainers">
       <div class="trainers-wrapper">
         <h2 class="section-title text-center">Meet Our Trainers</h2>
-        <div class="trainers-grid">
-          <article v-for="(trainer, idx) in trainers" :key="idx" class="trainer-card">
-            <img :src="trainer.photo" :alt="trainer.name" class="trainer-photo"/>
-            <h3>{{ trainer.name }}</h3>
-            <h4>{{ trainer.specialty }}</h4>
-            <p>{{ trainer.bio }}</p>
+        <div class="trainers-list">
+          <article v-for="trainer in trainers" :key="trainer.UserID" class="trainer-card">
+            <img :src="getTrainerPhoto(trainer.photo)" :alt="trainer.fullName" class="trainer-photo" />
+            <h3>{{ trainer.fullName }}</h3>
+            <h4>{{ trainer.focus_area ? trainer.focus_area : 'Personal Trainer' }}</h4>
+
+            <p>
+              {{ trainer.description ? trainer.description : 'This trainer has not added a description yet.' }}
+            </p>
           </article>
         </div>
       </div>
@@ -117,20 +158,21 @@
 
     
 <section class="testimonials full-width" aria-label="Testimonials">
-  <div class="testimonials-wrapper">
-    <h2 class="section-title text-center">What Our Users Say</h2>
-    <div class="testimonials-grid">
-      <div class="testimonial-card" v-for="(testi, idx) in testimonials" :key="idx">
-        <div class="testimonial-photo-wrapper">
-          <img :src="testi.photo" :alt="testi.name" class="testimonial-photo" />
+      <div class="testimonials-wrapper">
+        <h2 class="section-title text-center">What Our Users Say</h2>
+        <p class="testimonial-subtitle text-center">Real progress stories from members who built strength, stamina, and confidence with our training and meal plans.</p>
+        <div class="testimonials-grid">
+          <div class="testimonial-card" v-for="(testi, idx) in testimonials" :key="idx">
+            <div class="testimonial-photo-wrapper">
+              <img :src="testi.photo" :alt="testi.name" class="testimonial-photo" />
+            </div>
+            <p class="testimonial-text">"{{ testi.feedback }}"</p>
+            <h4 class="testimonial-name">{{ testi.name }}</h4>
+            <span class="testimonial-role">{{ testi.role }}</span>
+          </div>
         </div>
-        <p>"{{ testi.feedback }}"</p>
-        <h4>- {{ testi.name }}</h4>
       </div>
-    </div>
-  </div>
-</section>
-
+    </section>
 
   
 <section class="cta full-width" aria-label="Call to action">
@@ -237,8 +279,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
+import api from '@/services/axios';
 import '@/assets/global.css';
+import searchIcon from '@/icons/search.png';
 
 import exercise1 from '@/img/exercise1.jpg';
 import exercise2 from '@/img/exercise2.jpg';
@@ -251,11 +296,6 @@ import meal4 from '@/img/kiwismoothie.jpg';
 import meal5 from '@/img/passionfruitsmoothie.jpg';
 import meal6 from '@/img/strawberrysmoothie.jpg';
 
-import trainer1 from '@/img/trainer2.jpg';
-import trainer2 from '@/img/trainer1.webp';
-import trainer3 from '@/img/trainer3.jpg';
-
-
 import user1 from '@/img/user1.jpg';
 import user2 from '@/img/user2.jpg';
 import user3 from '@/img/user3.jpg';
@@ -267,6 +307,59 @@ const mealImages = [meal1, meal2, meal3, meal4, meal5, meal6];
 
 const exerciseIndex = ref(0);
 const mealIndex = ref(0);
+const searchQuery = ref('');
+const router = useRouter();
+const aboutSection = ref(null);
+const aboutVisible = ref(false);
+const trainers = ref([]);
+
+const handleSearch = async () => {
+  if (!searchQuery.value.trim()) return;
+
+  try {
+    const response = await api.get('/search', {
+      params: { q: searchQuery.value }
+    });
+
+    const { type, item } = response.data;
+
+    if (type === 'exercise' && item) {
+      router.push(`/exercises?id=${item.ExerciseID || item.id}`).catch(() => {});
+    } else if (type === 'meal' && item) {
+      router.push(`/meals?id=${item.MealID || item.id}`).catch(() => {});
+    } else if (type === 'trainer' && item) {
+      router.push(`/trainers-browse?id=${item.UserID || item.id}`).catch(() => {});
+    } else {
+      alert('No results found. Try searching for exercises, meals, or trainers.');
+    }
+
+    searchQuery.value = '';
+  } catch (error) {
+    console.error('Search error:', error);
+    alert('Search failed. Please try again.');
+  }
+};
+
+const fetchTrainers = async () => {
+  try {
+    const response = await api.get('/trainers');
+    trainers.value = response.data.map((trainer) => ({
+      ...trainer,
+      fullName: `${trainer.name} ${trainer.surname}`.trim(),
+    }));
+  } catch (error) {
+    console.error('Unable to load trainers:', error);
+  }
+};
+
+const getTrainerPhoto = (photo) => {
+  if (!photo) {
+    return 'https://via.placeholder.com/360x320?text=Trainer+Photo';
+  }
+
+  return `http://127.0.0.1:8000/uploads/profilephotos/${photo}`;
+};
+
 
 const nextSlide = (type) => {
   if (type === 'exercise') exerciseIndex.value = (exerciseIndex.value + 1) % exerciseImages.length;
@@ -278,6 +371,31 @@ const prevSlide = (type) => {
   if (type === 'meal') mealIndex.value = (mealIndex.value - 1 + mealImages.length) % mealImages.length;
 };
 
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.target === aboutSection.value) {
+        aboutVisible.value = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+      }
+    });
+  }, {
+    threshold: [0.5],
+  });
+
+  if (aboutSection.value) {
+    observer.observe(aboutSection.value);
+  }
+
+  fetchTrainers();
+});
+
+onBeforeUnmount(() => {
+  if (observer && aboutSection.value) {
+    observer.unobserve(aboutSection.value);
+  }
+});
 
 const services = [
   { icon: meal4, title: "Personal Training", description: "Customized workouts for your goals." },
@@ -286,23 +404,21 @@ const services = [
   { icon: exercise1, title: "Community Challenges", description: "Join challenges with friends." },
 ];
 
-
-const trainers = [
-  { name: "Sophia Turner", specialty: "Strength & Conditioning", bio: "Certified trainer helping clients achieve strength and endurance goals.", photo: trainer1 },
-  { name: "Liam Johnson", specialty: "Nutrition & Wellness", bio: "Expert in creating personalized nutrition plans for maximum results.", photo: trainer2 },
-  { name: "Emma Davis", specialty: "Yoga & Flexibility", bio: "Passionate about mindfulness and functional training for all levels.", photo: trainer3 },
-];
-
-
 const testimonials = [
-  { name: "Alex", feedback: "Kynetic helped me stay consistent and achieve my goals! I feel stronger and healthier every day.", photo: user1 },
-  { name: "Maria", feedback: "Love the meal plans and progress tracking! It really makes my fitness journey easy and fun.", photo: user2 },
-  { name: "John", feedback: "Easy to use, motivating, and full of features that help me track my growth effectively.", photo: user3 },
+  { name: "Alex", role: "Strength Athlete", feedback: "With Kynetic, I finally kept a workout routine and gained real muscle in 10 weeks. The planner made it easy to train smarter, not harder.", photo: user1 },
+  { name: "Maria", role: "Busy Professional", feedback: "The meal plans are a game-changer — quick, nutritious, and tailored to fatigue-free training days. I feel fitter and more energized.", photo: user2 },
+  { name: "John", role: "Weekend Warrior", feedback: "I used to skip gym days. Now I stay consistent, track progress clearly, and actually enjoy the results.", photo: user3 },
 ];
 
 </script>
 
 <style scoped>
+.home {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .hero {
   position: relative;
   width: 100%;
@@ -311,29 +427,127 @@ const testimonials = [
   overflow: hidden;
 }
 .hero__overlay { 
-  padding: 3rem;
+  padding: 4rem 2rem;
   display: grid;
   place-items: center;
   text-align: center;
-  gap: 1.25rem;
+  gap: 1.75rem;
   min-height: inherit; 
+}
+.hero__title {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: Lucida Handwriting;
+  font-weight: 800;
+}
+.hero__subtitle {
+  font-size: 1.32rem;
+  max-width: 760px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.85;
+}
+.search {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.search-field {
+  position: relative;
+  width: 100%;
+}
+.search-field input {
+  width: 100%;
+  min-height: 60px;
+  padding: 1.3rem 4.5rem 1.3rem 1.5rem;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.96);
+  color: #111827;
+  font-size: 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+.search-field input::placeholder {
+  color: #6b7280;
+}
+.search-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-icon-img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.search-btn:hover .search-icon-img {
+  opacity: 1;
+}
+.search-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+.search-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.search-field input:focus {
+  outline: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.hero__cta .btn {
+  min-width: 190px;
+  padding: 1rem 1.8rem;
+  font-size: 1rem;
 }
 
 
 .features { 
   background: var(--bg-dark); 
-  padding: 3rem 2rem; 
+  padding: 3rem 8rem; 
+  width: 100%;
+  margin: 0;
 }
+
+.feature {
+  width: 100%;
+  margin: 0;
+}
+
 .feature-inner { 
   display: flex; 
   align-items: center; 
-  justify-content: center; 
-  gap: 2rem; 
+  justify-content: space-between; 
+  gap: 2.5rem; 
   margin: 2rem 0; 
+  padding: 0 2rem;
 }
 .feature-inner.reverse { 
   flex-direction: 
   row-reverse; 
+}
+
+.section-title {
+  padding: 0 2rem;
+  margin: 2rem 0;
 }
 .slider-wrapper { 
   flex: 0 0 320px; 
@@ -388,20 +602,20 @@ const testimonials = [
 
 
 .sidebar.slider-box {
-  background: #2f2f35ff;
-  border-radius: 20px;
-  padding: 2rem 2.5rem;
-  box-shadow: 0 8px 20px rgba(246, 244, 244, 0.08);
-  transition: all 0.3s ease;
+  background: rgba(25, 28, 34, 0.96);
+  border-radius: 24px;
+  padding: 2.2rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid #4f8dff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
-
-
 .sidebar.slider-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 45px rgba(0, 0, 0, 0.32);
 }
 
 .sidebar.slider-box h3 {
@@ -424,8 +638,8 @@ const testimonials = [
 
 
 .services-wrapper  { 
-  max-width: 1200px; 
-  margin: 0 auto; 
+  max-width: 100%; 
+  margin: 0; 
   padding: 3rem 2rem; 
 }
 .services-grid { 
@@ -449,47 +663,176 @@ const testimonials = [
 
 
 .about-wrapper { 
-  max-width: 900px; 
+  max-width: 85%; 
   margin: 0 auto; 
-  padding: 3rem 2rem; 
+  padding: 4rem 1.5rem; 
   text-align: center;
+  background: rgba(12, 14, 18, 0.96);
+  border-radius: 32px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.about-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
+  gap: 2rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+.about-copy {
+  text-align: left;
 }
 .about-text { 
-  font-size: 1.1rem; 
-  line-height: 1.6; 
-  margin-bottom: 1rem; 
+  font-size: 1.05rem; 
+  line-height: 2.8; 
+  margin-bottom: 2.35rem; 
+  color: #d7d9df;
+}
+.about-highlights {
+  display: grid;
+  gap: 1rem;
+}
+.about-card {
+  width: 100%;
+  min-height: 180px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #4f8dff;
+  padding: 1.8rem;
+  border-radius: 20px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+.about-card-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(79, 141, 255, 0.15);
+  color: #4f8dff;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.about-card h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+.about-card p {
+  color: #c7cad0;
+  line-height: 1.7;
+}
+.about-card {
+  width: 100%;
+  min-height: 130px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #4f8dff;
+  padding: 1.4rem;
+  border-radius: 20px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateX(0);
+}
+.about-card--enter-left.about-card--active {
+  animation: slideInLeft 1.2s ease-out both;
+}
+.about-card--enter-right.about-card--active {
+  animation: slideInRight 1.2s ease-out both;
+}
+.about-card:nth-child(1) {
+  animation-delay: 0.08s;
+}
+.about-card:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.about-card:nth-child(3) {
+  animation-delay: 0.24s;
+}
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 
 .trainers-wrapper { 
-  max-width: 1200px; 
-  margin: 0 auto;
+  max-width: 100%; 
+  margin: 0;
   padding: 3rem 2rem; 
   text-align: center; 
 }
-.trainers-grid { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-  gap: 2rem; 
+.trainers-list {
+  display: flex;
+  gap: 1.75rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scroll-snap-type: x mandatory;
+  margin-top: 2rem;
 }
-.trainer-card { 
+.trainers-list::-webkit-scrollbar {
+  height: 10px;
+}
+.trainers-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+.trainers-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.trainer-card {
+  flex: 0 0 320px;
+  min-width: 320px;
   background: var(--bg-card); 
-  padding: 1.5rem; 
+  padding: 1.75rem; 
   border-radius: var(--radius-lg); 
   box-shadow: var(--shadow-sm);
+  scroll-snap-align: start;
+  min-height: 420px;
 }
-.trainer-photo { 
+.trainer-photo {
   width: 100%; 
-  height: 250px; 
+  height: 260px; 
   object-fit: cover; 
   border-radius: var(--radius-lg); 
   margin-bottom: 1rem;
 }
+.trainer-photo {
+  width: 100%; 
+  height: 260px; 
+  object-fit: cover; 
+  border-radius: var(--radius-lg); 
+  margin-bottom: 1rem;
+}
+@media (max-width: 900px) {
+  .trainers-list {
+    flex-wrap: nowrap;
+  }
+  .trainer-card {
+    min-width: 280px;
+  }
+}
 
 
 .testimonials-wrapper { 
-  max-width: 900px; 
-  margin: 0 auto; 
+  max-width: 100%; 
+  margin: 0; 
   padding: 3rem 2rem; 
   text-align: center; 
 }
@@ -499,28 +842,55 @@ const testimonials = [
   gap: 2rem; 
 }
 .testimonial-card { 
-  background: var(--bg-card); 
-  padding: 1.5rem; 
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  font-style: italic; 
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(9, 12, 20, 0.98)); 
+  border: 1px solid rgba(79, 141, 255, 0.18);
+  padding: 2rem; 
+  border-radius: 28px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+  font-style: normal; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
 }
 .testimonial-photo-wrapper { 
   display: flex; 
   justify-content: center; 
-  margin-bottom: 1rem; 
+  margin-bottom: 0.5rem; 
 }
 .testimonial-photo { 
-  width: 80px; 
-  height: 80px; 
+  width: 86px; 
+  height: 86px; 
   border-radius: 50%; 
   object-fit: cover; 
-  border: 3px solid #fff; 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
-  transition: transform 0.3s; 
+  border: 3px solid #1e90ff; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+  transition: transform 0.3s ease; 
 }
 .testimonial-photo:hover { 
-  transform: scale(1.1); 
+  transform: scale(1.05); 
+}
+.testimonial-text {
+  font-size: 1rem;
+  color: #e2e8f0;
+  line-height: 1.8;
+  text-align: center;
+}
+.testimonial-name {
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+}
+.testimonial-role {
+  color: #93c5fd;
+  font-size: 0.95rem;
+}
+.testimonial-subtitle {
+  max-width: 760px;
+  margin: 0 auto 1.75rem;
+  color: #a5b4fc;
+  font-size: 1.05rem;
+  line-height: 1.8;
 }
 
 
@@ -612,11 +982,14 @@ const testimonials = [
   background: #0d1117;
   color: #cbd5e1;
   padding: 3rem 1.5rem 1rem;
+  width: 100%;
+  margin: 0;
 }
 
 .footer-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 2rem;
 }
 
 .footer-columns {

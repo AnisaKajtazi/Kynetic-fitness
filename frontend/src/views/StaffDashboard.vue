@@ -45,6 +45,14 @@
               <img :src="genderIcon" class="icon" />
               <span class="label">Gender:</span> {{ user.gender }}
             </p>
+
+            <p class="info-line">
+              <img :src="locationIcon" class="icon" />
+              <span class="label">Description:</span>
+              <span class="description-text">
+                {{ user.description ? user.description : 'No description added yet. Click Edit Profile to add your trainer bio.' }}
+              </span>
+            </p>
           </div>
 
           <button class="edit-btn" @click="toggleEdit">
@@ -87,6 +95,11 @@
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea id="description" v-model="user.description" rows="4" placeholder="Describe your specialties and training style"></textarea>
             </div>
 
             <button type="submit" class="save-btn">Save Changes</button>
@@ -177,6 +190,7 @@ const saveProfile = async () => {
   formData.append("address", user.value.address || "");
   formData.append("dob", user.value.dob || "");
   formData.append("gender", user.value.gender || "");
+  formData.append("description", user.value.description || "");
 
   if (photoFile.value) {
     formData.append("photo", photoFile.value);
@@ -311,9 +325,23 @@ const formatDate = (dateStr) => {
 }
 
 .profile-details .label {
-  font-weight: 600;
-  color: #60a5fa;
-  margin-right: 0.3rem;
+  min-width: 90px;
+}
+.description-text {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #d1d5db;
+  max-width: calc(100% - 120px);
+}
+..profile-form textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
 }
 
 .edit-btn {
