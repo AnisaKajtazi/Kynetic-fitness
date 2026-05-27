@@ -114,7 +114,7 @@
 import { ref, onMounted } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import api from "@/services/axios";
 
 const router = useRouter();
 const user = ref({});
@@ -142,9 +142,7 @@ async function loadUser() {
   const localUser = JSON.parse(storedUser);
 
   try {
-    const res = await axios.get(`http://127.0.0.1:8000/api/users/${localUser.UserID}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await api.get(`/users/${localUser.UserID}`);
     user.value = res.data;
     localStorage.setItem("user", JSON.stringify(res.data));
   } catch (error) {
@@ -177,8 +175,9 @@ const onPhotoChange = (event) => {
   }
 };
 
+const IMG_BASE = api.defaults.baseURL.replace(/\/api\/?$/, "");
 const imageUrl = (user) => {
-  return user.photo ? `http://127.0.0.1:8000/uploads/profilephotos/${user.photo}` : defaultPhoto;
+  return user.photo ? `${IMG_BASE}/uploads/profilephotos/${user.photo}` : defaultPhoto;
 };
 
 const saveProfile = async () => {
@@ -197,16 +196,9 @@ const saveProfile = async () => {
   }
 
   try {
-    const res = await axios.post(
-      `http://127.0.0.1:8000/api/users/${user.value.UserID}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const res = await api.post(`/users/${user.value.UserID}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
     user.value = res.data;
     localStorage.setItem("user", JSON.stringify(res.data));
@@ -232,7 +224,7 @@ const formatDate = (dateStr) => {
   display: flex;
   width: 100vw;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1115, #1c1f26);
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card));
   color: #f9fafb;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -254,7 +246,7 @@ const formatDate = (dateStr) => {
 .profile-card {
   width: 100%;
   max-width: 800px;
-  background: linear-gradient(145deg, #1f2937, #111827);
+  background: linear-gradient(145deg, var(--bg-card), var(--bg-card));
   border-radius: 16px;
   padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
@@ -283,13 +275,13 @@ const formatDate = (dateStr) => {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #2563eb;
+  border: 3px solid var(--accent-blue);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-photo:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px #2563eb;
+  box-shadow: 0 0 15px var(--accent-blue);
 }
 
 .profile-info h2 {
@@ -341,13 +333,13 @@ const formatDate = (dateStr) => {
   padding: 1rem;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.05);
-  color: #fff;
+  color: var(--text-strong);
 }
 
 .edit-btn {
   margin-top: 2rem;
   width: 100%;
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
   color: #f9fafb;
   font-weight: 600;
   padding: 0.8rem;
@@ -365,7 +357,7 @@ const formatDate = (dateStr) => {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  background-color: #111827;
+  background-color: var(--bg-card);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.6);
@@ -390,19 +382,19 @@ const formatDate = (dateStr) => {
   border: none;
   outline: none;
   font-size: 1rem;
-  background-color: #1f2937;
+  background-color: var(--bg-card);
   color: #f9fafb;
   transition: all 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  box-shadow: 0 0 0 2px #2563eb;
+  box-shadow: 0 0 0 2px var(--accent-blue);
 }
 
 .save-btn {
   margin-top: 1.2rem;
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
   color: #f9fafb;
   font-weight: 600;
   padding: 0.7rem 1.4rem;

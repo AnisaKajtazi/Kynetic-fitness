@@ -208,7 +208,7 @@ const addAllToCart = async () => {
 }
 
 .add-to-cart-btn.total-cart-btn {
-  background: #ff5722;
+  background: var(--accent-lavender);
   padding: 6px 16px;
   border: none;
   color: white;

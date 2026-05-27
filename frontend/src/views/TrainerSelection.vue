@@ -92,7 +92,10 @@ const loadTrainers = async () => {
       },
     })
 
-    trainers.value = Array.isArray(res.data.data) ? res.data.data : []
+    const allUsers = Array.isArray(res.data.data) ? res.data.data : []
+
+    trainers.value = allUsers.filter(u => u.staff_type === 'trainer')
+
     selectedTrainer.value = trainers.value.find(
       (trainer) => trainer.UserID === user.value.preferred_trainer_id
     ) || null
@@ -132,7 +135,7 @@ const photoUrl = (trainer) => {
     return trainer.photo
   }
 
-  return `http://127.0.0.1:8000/uploads/profilephotos/${trainer.photo}`
+  return `${api.defaults.baseURL.replace(/\/api\/?$/, '')}/uploads/trainers/${trainer.photo}`
 }
 
 const trainerSpecialty = (trainer) => {
@@ -265,7 +268,7 @@ onMounted(loadTrainers)
 }
 
 .trainer-card.active {
-  border-color: #2563eb;
+  border-color: var(--accent-blue);
   box-shadow: 0 16px 40px rgba(37, 99, 235, 0.18);
 }
 
@@ -295,8 +298,8 @@ onMounted(loadTrainers)
 }
 
 .chat-btn .badge {
-  background: #ef4444;
-  color: #fff;
+  background: var(--accent-plum);
+  color: var(--text-strong);
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
   margin-left: 0.5rem;
@@ -341,8 +344,8 @@ onMounted(loadTrainers)
 }
 
 .primary-btn {
-  background: #2563eb;
-  color: #fff;
+  background: var(--accent-blue);
+  color: var(--text-strong);
 }
 
 .secondary-btn {
@@ -352,8 +355,8 @@ onMounted(loadTrainers)
 }
 
 .select-btn {
-  background: #10b981;
-  color: #fff;
+  background: var(--accent-lavender);
+  color: var(--text-strong);
 }
 
 .primary-btn:disabled,

@@ -153,7 +153,7 @@ const formatTime = t => {
 }
 .staff-type {
   font-style: italic;
-  color: #2563eb;
+  color: var(--accent-blue);
 }
 .display-box {
   display: flex;
@@ -196,7 +196,7 @@ const formatTime = t => {
   padding: 5px 12px;
   border-radius: 6px;
   border: none;
-  background: #2563eb;
+  background: var(--accent-blue);
   color: white;
 }
 .set-btn:hover {

@@ -76,8 +76,8 @@ const logout = () => {
   left: 0;
   width: 240px;
   height: 100vh;
-  background-color: #111827;
-  color: #fff;
+  background-color: var(--bg-card);
+  color: var(--text-strong);
   padding: 2.5rem 1rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -111,20 +111,20 @@ const logout = () => {
 }
 
 .sidebar__links li:hover {
-  background: #1f2937;
-  color: #fff;
+  background: var(--bg-card);
+  color: var(--text-strong);
 }
 
 .sidebar__links li.active {
-  background: #2563eb;
-  color: #fff;
+  background: var(--accent-blue);
+  color: var(--text-strong);
   font-weight: 600;
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
 }
 
 .logout-btn {
   margin-top: auto;
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
   color: white;
   font-weight: 600;
   text-align: center;

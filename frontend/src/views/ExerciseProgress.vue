@@ -166,10 +166,10 @@ export default {
           datasets: [{
             data: sorted.map(e => e[1]),
             backgroundColor: [
-              "#2563eb",
-              "#10b981",
+              "var(--accent-blue)",
+              "var(--accent-lavender)",
               "#f59e0b",
-              "#ef4444",
+              "var(--accent-plum)",
               "#8b5cf6",
               "#14b8a6"
             ]
@@ -193,7 +193,7 @@ export default {
           datasets: [{
             label: "Reps",
             data: days.map(d => d.duration),
-            backgroundColor: "#2563eb",
+            backgroundColor: "var(--accent-blue)",
             borderRadius: 6
           }]
         },
@@ -257,7 +257,7 @@ export default {
 }
 
 .exercise-card {
-  background: #1f2937;
+  background: var(--bg-card);
   padding: 1rem;
   border-radius: 10px;
   width: 200px;
@@ -289,7 +289,7 @@ export default {
 }
 
 .save-btn {
-  background: #2563eb;
+  background: var(--accent-blue);
   color: white;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;

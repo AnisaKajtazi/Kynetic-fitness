@@ -199,7 +199,7 @@ watchEffect(() => {
 .hero-title {
   font-size: 38px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-strong);
   font-family: Lucida Handwriting;
 }
 
@@ -266,11 +266,11 @@ watchEffect(() => {
 
 .meal-price {
   font-weight: 700;
-  color: #ff5722;
+  color: var(--accent-lavender);
 }
 
 .add-to-cart-btn {
-  background: #ff5722;
+  background: var(--accent-lavender);
   padding: 6px 12px;
   border: none;
   color: white;
@@ -321,7 +321,7 @@ watchEffect(() => {
 }
 
 .popup-card {
-  background: #fff;
+  background: var(--bg-card);
   width: 90%;
   max-width: 620px;
   border-radius: 12px;

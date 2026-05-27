@@ -357,7 +357,7 @@ const getTrainerPhoto = (photo) => {
     return 'https://via.placeholder.com/360x320?text=Trainer+Photo';
   }
 
-  return `http://127.0.0.1:8000/uploads/profilephotos/${photo}`;
+  return `${api.defaults.baseURL.replace(/\/api\/?$/, '')}/uploads/trainers/${photo}`;
 };
 
 
@@ -466,7 +466,7 @@ const testimonials = [
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.96);
-  color: #111827;
+  color: var(--bg-card);
   font-size: 1rem;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
 }
@@ -586,7 +586,7 @@ const testimonials = [
   top: 50%; 
   transform: translateY(-50%); 
   background: rgba(0,0,0,0.4); 
-  border: none; color: #fff; 
+  border: none; color: var(--text-strong); 
   font-size: 2rem; 
   padding: 0.5rem 1rem; 
   cursor: pointer; 
@@ -629,7 +629,7 @@ const testimonials = [
 
 .sidebar.slider-box p {
   font-size: 1.05rem;
-  color: #ffffffff;
+  color: var(--text-strong)fffff;
   line-height: 2.6;
   position: relative;
   z-index: 1;
@@ -717,7 +717,7 @@ const testimonials = [
 .about-card h4 {
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
-  color: #ffffff;
+  color: var(--text-strong)fff;
 }
 .about-card p {
   color: #c7cad0;
@@ -863,7 +863,7 @@ const testimonials = [
   height: 86px; 
   border-radius: 50%; 
   object-fit: cover; 
-  border: 3px solid #1e90ff; 
+  border: 3px solid var(--accent-blue); 
   box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
   transition: transform 0.3s ease; 
 }
@@ -877,7 +877,7 @@ const testimonials = [
   text-align: center;
 }
 .testimonial-name {
-  color: #ffffff;
+  color: var(--text-strong)fff;
   font-weight: 700;
   margin: 0;
 }
@@ -921,7 +921,7 @@ const testimonials = [
   z-index: 2;
   max-width: 800px;
   text-align: center;
-  color: #fff;
+  color: var(--text-strong);
   padding: 2rem;
 }
 
@@ -947,8 +947,8 @@ const testimonials = [
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, #1e90ff, #2563eb);
-  color: #fff;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue));
+  color: var(--text-strong);
   border: none;
   padding: 0.8rem 1.8rem;
   font-size: 1rem;
@@ -957,14 +957,14 @@ const testimonials = [
 }
 
 .btn--primary:hover {
-  background: linear-gradient(135deg, #2563eb, #1e90ff);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue));
   transform: scale(1.05);
 }
 
 .btn--outline {
   background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
+  color: var(--text-strong);
+  border: 2px solid rgba(255,255,255,0.55);
   padding: 0.8rem 1.8rem;
   border-radius: 50px;
   font-size: 1rem;
@@ -972,8 +972,8 @@ const testimonials = [
 }
 
 .btn--outline:hover {
-  background: #fff;
-  color: #1e90ff;
+  background: var(--bg-card);
+  color: var(--accent-blue);
   transform: scale(1.05);
 }
 
@@ -1001,7 +1001,7 @@ const testimonials = [
 
 .footer-col h4 {
   font-size: 1.1rem;
-  color: #fff;
+  color: var(--text-strong);
   margin-bottom: 1rem;
 }
 
@@ -1025,13 +1025,13 @@ const testimonials = [
 .footer-logo {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1e90ff;
+  color: var(--accent-blue);
   margin-bottom: 1rem;
 }
 
 
 .footer-bottom {
-  border-top: 1px solid #1f2937;
+  border-top: 1px solid var(--bg-card);
   padding-top: 1rem;
   text-align: center;
   font-size: 0.9rem;

@@ -91,7 +91,7 @@ const getTrainerPhoto = (photo) => {
   if (!photo) {
     return 'https://via.placeholder.com/360x320?text=Trainer+Photo';
   }
-  return `http://127.0.0.1:8000/uploads/profilephotos/${photo}`;
+  return `${api.defaults.baseURL.replace(/\/api\/?$/, '')}/uploads/trainers/${photo}`;
 };
 
 const viewDetails = (trainer) => {
@@ -123,7 +123,7 @@ onMounted(() => {
 .hero-title {
   font-size: 3.2rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-strong)fff;
   margin-bottom: 0.5rem;
 }
 
@@ -188,7 +188,7 @@ onMounted(() => {
 
 .trainer-info h3 {
   font-size: 1.3rem;
-  color: #ffffff;
+  color: var(--text-strong)fff;
   margin-bottom: 0.3rem;
 }
 
@@ -243,7 +243,7 @@ onMounted(() => {
 }
 
 .close-btn:hover {
-  color: #ffffff;
+  color: var(--text-strong)fff;
 }
 
 .modal-photo {
@@ -263,7 +263,7 @@ onMounted(() => {
 
 .modal-body h2 {
   font-size: 1.8rem;
-  color: #ffffff;
+  color: var(--text-strong)fff;
   margin-bottom: 1rem;
 }
 

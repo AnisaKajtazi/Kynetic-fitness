@@ -223,7 +223,7 @@ const getImageUrl = (image) => {
 }
 
 .btn--blue {
-  background: #2563eb;
+  background: var(--accent-blue);
   color: white;
 }
 
@@ -232,13 +232,13 @@ const getImageUrl = (image) => {
 }
 
 .btn--red {
-  background: #dc2626;
+  background: var(--accent-plum);
   color: white;
   font-size: 12px;
   padding: 0.5rem 1.5rem;
 }
 
 .btn--red:hover {
-  background: #b91c1c;
+  background: var(--accent-plum);
 }
 </style>

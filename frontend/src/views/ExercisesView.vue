@@ -265,7 +265,7 @@ export default {
 .hero-title {
   font-size: 38px;
   font-weight: 800;
-  color: #ffffffff;
+  color: var(--text-strong)fffff;
   font-family: Lucida Handwriting;
   text-align:center;
 }

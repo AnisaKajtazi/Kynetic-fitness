@@ -85,9 +85,9 @@ onMounted(() => {
 
 <style scoped>
 :root {
-  --nav-bg: #111827;
-  --accent: #ff4d4d;
-  --text: #ffffff;
+  --nav-bg: var(--bg-card);
+  --accent: var(--accent-plum);
+  --text: var(--text-strong);
 }
 
 .navbar {
@@ -96,9 +96,9 @@ onMounted(() => {
   left: 0;
   right: 0;
   z-index: 1200;
-  background: linear-gradient(180deg, rgba(17,24,39,0.95), rgba(17,24,39,0.88));
+  background: linear-gradient(180deg, rgba(78,20,140,0.96), rgba(44,7,53,0.88));
   backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .navbar__inner {
@@ -183,6 +183,6 @@ onMounted(() => {
 }
 
 .chat-link { position: relative; color: var(--text); font-size: 1.1rem; }
-.chat-badge { position: absolute; top: -6px; right: -10px; background: #ef4444; color: #fff; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; }
+.chat-badge { position: absolute; top: -6px; right: -10px; background: var(--accent-plum); color: var(--text-strong); padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; }
 .chat-icon { width: 20px; height: 20px; display: inline-block; }
 </style>

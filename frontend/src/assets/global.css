@@ -1,26 +1,40 @@
 :root {
-  --bg-dark: #1b1c1f;
-  --bg-card: #232427;
-  --bg-contrast: #2b2d31;
-  --bg-light: #f9f9f9;
+  --theme-ice: #97dffc;
+  --theme-lavender: #858ae3;
+  --theme-violet: #613dc1;
+  --theme-plum: #4e148c;
+  --theme-night: #2c0735;
 
-  --primary-silver: #9ca3af;
-  --accent-gold: #d4af37;
-  --accent-gold-dark: #b8911c;
-  --accent-blue: #1a73e8;
-  --accent-blue-dark: #155ab6;
+  --theme-ice-rgb: 151, 223, 252;
+  --theme-lavender-rgb: 133, 138, 227;
+  --theme-violet-rgb: 97, 61, 193;
+  --theme-plum-rgb: 78, 20, 140;
+  --theme-night-rgb: 44, 7, 53;
 
-  --text-light: #f5f6f7;
-  --text-muted: #d1d5db;
-  --text-dim: #9ca3af;
+  --bg-dark: var(--theme-night);
+  --bg-card: #321a55;
+  --bg-contrast: #3c1d63;
+  --bg-light: rgba(var(--theme-ice-rgb), 0.08);
+  --bg-soft: rgba(var(--theme-lavender-rgb), 0.12);
 
-  --border-dark: #383a3e;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+  --primary-silver: var(--theme-ice);
+  --accent-gold: var(--theme-violet);
+  --accent-gold-dark: var(--theme-plum);
+  --accent-blue: var(--theme-ice);
+  --accent-blue-dark: var(--theme-lavender);
 
-  --radius: 14px;
-  --radius-lg: 20px;
+  --text-light: #f5f4ff;
+  --text-muted: #c9c2ff;
+  --text-dim: #a99fe3;
+  --text-strong: #ffffff;
+
+  --border-dark: rgba(var(--theme-ice-rgb), 0.15);
+  --shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 18px 40px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 28px 60px rgba(0, 0, 0, 0.55);
+
+  --radius: 16px;
+  --radius-lg: 24px;
 }
 
 
@@ -107,31 +121,32 @@ p {
 }
 
 .btn--primary {
-  background: var(--primary-silver);
-  color: #111;
-  box-shadow: 0 6px 18px rgba(156,163,175,0.25);
+  background: var(--accent-blue);
+  color: var(--theme-night);
+  box-shadow: 0 6px 18px rgba(var(--theme-ice-rgb), 0.35);
 }
 .btn--primary:hover {
-  background: #b1b6bf;
+  background: var(--accent-lavender);
+  color: var(--text-strong);
 }
 
 .btn--accent {
   background: var(--accent-gold);
-  color: #111;
-  box-shadow: 0 6px 18px rgba(212,175,55,0.35);
+  color: var(--text-strong);
+  box-shadow: 0 6px 18px rgba(var(--theme-lavender-rgb), 0.35);
 }
 .btn--accent:hover {
   background: var(--accent-gold-dark);
 }
 
 .btn--blue {
-  background: var(--accent-blue);
-  color: #fff;
+  background: var(--accent-lavender);
+  color: var(--text-strong);
   border: none;
-  box-shadow: 0 6px 18px rgba(26, 115, 232, 0.35);
+  box-shadow: 0 6px 18px rgba(var(--theme-lavender-rgb), 0.35);
 }
 .btn--blue:hover {
-  background: var(--accent-blue-dark);
+  background: var(--accent-violet);
 }
 
 
@@ -141,7 +156,9 @@ textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: var(--radius);
-  border: 1px solid #ccc;
+  border: 1px solid rgba(var(--theme-ice-rgb), 0.16);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-light);
   font-size: 1rem;
   outline: none;
   transition: all 0.3s ease;
@@ -229,7 +246,7 @@ a:focus-visible {
 }
 
 .error-text {
-  color: #ff4d4d;
+  color: var(--accent-plum);
   font-size: 0.9rem;
   margin-top: 6px;
   display: block;

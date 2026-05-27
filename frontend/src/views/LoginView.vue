@@ -149,7 +149,7 @@ export default {
   margin-bottom: 1rem;
   line-height: 1.2;
   font-weight: 800;
-  background: linear-gradient(90deg, #d4af37, #f0c75e);
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: Lucida Handwriting;

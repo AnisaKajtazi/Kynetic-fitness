@@ -177,7 +177,7 @@ const checkout = async () => {
   height: 32px;
   border-radius: 50%;
   border: none;
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -185,7 +185,7 @@ const checkout = async () => {
 }
 
 .meal-quantity button:hover {
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
 }
 
 .meal-price {
@@ -195,7 +195,7 @@ const checkout = async () => {
 }
 
 .remove-btn {
-  background: #e3342f;
+  background: var(--accent-plum);
   color: white;
   border: none;
   border-radius: 6px;
@@ -220,7 +220,7 @@ const checkout = async () => {
 }
 
 .checkout-btn {
-  background-color: #2563eb;
+  background-color: var(--accent-blue);
   color: white;
   border: none;
   border-radius: 8px;

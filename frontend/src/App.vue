@@ -17,18 +17,19 @@ const showNavbar = computed(() => !route.path.startsWith('/admin'))
 </template>
 
 <style>
-body {
+html, body, #app {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa, #ffffffff);
-  color: #333;
+  width: 100%;
+  background: var(--bg-dark);
+  background-image: linear-gradient(180deg, rgba(var(--theme-night-rgb), 1), rgba(var(--theme-plum-rgb), 0.95));
+  color: var(--text-light);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 main {

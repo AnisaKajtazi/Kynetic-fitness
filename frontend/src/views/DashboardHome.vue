@@ -162,7 +162,7 @@ onMounted(loadUser);
 
 async function loadUser() {
   const localUser = JSON.parse(localStorage.getItem("user"));
-  if (!localUser?.UserID) router.push("/login");
+  if (!localUser?.UserID) return router.push("/login");
 
   const res = await axios.get(`${API}/users/${localUser.UserID}`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -187,7 +187,7 @@ function resetForm() {
     fitness_goal: user.value.fitness_goal ?? "",
     activity_level: user.value.activity_level ?? "",
     focus_area: user.value.focus_area ?? "",
-    training_days: user.value.training_days ?? ""
+    training_days: user.value.training_days ?? null
   };
 }
 
@@ -202,7 +202,9 @@ function selectPhoto() {
 
 function onPhotoChange(e) {
   photoFile.value = e.target.files[0];
-  photoPreview.value = URL.createObjectURL(photoFile.value);
+  if (photoFile.value) {
+    photoPreview.value = URL.createObjectURL(photoFile.value);
+  }
 }
 
 const profilePhoto = computed(() =>
@@ -212,21 +214,47 @@ const profilePhoto = computed(() =>
 );
 
 async function saveProfile() {
-  const fd = new FormData();
-  fd.append("_method", "PUT");
-  Object.entries(form.value).forEach(([k,v]) => { if(v) fd.append(k,v); });
-  if(photoFile.value) fd.append("photo", photoFile.value);
-  await axios.post(`${API}/users/${user.value.UserID}`, fd, {
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
-  });
-  await loadUser();
-  editing.value = false;
-  photoFile.value = null;
-  photoPreview.value = null;
-  alert("Profile updated successfully ✅");
+  try {
+    const fd = new FormData();
+    fd.append("_method", "PUT");
+
+    Object.entries(form.value).forEach(([k, v]) => {
+      if (k === "password" && !v) return;
+
+      if (v === "") v = null;
+
+      if (v !== null && v !== undefined) {
+        fd.append(k, v);
+      }
+    });
+
+    if (photoFile.value) {
+      fd.append("photo", photoFile.value);
+    }
+
+    await axios.post(`${API}/users/${user.value.UserID}`, fd, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    await loadUser();
+
+    editing.value = false;
+    photoFile.value = null;
+    photoPreview.value = null;
+
+    alert("Profile updated successfully ✅");
+
+  } catch (err) {
+    console.log("ERROR:", err.response?.data);
+    alert("Error updating profile ❌");
+  }
 }
 
-function formatDate(d) { return new Date(d).toLocaleDateString(); }
+function formatDate(d) {
+  return new Date(d).toLocaleDateString();
+}
 </script>
 
 <style scoped>

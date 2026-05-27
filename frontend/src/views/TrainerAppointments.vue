@@ -123,7 +123,9 @@ const photoUrl = (user) => {
     return user.photo
   }
 
-  return `http://127.0.0.1:8000/uploads/profilephotos/${user.photo}`
+  const base = api.defaults.baseURL.replace(/\/api\/?$/, '')
+  const folder = (user.RoleID === 3 || user.staff_type) ? 'trainers' : 'profilephotos'
+  return `${base}/uploads/${folder}/${user.photo}`
 }
 
 const trainerSpecialty = (user) => {
@@ -299,7 +301,7 @@ onMounted(loadClients)
 }
 
 .client-badges span {
-  background: #111827;
+  background: var(--bg-card);
   color: #d1d5db;
   padding: 0.5rem 0.75rem;
   border-radius: 999px;
@@ -320,8 +322,8 @@ onMounted(loadClients)
 }
 
 .chat-btn .badge {
-  background: #ef4444;
-  color: #fff;
+  background: var(--accent-plum);
+  color: var(--text-strong);
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
   margin-left: 0.5rem;

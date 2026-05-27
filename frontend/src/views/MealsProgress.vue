@@ -212,10 +212,10 @@ export default {
       const values = sortedEntries.map(e => e[1]);
 
       const bgColors = [
-        "#2563eb",
-        "#10b981",
+        "var(--accent-blue)",
+        "var(--accent-lavender)",
         "#f59e0b",
-        "#ef4444",
+        "var(--accent-plum)",
         "#8b5cf6",
         "#14b8a6"
       ];
@@ -291,7 +291,7 @@ export default {
             {
               label: "Calories",
               data: days.map(d => d.calories),
-              backgroundColor: "#2563eb",
+              backgroundColor: "var(--accent-blue)",
               borderRadius: 6
             }
           ]
@@ -374,7 +374,7 @@ export default {
 }
 
 .select-all-btn {
-  background: #10b981;
+  background: var(--accent-lavender);
   color: white;
   font-weight: 600;
   padding: 0.4rem 0.8rem;
@@ -384,7 +384,7 @@ export default {
 }
 
 .save-btn {
-  background: #2563eb;
+  background: var(--accent-blue);
   color: white;
   padding: 0.7rem 1.4rem;
   border-radius: 8px;

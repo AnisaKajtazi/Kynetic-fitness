@@ -135,7 +135,7 @@ const formatTime = (t) => {
 const photoUrl = (user) => {
   if (!user || !user.photo) return 'https://via.placeholder.com/100x100?text=Profile'
   if (user.photo.startsWith('http')) return user.photo
-  return `http://127.0.0.1:8000/uploads/profilephotos/${user.photo}`
+  return `${api.defaults.baseURL.replace(/\/api\/?$/, '')}/uploads/profilephotos/${user.photo}`
 }
 
 const scrollToBottom = () => {
@@ -167,12 +167,12 @@ watch(() => route.query.peer, (p) => {
 .chat-sidebar { width: 320px; background: var(--bg-card); border-radius: 12px; padding: 1rem; overflow: auto; }
 .chat-sidebar ul { list-style: none; padding: 0; margin: 0; }
 .chat-sidebar li { display: flex; gap: .75rem; padding: .5rem; border-radius: 8px; cursor: pointer; align-items: center; }
-.chat-sidebar li.active { background: rgba(255,255,255,0.02); }
+.chat-sidebar li.active { background: rgba(255,255,255,0.05); }
 .chat-sidebar img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
 .chat-sidebar .meta { flex: 1; }
 .chat-sidebar .top { display:flex; justify-content: space-between; align-items: center; }
 .chat-sidebar .bottom { display:flex; justify-content: space-between; align-items: center; gap: .5rem; }
-.badge { background: #ef4444; color: #fff; padding: .15rem .5rem; border-radius: 999px; font-size: .8rem; }
+.badge { background: var(--accent-plum); color: var(--text-strong); padding: .15rem .5rem; border-radius: 999px; font-size: .8rem; }
 
 .chat-window { flex: 1; display: flex; flex-direction: column; background: var(--bg-card); border-radius: 12px; overflow: hidden; }
 .chat-header { display:flex; gap: .75rem; padding: 1rem; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
@@ -181,10 +181,10 @@ watch(() => route.query.peer, (p) => {
 .message { display:flex; flex-direction: column; max-width: 70%; }
 .message.me { align-self: flex-end; }
 .bubble { padding: .6rem .9rem; background: rgba(255,255,255,0.04); border-radius: 12px; }
-.message.me .bubble { background: linear-gradient(90deg,#2563eb,#06b6d4); color: white; }
+.message.me .bubble { background: linear-gradient(90deg, var(--accent-blue), var(--accent-plum)); color: var(--text-strong); }
 .composer { display:flex; gap:.5rem; padding: .75rem; border-top: 1px solid rgba(255,255,255,0.03); }
-.composer input { flex:1; padding:.6rem .8rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.02); color: #fff; }
-.send-btn { background:#2563eb; color:#fff; padding:.5rem .8rem; border-radius:8px; border:none }
+.composer input { flex:1; padding:.6rem .8rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: var(--text-strong); }
+.send-btn { background: var(--accent-plum); color: var(--text-strong); padding:.5rem .8rem; border-radius:8px; border:none }
 
 .chat-empty { flex:1; display:flex; align-items:center; justify-content:center; }
 .empty-card { background: var(--bg-card); padding:2rem; border-radius:12px; }

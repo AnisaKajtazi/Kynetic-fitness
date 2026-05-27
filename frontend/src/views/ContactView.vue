@@ -129,7 +129,7 @@ const handleSubmit = async () => {
 }
 
 .contact-card-local {
-  background: #fff;
+  background: var(--bg-card);
   padding: 2rem 3rem;
   border-radius: 1.5rem;
   width: 90%;
@@ -163,7 +163,7 @@ textarea {
 }
 
 input:focus, textarea:focus {
-  border-color: #1a73e8;
+  border-color: var(--accent-blue);
   box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
 }
 
@@ -175,8 +175,8 @@ input:focus, textarea:focus {
 }
 
 .btn-local {
-  background: #1a73e8;
-  color: #fff;
+  background: var(--accent-blue);
+  color: var(--text-strong);
   border: none;
   padding: 0.8rem;
   border-radius: 999px;
@@ -186,6 +186,6 @@ input:focus, textarea:focus {
 }
 
 .btn-local:hover {
-  background: #155ab6;
+  background: var(--accent-lavender);
 }
 </style>

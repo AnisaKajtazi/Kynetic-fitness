@@ -56,7 +56,7 @@
               <td>
                 <img 
                   v-if="u.photo" 
-                  :src="`http://127.0.0.1:8000/uploads/profilephotos/${u.photo}`" 
+                  :src="imageUrl(u.photo)" 
                   alt="User Photo" 
                   style="max-width:60px; border-radius:6px;"
                 />
@@ -94,10 +94,11 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/services/axios";
 import UserForm from "./UserForm.vue";
 
-const BASE_URL = "http://127.0.0.1:8000/api";
+const BASE_URL = api.defaults.baseURL;
+const IMG_BASE = BASE_URL.replace(/\/api\/?$/, "");
 
 export default {
   components: { UserForm },
@@ -118,6 +119,9 @@ export default {
   },
 
   methods: {
+    imageUrl(photo) {
+      return `${IMG_BASE}/uploads/profilephotos/${photo}`;
+    },
     getRoleName(roleId) {
       return this.roles[roleId] || "Unknown";
     },
