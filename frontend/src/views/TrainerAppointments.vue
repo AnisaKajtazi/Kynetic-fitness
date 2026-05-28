@@ -161,7 +161,7 @@ onMounted(loadClients)
 
 .page-container {
   margin-left: 240px;
-  padding: 2rem;
+  padding: 6rem;
   width: calc(100% - 240px);
 }
 
@@ -172,7 +172,7 @@ onMounted(loadClients)
 .page-header h1 {
   font-size: 2.2rem;
   margin-bottom: 0.5rem;
-  color: #f9fafb;
+  color: #97dffc;
 }
 
 .page-header p {
@@ -204,11 +204,11 @@ onMounted(loadClients)
 
 .profile-copy h2 {
   margin-bottom: 0.5rem;
-  color: #f9fafb;
+  color: #97dffc;
 }
 
 .role {
-  color: #93c5fd;
+  color: #97dffc;
   margin-bottom: 1rem;
 }
 

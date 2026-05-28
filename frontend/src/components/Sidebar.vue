@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <div class="sidebar__logo">🏋️‍♀️ Kynetic</div>
+    <div class="sidebar__logo">Kynetic</div>
 
     <ul class="sidebar__links">
 
@@ -78,7 +78,7 @@ const logout = () => {
   height: 100vh;
   background-color: var(--bg-card);
   color: var(--text-strong);
-  padding: 2.5rem 1rem 1.5rem;
+  padding: 6rem 1rem 1.5rem;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);

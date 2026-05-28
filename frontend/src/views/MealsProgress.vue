@@ -198,6 +198,20 @@ export default {
 
     });
 
+    const themeColor = (name, fallback) => {
+      return getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim() || fallback;
+    };
+
+    const chartPalette = () => [
+      themeColor("--theme-ice", "#97dffc"),
+      themeColor("--theme-lavender", "#858ae3"),
+      themeColor("--theme-violet", "#613dc1"),
+      themeColor("--theme-plum", "#4e148c"),
+      themeColor("--theme-night", "#2c0735")
+    ];
+
     const renderCategoryChart = (data) => {
 
       if (categoryInstance) categoryInstance.destroy();
@@ -211,14 +225,7 @@ export default {
 
       const values = sortedEntries.map(e => e[1]);
 
-      const bgColors = [
-        "var(--accent-blue)",
-        "var(--accent-lavender)",
-        "#f59e0b",
-        "var(--accent-plum)",
-        "#8b5cf6",
-        "#14b8a6"
-      ];
+      const bgColors = chartPalette();
 
       const backgroundColor = bgColors.slice(0, labels.length);
 
@@ -232,7 +239,8 @@ export default {
             {
               data: values,
               backgroundColor,
-              borderWidth: 1
+              borderColor: themeColor("--theme-night", "#2c0735"),
+              borderWidth: 2
             }
           ]
         },
@@ -291,7 +299,9 @@ export default {
             {
               label: "Calories",
               data: days.map(d => d.calories),
-              backgroundColor: "var(--accent-blue)",
+              backgroundColor: themeColor("--theme-lavender", "#858ae3"),
+              borderColor: themeColor("--theme-ice", "#97dffc"),
+              borderWidth: 1,
               borderRadius: 6
             }
           ]
@@ -346,12 +356,12 @@ export default {
 .page-header h2 {
   font-size: 2rem;
   margin-bottom: 0.7rem;
-  color: #f9fafb;
+  color: var(--theme-ice);
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #d1d5db;
+  color: var(--text-muted);
   opacity: 0.85;
 }
 
@@ -369,7 +379,7 @@ export default {
 .meals-list th,
 .meals-list td {
   padding: 0.7rem;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #97dffc;
   text-align: center;
 }
 
@@ -409,6 +419,6 @@ export default {
 .chart-box h3 {
   text-align: center;
   margin-bottom: 1rem;
-  color: #f3f4f6;
+  color: var(--text-light);
 }
 </style>

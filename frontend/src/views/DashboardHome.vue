@@ -267,10 +267,10 @@ function formatDate(d) {
 .profile-card {
   max-width: 850px;
   width: 100%;
-  background: linear-gradient(145deg, #1f2937, #111827);
+  background: linear-gradient(145deg, var(--bg-card), var(--bg-card));
   border-radius: 16px;
   padding: 2.5rem;
-  color: #f9fafb;
+  color: var(--text-strong);
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -296,14 +296,14 @@ function formatDate(d) {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #2563eb;
+  border: 3px solid var(--accent-blue);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-photo:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px #2563eb;
+  box-shadow: 0 0 15px var(--accent-blue);
 }
 
 .profile-info h2 {
@@ -313,7 +313,7 @@ function formatDate(d) {
 }
 
 .profile-info .role {
-  color: #60a5fa;
+  color: var(--accent-blue);
   font-weight: 600;
   margin-top: 0.25rem;
   font-size: 1.1rem;
@@ -340,7 +340,7 @@ function formatDate(d) {
 
 .profile-details .label {
   font-weight: 600;
-  color: #60a5fa;
+  color: var(--accent-blue);
   margin-right: 0.3rem;
 }
 
@@ -350,17 +350,20 @@ function formatDate(d) {
   margin-top: 1rem;
   padding: 0.7rem;
   width: 100%;
-  background: #2563eb;
+  background: var(--accent-blue);
   border-radius: 10px;
   font-weight: bold;
-  color: #f9fafb;
+  color: var(--theme-navy);
+  border: none;
+  cursor: pointer;
   transition: background 0.25s ease;
 }
 
 .edit-btn:hover,
 .save-btn:hover,
 .photo-btn:hover {
-  background-color: #1d4ed8;
+  background-color: var(--accent-blue-dark);
+  color: var(--text-strong);
 }
 
 .profile-form {
@@ -368,7 +371,7 @@ function formatDate(d) {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  background-color: #111827;
+  background-color: var(--bg-card);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.6);
@@ -378,15 +381,15 @@ function formatDate(d) {
 .profile-form select {
   padding: 0.6rem;
   border-radius: 8px;
-  border: none;
+  border: 1px solid rgba(var(--theme-sky-rgb), 0.16);
   outline: none;
-  background-color: #1f2937;
-  color: #f9fafb;
+  background-color: var(--bg-card);
+  color: var(--text-strong);
   transition: all 0.2s ease;
 }
 
 .profile-form input:focus,
 .profile-form select:focus {
-  box-shadow: 0 0 0 2px #2563eb;
+  box-shadow: 0 0 0 2px var(--accent-blue);
 }
 </style>

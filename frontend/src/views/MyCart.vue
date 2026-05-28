@@ -1,6 +1,6 @@
 <template>
   <div class="my-cart-page">
-    <h2>My Cart</h2>
+    <h2 class="text-color">My Cart</h2>
     <div v-if="loading" class="loading">Loading cart...</div>
     <div v-else>
       <p v-if="cartItems.length === 0">Your cart is empty.</p>
@@ -135,7 +135,13 @@ const checkout = async () => {
 
 <style scoped>
 .my-cart-page {
-  padding: 1.5rem;
+  padding: 5rem;
+}
+
+.text-color{
+  color: #97dffc;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .cart-item {

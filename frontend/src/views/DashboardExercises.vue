@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-exercises">
-    <h2>Your Favorite Exercises</h2>
+    <h2 class="text-color">Your Favorite Exercises</h2>
 
     <div v-if="exercises.length === 0">
       You haven't saved any favorite exercises yet.
@@ -109,7 +109,7 @@ export default {
 
 <style scoped>
 .dashboard-exercises {
-  padding: 1rem;
+  padding: 5rem;
 }
 
 .grid {
@@ -134,7 +134,7 @@ export default {
 
 .exercise-img {
   width: 100%;
-  height: 150px;
+  height: 160px;
   object-fit: cover;
   border-radius: var(--radius);
   margin-bottom: 0.5rem;
@@ -146,5 +146,11 @@ export default {
   font-size: 1rem;
   cursor: pointer;
   color: var(--text-accent);
+  display: inline;
+}
+.text-color{
+  color: #97dffc;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 </style>

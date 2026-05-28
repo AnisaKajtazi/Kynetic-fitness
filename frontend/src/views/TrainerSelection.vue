@@ -3,10 +3,8 @@
     <Sidebar />
 
     <main class="page-container">
-      <div class="page-header">
-        <h1>Trainers</h1>
-        <p>Choose one trainer to support your workouts. You can update your selection later, but only one trainer can be active at a time.</p>
-      </div>
+      <h2 class="text-color">Trainers</h2>
+      <p class="page-subtitle">Choose one trainer to support your workouts. You can update your selection later, but only one trainer can be active at a time.</p>
 
       <div v-if="loading" class="state-message">Loading trainers...</div>
 
@@ -202,34 +200,47 @@ onMounted(loadTrainers)
 <style scoped>
 .trainer-selection-layout {
   display: flex;
-  width: 100%;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   background: var(--bg-dark);
 }
 
+.trainer-selection-layout :deep(.sidebar) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 230px;
+  height: 100vh;
+  z-index: 1000;
+}
+
 .page-container {
-  margin-left: 240px;
-  padding: 2rem;
-  width: calc(100% - 240px);
+  margin-left: 230px;
+  padding: 6rem;
+  width: calc(100vw - 230px);
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-dark);
+  color: var(--text-light);
 }
 
-.page-header {
-  margin-bottom: 2rem;
-}
-
-.page-header h1 {
+.text-color {
   font-size: 2.2rem;
   margin-bottom: 0.5rem;
-  color: #f9fafb;
+  color: var(--theme-ice);
 }
 
-.page-header p {
-  color: #d1d5db;
+.page-subtitle {
+  color: var(--text-muted);
   max-width: 760px;
+  margin: 0 0 2rem;
 }
 
 .state-message {
-  color: #d1d5db;
+  color: var(--text-muted);
 }
 
 .selected-trainer,
@@ -247,7 +258,7 @@ onMounted(loadTrainers)
 
 .section-head h2 {
   font-size: 1.5rem;
-  color: #f9fafb;
+  color: var(--theme-ice);
 }
 
 .trainers-grid {
@@ -259,8 +270,8 @@ onMounted(loadTrainers)
 .trainer-card {
   background: var(--bg-card);
   padding: 1.5rem;
-  border-radius: 16px;
-  border: 1px solid transparent;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
@@ -269,7 +280,7 @@ onMounted(loadTrainers)
 
 .trainer-card.active {
   border-color: var(--accent-blue);
-  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.18);
+  box-shadow: var(--shadow-md);
 }
 
 .trainer-card.featured {
@@ -283,14 +294,14 @@ onMounted(loadTrainers)
   width: 100%;
   height: 280px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: var(--radius);
   margin-bottom: 1rem;
 }
 
 .chat-btn {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #d1d5db;
+  border: 1px solid var(--border-dark);
+  color: var(--text-muted);
   padding: 0.45rem 0.7rem;
   border-radius: 8px;
   cursor: pointer;
@@ -318,16 +329,16 @@ onMounted(loadTrainers)
 
 .trainer-card h3 {
   margin-bottom: 0.5rem;
-  color: #f9fafb;
+  color: var(--text-light);
 }
 
 .trainer-card h4 {
   margin-bottom: 1rem;
-  color: #93c5fd;
+  color: var(--theme-ice);
 }
 
 .trainer-card p {
-  color: #d1d5db;
+  color: var(--text-muted);
   line-height: 1.7;
   margin-bottom: 1.2rem;
 }
@@ -350,8 +361,8 @@ onMounted(loadTrainers)
 
 .secondary-btn {
   background: transparent;
-  color: #f9fafb;
-  border: 1px solid #374151;
+  color: var(--text-light);
+  border: 1px solid var(--border-dark);
 }
 
 .select-btn {
@@ -374,12 +385,23 @@ onMounted(loadTrainers)
 @media (max-width: 768px) {
   .trainer-selection-layout {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .trainer-selection-layout :deep(.sidebar) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
   }
 
   .page-container {
     margin-left: 0;
     width: 100%;
+    height: auto;
     padding: 1rem;
+    border-left: none;
   }
 
   .trainer-card.featured {

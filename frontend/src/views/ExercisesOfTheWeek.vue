@@ -1,6 +1,7 @@
 <template>
   <div class="week-page">
-    <h2 class="title">Exercises of the Week</h2>
+    <h2 class="text-color">Exercises of the Week</h2>
+    <p class="page-subtitle">Review your weekly plan and mark each workout as completed.</p>
 
     <div
       v-for="(items, day) in week"
@@ -136,15 +137,23 @@ const getImageUrl = (image) => {
 
 <style scoped>
 .week-page {
-  padding: 1rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 5rem;
+  color: var(--text-light);
 }
 
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: var(--text-light);
+.text-color {
+  color: #97dffc;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  margin: 0 0 2rem;
+  color: var(--text-muted);
 }
 
 .day-card {

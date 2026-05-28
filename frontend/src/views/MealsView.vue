@@ -184,10 +184,11 @@ watchEffect(() => {
 
 <style scoped>
 .meals-page {
-  padding: 60px 20px;
-  max-width: 1300px;
-  margin: auto;
-  color: #222;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 5rem;
+  color: var(--text-light);
 }
 
 .hero {
@@ -199,7 +200,7 @@ watchEffect(() => {
 .hero-title {
   font-size: 38px;
   font-weight: 800;
-  color: var(--text-strong);
+  color: var(--theme-ice);
   font-family: Lucida Handwriting;
 }
 
@@ -211,6 +212,7 @@ watchEffect(() => {
 
 .category-section {
   margin-bottom: 50px;
+  width: 100%;
 }
 
 .category-title {
@@ -221,6 +223,7 @@ watchEffect(() => {
 
 .slider-wrapper {
   position: relative;
+  width: 100%;
 }
 
 .slider {
@@ -229,6 +232,7 @@ watchEffect(() => {
   overflow-x: auto;
   padding: 10px 0;
   scroll-behavior: smooth;
+  width: 100%;
 }
 
 .slider::-webkit-scrollbar {
@@ -236,7 +240,8 @@ watchEffect(() => {
 }
 
 .meal-card {
-  min-width: 230px;
+  flex: 0 0 calc((100% - 60px) / 5);
+  min-width: 220px;
   height: auto;
   border-radius: 12px;
   overflow: hidden;
@@ -280,7 +285,7 @@ watchEffect(() => {
 }
 
 .add-to-cart-btn:hover {
-  background: #e64a19;
+  background: #97dffc;
 }
 
 .slide-btn {
@@ -304,10 +309,10 @@ watchEffect(() => {
 }
 
 .slide-btn.left {
-  left: -10px;
+  left: 0;
 }
 .slide-btn.right {
-  right: -10px;
+  right: 0;
 }
 
 .popup-overlay {
@@ -361,5 +366,27 @@ watchEffect(() => {
   height: 34px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .meal-card {
+    flex-basis: calc((100% - 45px) / 4);
+  }
+}
+
+@media (max-width: 900px) {
+  .meal-card {
+    flex-basis: calc((100% - 30px) / 3);
+  }
+}
+
+@media (max-width: 640px) {
+  .meals-page {
+    padding: 1rem;
+  }
+
+  .meal-card {
+    flex-basis: calc((100% - 15px) / 2);
+  }
 }
 </style>

@@ -1,12 +1,9 @@
 <template>
   <div class="progress-page">
-
-    <div class="main-header">
-      <h1>Fitness Progress Dashboard</h1>
-      <p>
-        Track your nutrition, workouts, and weekly fitness journey.
-      </p>
-    </div>
+    <h2 class="text-color">Fitness Progress Dashboard</h2>
+    <p class="page-subtitle">
+      Track your nutrition, workouts, and weekly fitness journey.
+    </p>
 
     <MealsProgress />
     <ExerciseProgress />
@@ -30,29 +27,21 @@ export default {
 <style scoped>
 .progress-page {
   width: 100%;
-  padding: 2rem;
+  max-width: none;
+  margin: 0;
+  padding: 5rem;
+  color: var(--text-light);
 }
 
-.main-header {
-  text-align: center;
-  margin-bottom: 3rem;
+.text-color {
+  color: var(--theme-ice);
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.main-header h1 {
-  font-size: 2.7rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: Lucida Handwriting;
-}
-
-.main-header p {
-  color: #d1d5db;
+.page-subtitle {
+  color: var(--text-muted);
   font-size: 1rem;
-  max-width: 650px;
-  margin: 0 auto;
-  opacity: 0.9;
+  margin: 0 0 2rem;
 }
 </style>

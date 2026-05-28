@@ -153,6 +153,20 @@ export default {
       return day ? day.slice(0, 3) : "";
     };
 
+    const themeColor = (name, fallback) => {
+      return getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim() || fallback;
+    };
+
+    const chartPalette = () => [
+      themeColor("--theme-ice", "#97dffc"),
+      themeColor("--theme-lavender", "#858ae3"),
+      themeColor("--theme-violet", "#613dc1"),
+      themeColor("--theme-plum", "#4e148c"),
+      themeColor("--theme-night", "#2c0735")
+    ];
+
     const renderCategoryChart = (data) => {
       if (categoryInstance) categoryInstance.destroy();
       if (!Object.keys(data).length) return;
@@ -165,14 +179,9 @@ export default {
           labels: sorted.map(e => e[0]),
           datasets: [{
             data: sorted.map(e => e[1]),
-            backgroundColor: [
-              "var(--accent-blue)",
-              "var(--accent-lavender)",
-              "#f59e0b",
-              "var(--accent-plum)",
-              "#8b5cf6",
-              "#14b8a6"
-            ]
+            backgroundColor: chartPalette(),
+            borderColor: themeColor("--theme-night", "#2c0735"),
+            borderWidth: 2
           }]
         },
         options: {
@@ -193,7 +202,9 @@ export default {
           datasets: [{
             label: "Reps",
             data: days.map(d => d.duration),
-            backgroundColor: "var(--accent-blue)",
+            backgroundColor: themeColor("--theme-lavender", "#858ae3"),
+            borderColor: themeColor("--theme-ice", "#97dffc"),
+            borderWidth: 1,
             borderRadius: 6
           }]
         },
@@ -236,11 +247,11 @@ export default {
 
 .page-header h2 {
   font-size: 2rem;
-  color: #f9fafb;
+  color: var(--theme-ice);
 }
 
 .subtitle {
-  color: #d1d5db;
+  color: var(--text-muted);
 }
 
 .recommended {
@@ -284,8 +295,8 @@ export default {
 .meals-list th,
 .meals-list td {
   padding: 0.7rem;
-  border-bottom: 1px solid #374151;
   text-align: center;
+  border-bottom: 1px solid #97dffc;
 }
 
 .save-btn {
@@ -298,7 +309,7 @@ export default {
 
 .empty {
   text-align: center;
-  color: #9ca3af;
+  color: var(--text-dim);
 }
 
 .charts {
@@ -319,6 +330,6 @@ export default {
 .chart-box h3 {
   text-align: center;
   margin-bottom: 1rem;
-  color: #f3f4f6;
+  color: var(--text-light);
 }
 </style>

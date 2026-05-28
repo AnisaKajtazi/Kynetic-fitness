@@ -300,6 +300,11 @@ import user1 from '@/img/user1.jpg';
 import user2 from '@/img/user2.jpg';
 import user3 from '@/img/user3.jpg';
 
+import service1 from '@/img/PersonalTraining.jpg';
+import service2 from '@/img/passionfruitsmoothie.jpg';
+import service3 from '@/img/ProgressTracking.jpg';
+import service4 from '@/img/chat.jpg';
+
 
 
 const exerciseImages = [exercise1, exercise2, exercise3,exercise4];
@@ -398,10 +403,10 @@ onBeforeUnmount(() => {
 });
 
 const services = [
-  { icon: meal4, title: "Personal Training", description: "Customized workouts for your goals." },
-  { icon: meal5, title: "Nutrition Plans", description: "Healthy meal plans to complement exercises." },
-  { icon: meal6, title: "Progress Tracking", description: "Visualize your growth and milestones." },
-  { icon: exercise1, title: "Community Challenges", description: "Join challenges with friends." },
+  { icon: service1, title: "Personal Training", description: "Customized workouts for your goals." },
+  { icon: service2, title: "Nutrition Plans", description: "Healthy meal plans to complement exercises." },
+  { icon: service3, title: "Progress Tracking", description: "Visualize your growth and milestones." },
+  { icon: service4, title: "Communication With Our Trainers", description: "Chat with our trainers for any help you may need." },
 ];
 
 const testimonials = [
@@ -442,12 +447,13 @@ const testimonials = [
   margin: 0 auto;
   font-family: Lucida Handwriting;
   font-weight: 800;
+  color: #97dffc;
 }
 .hero__subtitle {
   font-size: 1.32rem;
   max-width: 760px;
   margin: 0 auto;
-  color: rgba(255, 255, 255, 0.92);
+  color: #97dffc;
   line-height: 1.85;
 }
 .search {
@@ -467,7 +473,7 @@ const testimonials = [
   border: none;
   background: rgba(255, 255, 255, 0.96);
   color: var(--bg-card);
-  font-size: 1rem;
+  font-size: 1.3rem;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
 }
 .search-field input::placeholder {
@@ -548,6 +554,7 @@ const testimonials = [
 .section-title {
   padding: 0 2rem;
   margin: 2rem 0;
+  color: #97dffc;
 }
 .slider-wrapper { 
   flex: 0 0 320px; 
@@ -606,7 +613,7 @@ const testimonials = [
   border-radius: 24px;
   padding: 2.2rem 2.5rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 4px solid #4f8dff;
+  border-left: 4px solid #97dffc;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
@@ -621,7 +628,7 @@ const testimonials = [
 .sidebar.slider-box h3 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #0d6efd;
+  color: #97dffc;
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
@@ -645,7 +652,7 @@ const testimonials = [
 .services-grid { 
   display: grid; 
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-  gap: 2rem; 
+  gap: 3rem; 
 }
 .service-card { 
   background: var(--bg-card); 
@@ -655,10 +662,11 @@ const testimonials = [
   box-shadow: var(--shadow-sm); 
 }
 .service-icon { 
-  width: 80px; 
-  height: 80px; 
+  width: 150px; 
+  height: 150px; 
   object-fit: cover; 
   margin-bottom: 1rem; 
+  border-radius: var(--radius-lg); 
 }
 
 
@@ -697,7 +705,7 @@ const testimonials = [
   min-height: 180px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: 4px solid #4f8dff;
+  border-left: 4px solid #97dffc;
   padding: 1.8rem;
   border-radius: 20px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
@@ -728,7 +736,7 @@ const testimonials = [
   min-height: 130px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: 4px solid #4f8dff;
+  border-left: 4px solid #97dffc;
   padding: 1.4rem;
   border-radius: 20px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);

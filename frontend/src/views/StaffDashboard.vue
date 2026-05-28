@@ -325,7 +325,7 @@ const formatDate = (dateStr) => {
   color: #d1d5db;
   max-width: calc(100% - 120px);
 }
-..profile-form textarea {
+.profile-form textarea {
   width: 100%;
   min-height: 120px;
   resize: vertical;

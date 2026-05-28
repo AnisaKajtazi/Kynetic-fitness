@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar__inner">
-      <div class="logo">🏋️‍♀️ <span class="brand">Kynetic</span></div>
+      <div class="logo"><span class="brand">Kynetic</span></div>
 
       
       <button class="menu-btn" @click="toggleMenu" aria-label="Toggle menu">
@@ -23,7 +23,12 @@
         <li v-if="isGuest"><RouterLink to="/login">Login</RouterLink></li>
         <li v-else>
           <RouterLink to="/chats" class="chat-link">
-            <img :src="chatIcon" alt="Chats" class="chat-icon" />
+            <span
+              class="chat-icon"
+              :style="{ '--chat-icon': `url(${chatIcon})` }"
+              role="img"
+              aria-label="Chats"
+            ></span>
             <span v-if="totalUnread" class="chat-badge">{{ totalUnread }}</span>
           </RouterLink>
         </li>
@@ -102,7 +107,7 @@ onMounted(() => {
 }
 
 .navbar__inner {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: .8rem 1rem;
   display: flex;
@@ -117,7 +122,7 @@ onMounted(() => {
   gap: .5rem;
   color: var(--text);
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
 }
 
 .brand {
@@ -182,7 +187,14 @@ onMounted(() => {
   }
 }
 
-.chat-link { position: relative; color: var(--text); font-size: 1.1rem; }
+.chat-link { position: relative; color: var(--text); font-size: 1.1rem; display: inline-flex; align-items: center; }
 .chat-badge { position: absolute; top: -6px; right: -10px; background: var(--accent-plum); color: var(--text-strong); padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.75rem; }
-.chat-icon { width: 20px; height: 20px; display: inline-block; }
+.chat-icon {
+  width: 37px;
+  height: 37px;
+  display: inline-block;
+  background: var(--theme-lavender);
+  mask: var(--chat-icon) center / contain no-repeat;
+  -webkit-mask: var(--chat-icon) center / contain no-repeat;
+}
 </style>

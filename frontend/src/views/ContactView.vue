@@ -2,7 +2,7 @@
   <section class="contact-us-page">
     <div class="contact-overlay">
       <div class="contact-card-local">
-        <h1 style="color: grey; font-family: Lucida Handwriting;">Contact Us</h1>
+        <h1 style="color: var(--theme-ice); font-family: Lucida Handwriting;">Contact Us</h1>
         <p>Fill the form below to send us a message.</p>
 
         <form @submit.prevent="handleSubmit">

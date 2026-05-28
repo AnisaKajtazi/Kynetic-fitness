@@ -3,7 +3,7 @@
     <Sidebar />
 
     <div class="page-container">
-      <h1>My Schedule</h1>
+      <h1 class="text-color">My Schedule</h1>
 
       <div v-if="loading">Loading...</div>
 
@@ -60,8 +60,14 @@ onMounted(async () => {
 
 .page-container {
   margin-left: 240px;
-  padding: 2rem;
+  padding: 6rem;
   width: calc(100vw - 240px);
+}
+
+.text-color{
+  color: #97dffc;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .schedule-table {
@@ -72,7 +78,7 @@ onMounted(async () => {
 .schedule-table th,
 .schedule-table td {
   padding: 0.8rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #97dffc;
 }
 
 .available {

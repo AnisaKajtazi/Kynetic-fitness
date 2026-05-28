@@ -254,7 +254,7 @@ export default {
 
 <style scoped>
 .exercises-page {
-  padding: 2rem;
+  padding: 5rem;
 }
 
 .hero {
@@ -265,7 +265,7 @@ export default {
 .hero-title {
   font-size: 38px;
   font-weight: 800;
-  color: var(--text-strong)fffff;
+  color: var(--theme-ice);
   font-family: Lucida Handwriting;
   text-align:center;
 }
