@@ -1,15 +1,11 @@
 <template>
-  <div 
-    class="admin-dashboard"
-    :style="{ backgroundImage: backgroundUrl }"
-  >
+  <div class="admin-dashboard">
     <Sidebar
       :activeSection="activeSection"
       @changeSection="activeSection = $event"
     />
 
     <main class="admin-dashboard__main">
-      <h3 class="text-center text-white mb-4">Admin Dashboard</h3>
       <component :is="currentSection" />
     </main>
   </div>
@@ -35,27 +31,35 @@ export default {
   },
   data() {
     return {
-      backgroundImage: 'admindashboardbackground.avif',
       activeSection: 'users',
     }
   },
+  mounted() {
+    const section = this.$route.query.activeSection
+    if (section && this.sections[section]) {
+      this.activeSection = section
+    }
+  },
+  watch: {
+    '$route.query.activeSection'(section) {
+      if (section && this.sections[section]) {
+        this.activeSection = section
+      }
+    }
+  },
   computed: {
-    backgroundUrl() {
-      return this.backgroundImage
-        ? `url(http://127.0.0.1:8000/uploads/${this.backgroundImage})`
-        : 'none'
-    },
-
-    currentSection() {
-      const sections = {
+    sections() {
+      return {
         users: UsersList,
         roles: RolesList,
         exercises: ExercisesList,
         meals: MealsList,
         schedule: AdminSchedule,
       }
+    },
 
-      return sections[this.activeSection] || UsersList
+    currentSection() {
+      return this.sections[this.activeSection] || UsersList
     }
   }
 }
@@ -64,29 +68,22 @@ export default {
 <style scoped>
 .admin-dashboard {
   display: flex;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  color: white;
-}
-
-.admin-dashboard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-light);
 }
 
 .admin-dashboard__main {
   margin-left: 230px;
-  width: calc(100% - 230px);
-  padding: 20px;
-  position: relative;
-  z-index: 1;
+  width: calc(100vw - 230px);
+  height: 100vh;
+  padding: 2rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-dark);
 }
 
 .admin-dashboard :deep(.sidebar) {
@@ -95,6 +92,6 @@ export default {
   left: 0;
   width: 230px;
   height: 100vh;
-  z-index: 2;
+  z-index: 1000;
 }
 </style>

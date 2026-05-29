@@ -1,6 +1,6 @@
 <template>
   <div class="exercises-wrapper">
-    <div class="p-4 shadow rounded">
+    <div class="admin-panel p-4 shadow rounded">
       <h2 class="text-center mb-4">Exercises List</h2>
 
       <button class="btn btn-primary mb-3" @click="openModal">
@@ -14,7 +14,8 @@
         @saved="fetchExercises"
       />
 
-      <div class="d-flex justify-content-end mb-2">
+      <div class="toolbar d-flex justify-content-between align-items-center mb-3">
+        <span class="table-count">{{ pagination ? pagination.total : exercises.length }} exercises</span>
         <input
           type="text"
           v-model="searchQuery"
@@ -89,10 +90,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/services/axios";
 import ExerciseForm from "./ExerciseForm.vue";
-
-const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
   components: { ExerciseForm },
@@ -103,7 +102,7 @@ export default {
       showForm: false,
       selectedExercise: null,
       searchQuery: "",
-      perPage: 10,
+      perPage: 15,
       pagination: null
     };
   },
@@ -130,17 +129,14 @@ export default {
     async deleteExercise(id) {
       if (!confirm("Delete this exercise?")) return;
 
-      await axios.delete(`${BASE_URL}/exercises/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      await api.delete(`/exercises/${id}`);
 
       this.fetchExercises();
     },
 
     async fetchExercises(page = 1) {
       try {
-        const res = await axios.get(`${BASE_URL}/exercises`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        const res = await api.get("/exercises", {
           params: {
             search: this.searchQuery,
             per_page: this.perPage,
@@ -160,22 +156,99 @@ export default {
 
 <style scoped>
 .exercises-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 40px;
+  width: 100%;
+  padding: 1rem 0;
+  color: var(--text-light);
+}
+
+.admin-panel {
+  width: 100%;
+  max-width: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-panel h2 {
+  color: var(--theme-ice);
+  font-size: 2.2rem;
+  text-align: left !important;
+}
+
+.toolbar {
+  gap: 1rem;
+}
+
+.table-count {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
 }
 
 table {
-  background-color: #02143aff;
-  border-radius: 10px;
   width: 100%;
-  padding: 20px;
-  margin: 25px 0;
+  min-width: 1150px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dark);
+  background: var(--bg-contrast);
 }
 
-.table-dark th {
-  color: white;
+.table > :not(caption) > * > * {
+  padding: 0.9rem 1rem;
+  background-color: transparent;
+  border-color: var(--border-dark);
+  color: var(--text-light);
+}
+
+.table-dark th,
+.table thead th {
+  background: var(--theme-plum);
+  color: var(--theme-ice);
+  border-color: var(--border-dark);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: rgba(var(--theme-night-rgb), 0.28);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) > * {
+  background-color: rgba(var(--theme-lavender-rgb), 0.08);
+}
+
+.btn-primary {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: var(--theme-night);
+  font-weight: 700;
+}
+
+.btn-warning {
+  background: var(--theme-lavender);
+  border-color: var(--theme-lavender);
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.btn-danger {
+  background: var(--theme-plum);
+  border-color: var(--theme-plum);
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.btn-secondary {
+  background: var(--bg-contrast);
+  border-color: var(--border-dark);
+  color: var(--text-light);
 }
 
 td button {
@@ -183,6 +256,32 @@ td button {
 }
 
 .form-control {
-  max-width: 300px;
+  max-width: 420px;
+  background: var(--bg-contrast);
+  border: 1px solid var(--border-dark);
+  color: var(--text-light);
+}
+
+.form-control::placeholder {
+  color: var(--text-dim);
+}
+
+.form-control:focus {
+  background: var(--bg-contrast);
+  border-color: var(--theme-ice);
+  color: var(--text-light);
+  box-shadow: 0 0 0 0.2rem rgba(var(--theme-ice-rgb), 0.18);
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    align-items: stretch !important;
+    flex-direction: column;
+  }
+
+  .form-control {
+    max-width: none;
+    width: 100% !important;
+  }
 }
 </style>

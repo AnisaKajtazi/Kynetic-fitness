@@ -14,7 +14,6 @@
       </template>
 
       <template v-else-if="roleID === 1">
-        <li @click="navigate('users','/admin-dashboard')">Dashboard</li>
         <li @click="navigate('users','/admin-dashboard')">Users</li>
         <li @click="navigate('roles','/admin-dashboard')">Roles</li>
         <li @click="navigate('exercises','/admin-dashboard')">Exercises</li>
