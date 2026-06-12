@@ -2,7 +2,7 @@
   <section class="reset-password-page">
     <div class="login-wrapper">
       <div class="login-text">
-        <h1>Reset Your Password 🔒</h1>
+        <h1 class="heading-font auth-hero-title">Reset Your Password</h1>
         <p>Enter your new password below to regain access to your account.</p>
       </div>
 
@@ -70,7 +70,6 @@ export default {
         return;
       }
 
-      // Marrim token nga query params (nga email link)
       const token = this.$route.query.token;
       if (!token) {
         alert("Invalid or missing reset token.");
@@ -105,4 +104,142 @@ export default {
 </script>
 
 <style scoped>
+.reset-password-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top right, rgba(26, 115, 232, 0.15), transparent 60%),
+              radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.12), transparent 60%),
+              var(--bg-dark);
+  background-blend-mode: screen;
+  overflow: hidden;
+  position: relative;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3rem;
+  max-width: 1000px;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+.login-text {
+  flex: 1 1 380px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 1rem;
+}
+
+.login-text p {
+  font-size: var(--text-md);
+  color: var(--text-light);
+  opacity: 0.8;
+  max-width: 420px;
+}
+
+.login-card {
+  flex: 1 1 360px;
+  padding: 3rem 2.5rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--bg-card), var(--bg-contrast));
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.login-title {
+  font-size: var(--text-2xl);
+  margin-bottom: 0.5rem;
+  color: var(--accent-blue);
+  font-weight: 700;
+}
+
+.login-subtitle {
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text-muted);
+}
+
+input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 999px;
+  font-size: var(--text-base);
+  border: 1px solid #444;
+  background: #1f2023;
+  color: var(--text-light);
+}
+
+input::placeholder {
+  color: #777;
+}
+
+.signup-text {
+  margin-top: 1.8rem;
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+}
+
+.btn.full-width {
+  width: 100%;
+  padding: 1rem 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.btn.full-width:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(26, 115, 232, 0.35);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .login-text {
+    text-align: center;
+  }
+
+  .auth-hero-title {
+    font-size: var(--text-2xl);
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+  }
+}
 </style>

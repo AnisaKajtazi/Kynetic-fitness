@@ -2,7 +2,7 @@
   <section class="home">
     <header class="hero" role="banner" aria-label="Fitness hero">
       <div class="hero__overlay">
-        <h1 class="hero__title">Achieve Your Fitness Goals</h1>
+        <h1 class="hero__title heading-font">Achieve Your Fitness Goals</h1>
         <p class="hero__subtitle">
           Track exercises, plan meals, and visualize your progress — all in one place.
         </p>
@@ -178,7 +178,7 @@
 <section class="cta full-width" aria-label="Call to action">
   <div class="cta-overlay"></div>
   <div class="cta-inner">
-    <h2 class="cta-title">Transform Your Life Today</h2>
+    <h2 class="cta-title heading-font">Transform Your Life Today</h2>
     <p class="cta-desc">
       Join thousands of fitness enthusiasts achieving their goals every day. 
       Discover personalized workouts, nutrition plans, and progress tracking — 
@@ -198,7 +198,7 @@
       
       
       <div class="footer-col brand">
-        <h3 class="footer-logo">Kynetic</h3>
+        <h3 class="footer-logo heading-font">Kynetic</h3>
         <p>
           Your trusted fitness companion — combining <strong>training</strong>,
           <strong>nutrition</strong>, and <strong>motivation</strong> to help
@@ -445,12 +445,11 @@ const testimonials = [
   letter-spacing: -0.04em;
   max-width: 900px;
   margin: 0 auto;
-  font-family: Lucida Handwriting;
   font-weight: 800;
   color: #97dffc;
 }
 .hero__subtitle {
-  font-size: 1.32rem;
+  font-size: var(--text-lg);
   max-width: 760px;
   margin: 0 auto;
   color: #97dffc;
@@ -635,9 +634,9 @@ const testimonials = [
 }
 
 .sidebar.slider-box p {
-  font-size: 1.05rem;
+  font-size: var(--text-md);
   color: var(--text-strong)fffff;
-  line-height: 2.6;
+  line-height: 2.2;
   position: relative;
   z-index: 1;
 }
@@ -691,8 +690,8 @@ const testimonials = [
   text-align: left;
 }
 .about-text { 
-  font-size: 1.05rem; 
-  line-height: 2.8; 
+  font-size: var(--text-md); 
+  line-height: 2.2; 
   margin-bottom: 2.35rem; 
   color: #d7d9df;
 }
@@ -879,7 +878,7 @@ const testimonials = [
   transform: scale(1.05); 
 }
 .testimonial-text {
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: #e2e8f0;
   line-height: 1.8;
   text-align: center;
@@ -891,13 +890,13 @@ const testimonials = [
 }
 .testimonial-role {
   color: #93c5fd;
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
 }
 .testimonial-subtitle {
   max-width: 760px;
   margin: 0 auto 1.75rem;
   color: #a5b4fc;
-  font-size: 1.05rem;
+  font-size: var(--text-md);
   line-height: 1.8;
 }
 
@@ -934,7 +933,7 @@ const testimonials = [
 }
 
 .cta-title {
-  font-size: 2.8rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 800;
   margin-bottom: 1rem;
   letter-spacing: 1px;
@@ -942,7 +941,7 @@ const testimonials = [
 }
 
 .cta-desc {
-  font-size: 1.15rem;
+  font-size: var(--text-md);
   line-height: 1.7;
   margin-bottom: 2rem;
   color: #e5e7eb;
@@ -958,8 +957,8 @@ const testimonials = [
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue));
   color: var(--text-strong);
   border: none;
-  padding: 0.8rem 1.8rem;
-  font-size: 1rem;
+  padding: 0.85rem 1.9rem;
+  font-size: var(--text-base);
   border-radius: 50px;
   transition: all 0.3s ease;
 }
@@ -973,9 +972,9 @@ const testimonials = [
   background: transparent;
   color: var(--text-strong);
   border: 2px solid rgba(255,255,255,0.55);
-  padding: 0.8rem 1.8rem;
+  padding: 0.85rem 1.9rem;
   border-radius: 50px;
-  font-size: 1rem;
+  font-size: var(--text-base);
   transition: all 0.3s ease;
 }
 
@@ -1008,7 +1007,7 @@ const testimonials = [
 }
 
 .footer-col h4 {
-  font-size: 1.1rem;
+  font-size: var(--text-md);
   color: var(--text-strong);
   margin-bottom: 1rem;
 }
@@ -1031,7 +1030,7 @@ const testimonials = [
 
 
 .footer-logo {
-  font-size: 1.8rem;
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--accent-blue);
   margin-bottom: 1rem;
@@ -1042,7 +1041,7 @@ const testimonials = [
   border-top: 1px solid var(--bg-card);
   padding-top: 1rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
   color: #94a3b8;
 }
 

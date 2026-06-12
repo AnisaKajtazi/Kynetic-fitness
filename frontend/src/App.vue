@@ -24,7 +24,8 @@ html, body, #app {
   background: var(--bg-dark);
   background-image: linear-gradient(180deg, rgba(var(--theme-night-rgb), 1), rgba(var(--theme-plum-rgb), 0.95));
   color: var(--text-light);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
 }
 
 #app {

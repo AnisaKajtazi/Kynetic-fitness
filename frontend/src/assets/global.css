@@ -35,6 +35,20 @@
 
   --radius: 16px;
   --radius-lg: 24px;
+
+  /* Typography — change fonts here only */
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --heading-font: 'Playfair Display', serif;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: clamp(2rem, 3.5vw, 2.75rem);
+  --text-display: clamp(2.25rem, 4vw, 3.5rem);
 }
 
 
@@ -52,11 +66,14 @@ html, body, #app {
   min-height: 100vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
   color: var(--text-light);
   background: var(--bg-dark);
   transition: background 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #app {
@@ -74,13 +91,67 @@ main {
 
 
 h1, h2, h3, h4, h5, h6 {
-  line-height: 1.2;
+  line-height: 1.25;
   font-weight: 700;
   color: var(--text-light);
 }
 
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-md); }
+h6 { font-size: var(--text-base); }
+
 p {
   color: var(--text-muted);
+  font-size: var(--text-base);
+  line-height: 1.7;
+}
+
+label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+small,
+.text-small {
+  font-size: var(--text-sm);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Single source for display/hero heading font */
+.heading-font {
+  font-family: var(--heading-font);
+}
+
+.page-hero-title {
+  font-size: var(--text-display);
+  font-weight: 800;
+  color: var(--theme-ice);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.page-hero-subtitle {
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-top: 0.75rem;
+}
+
+.auth-hero-title {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 
@@ -96,7 +167,7 @@ p {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.3s ease;
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
   position: relative;
   overflow: hidden;
 }
@@ -159,7 +230,7 @@ textarea {
   border: 1px solid rgba(var(--theme-ice-rgb), 0.16);
   background: rgba(255,255,255,0.04);
   color: var(--text-light);
-  font-size: 1rem;
+  font-size: var(--text-base);
   outline: none;
   transition: all 0.3s ease;
 }
@@ -247,7 +318,7 @@ a:focus-visible {
 
 .error-text {
   color: var(--accent-plum);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
   margin-top: 6px;
   display: block;
   text-align: left;

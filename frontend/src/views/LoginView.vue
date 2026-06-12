@@ -2,7 +2,7 @@
   <section class="login-page">
     <div class="login-wrapper">
       <div class="login-text">
-        <h1>Welcome Back, Champion 🏋️‍♀️</h1>
+        <h1 class="heading-font auth-hero-title">Welcome Back, Champion</h1>
         <p>Stay consistent. Stay strong. Let’s crush your fitness goals today!</p>
       </div>
 
@@ -144,18 +144,8 @@ export default {
   text-align: left;
   padding: 1rem;
 }
-.login-text h1 {
-  font-size: 2.6rem;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-  font-weight: 800;
-  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: Lucida Handwriting;
-}
 .login-text p {
-  font-size: 1.05rem;
+  font-size: var(--text-md);
   color: var(--text-light);
   opacity: 0.8;
   max-width: 420px;
@@ -174,14 +164,14 @@ export default {
   box-shadow: var(--shadow-lg);
 }
 .login-title {
-  font-size: 2rem;
+  font-size: var(--text-2xl);
   margin-bottom: 0.5rem;
   color: var(--accent-blue);
   font-weight: 700;
 }
 .login-subtitle {
   color: var(--text-dim);
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
   margin-bottom: 2rem;
 }
 .form-group {
@@ -198,7 +188,7 @@ input {
   width: 100%;
   padding: 1rem 1.2rem;
   border-radius: 999px;
-  font-size: 1rem;
+  font-size: var(--text-base);
   border: 1px solid #444;
   background: #1f2023;
   color: var(--text-light);
@@ -213,12 +203,12 @@ input::placeholder {
 .signup-text {
   margin-top: 1.8rem;
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
 }
 .btn.full-width {
   width: 100%;
   padding: 1rem 0;
-  font-size: 1.05rem;
+  font-size: var(--text-md);
   font-weight: 600;
   border-radius: 50px;
   transition: all 0.3s ease;
@@ -236,8 +226,9 @@ input::placeholder {
   .login-text {
     text-align: center;
   }
-  .login-text h1 {
-    font-size: 2rem;
+  .login-text h1,
+  .auth-hero-title {
+    font-size: var(--text-2xl);
   }
   .login-card {
     width: 100%;

@@ -2,8 +2,8 @@
   <section class="contact-us-page">
     <div class="contact-overlay">
       <div class="contact-card-local">
-        <h1 style="color: var(--theme-ice); font-family: Lucida Handwriting;">Contact Us</h1>
-        <p>Fill the form below to send us a message.</p>
+        <h1 class="heading-font page-hero-title">Contact Us</h1>
+        <p class="page-hero-subtitle">Fill the form below to send us a message.</p>
 
         <form @submit.prevent="handleSubmit">
           <div class="input-group">
@@ -130,7 +130,7 @@ const handleSubmit = async () => {
 
 .contact-card-local {
   background: var(--bg-card);
-  padding: 2rem 3rem;
+  padding: 2.5rem 3rem;
   border-radius: 1.5rem;
   width: 90%;
   max-width: 600px;
@@ -138,6 +138,7 @@ const handleSubmit = async () => {
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .input-group {
@@ -149,10 +150,10 @@ const handleSubmit = async () => {
 
 input, textarea {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.9rem 1.1rem;
   border-radius: 999px;
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: var(--text-base);
   outline: none;
 }
 
@@ -169,7 +170,7 @@ input:focus, textarea:focus {
 
 .error-text {
   color: red;
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   margin-top: 0.3rem;
   text-align: left;
 }
@@ -178,9 +179,10 @@ input:focus, textarea:focus {
   background: var(--accent-blue);
   color: var(--text-strong);
   border: none;
-  padding: 0.8rem;
+  padding: 0.9rem;
   border-radius: 999px;
-  font-size: 1rem;
+  font-size: var(--text-base);
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
 }

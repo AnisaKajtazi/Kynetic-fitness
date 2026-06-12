@@ -1,8 +1,8 @@
 <template>
   <div class="meals-page">
     <div class="hero">
-      <h1 class="hero-title">Discover Your Perfect Meal</h1>
-      <p class="hero-subtitle">Healthy • Delicious • Personalized for your goals</p>
+      <h1 class="hero-title heading-font page-hero-title">Discover Your Perfect Meal</h1>
+      <p class="hero-subtitle page-hero-subtitle">Healthy • Delicious • Personalized for your goals</p>
     </div>
 
     <div v-if="loading" class="loading">Loading meals...</div>
@@ -197,19 +197,6 @@ watchEffect(() => {
   margin-bottom: 50px;
 }
 
-.hero-title {
-  font-size: 38px;
-  font-weight: 800;
-  color: var(--theme-ice);
-  font-family: Lucida Handwriting;
-}
-
-.hero-subtitle {
-  font-size: 18px;
-  margin-top: 10px;
-  color: #ccc;
-}
-
 .category-section {
   margin-bottom: 50px;
   width: 100%;
@@ -281,7 +268,7 @@ watchEffect(() => {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .add-to-cart-btn:hover {

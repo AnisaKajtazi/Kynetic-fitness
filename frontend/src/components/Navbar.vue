@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar__inner">
-      <div class="logo"><span class="brand">Kynetic</span></div>
+      <div class="logo"><span class="brand heading-font">Kynetic</span></div>
 
       
       <button class="menu-btn" @click="toggleMenu" aria-label="Toggle menu">
@@ -122,7 +122,7 @@ onMounted(() => {
   gap: .5rem;
   color: var(--text);
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: var(--text-xl);
 }
 
 .brand {
@@ -152,6 +152,7 @@ onMounted(() => {
   color: var(--text);
   text-decoration: none;
   font-weight: 500;
+  font-size: var(--text-sm);
   padding: .25rem .5rem;
   border-radius: 6px;
 }
