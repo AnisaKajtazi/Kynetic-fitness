@@ -135,7 +135,9 @@ const checkout = async () => {
 
 <style scoped>
 .my-cart-page {
-  padding: 5rem;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--page-padding-y) var(--page-padding-x);
 }
 
 .text-color{
@@ -184,7 +186,7 @@ const checkout = async () => {
   border-radius: 50%;
   border: none;
   background-color: var(--accent-blue);
-  color: white;
+  color: var(--accent-purple);
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
@@ -227,11 +229,11 @@ const checkout = async () => {
 
 .checkout-btn {
   background-color: var(--accent-blue);
-  color: white;
+  color: var(--accent-purple);
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;

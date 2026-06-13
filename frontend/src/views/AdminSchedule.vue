@@ -1,21 +1,23 @@
 <template>
   <div class="admin-schedule">
-    <div class="admin-panel p-4 shadow rounded">
+    <div class="admin-panel admin-table-panel p-4 shadow rounded">
       <h2>Staff Weekly Schedule</h2>
 
-      <div class="table-wrapper" v-if="allSchedulesLoaded">
-        <table class="schedule-table">
+      <div class="table-wrapper admin-table-shell" v-if="allSchedulesLoaded">
+        <table class="schedule-table admin-table">
           <thead>
             <tr>
               <th class="staff-col">Staff</th>
-              <th class="staff-col">Type</th>
+              <th class="staff-type-col">Type</th>
               <th v-for="day in weekDays" :key="day">{{ day }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="staff in staffList" :key="staff.UserID">
               <td class="staff-name">{{ staff.first_name }} {{ staff.last_name }}</td>
-              <td class="staff-type">{{ staff.staff_type || 'N/A' }}</td>
+              <td class="staff-type">
+                <span class="admin-badge admin-badge--staff">{{ staff.staff_type || 'N/A' }}</span>
+              </td>
               <td v-for="(_, index) in weekDays" :key="index">
                 <div
                   v-if="!weeklySchedule[staff.UserID][index].editing"
@@ -26,10 +28,12 @@
                     <div>{{ formatTime(weeklySchedule[staff.UserID][index].start_time) || '--:--' }}</div>
                     <div>{{ formatTime(weeklySchedule[staff.UserID][index].end_time) || '--:--' }}</div>
                   </div>
-                  <button
+                  <AdminActionButton
                     v-if="weeklySchedule[staff.UserID][index].start_time || weeklySchedule[staff.UserID][index].end_time"
-                    class="edit-btn"
-                  >Edit</button>
+                    variant="edit"
+                    title="Edit time"
+                    @click="editTime(staff.UserID, index)"
+                  />
                 </div>
 
                 <div v-else class="edit-row">
@@ -53,6 +57,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '@/services/axios'
+import AdminActionButton from '@/components/AdminActionButton.vue'
 
 const staffList = ref([])
 const weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
@@ -130,17 +135,9 @@ const formatTime = t => {
   padding: 1rem 0;
   color: var(--text-light);
 }
-.admin-panel {
-  width: 100%;
-  max-width: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-}
 .admin-panel h2 {
   color: var(--theme-ice);
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin-bottom: 1.5rem;
 }
 .table-wrapper {
@@ -149,43 +146,23 @@ const formatTime = t => {
 }
 .schedule-table {
   width: 100%;
-  min-width: 1250px;
+  min-width: 1180px;
   border-collapse: collapse;
   overflow: hidden;
   border-radius: var(--radius);
-  border: 1px solid var(--border-dark);
-  background: var(--bg-contrast);
-}
-.schedule-table th,
-.schedule-table td {
-  border: 1px solid var(--border-dark);
-  padding: 0.9rem 1rem;
-  text-align: center;
-  vertical-align: middle;
-  color: var(--text-light);
-}
-.schedule-table th {
-  background: var(--theme-plum);
-  color: var(--theme-ice);
-  font-weight: 800;
-  white-space: nowrap;
-}
-.schedule-table tbody tr:nth-of-type(odd) td {
-  background-color: rgba(var(--theme-night-rgb), 0.28);
-}
-.schedule-table tbody tr:nth-of-type(even) td {
-  background-color: rgba(var(--theme-lavender-rgb), 0.08);
 }
 .staff-col {
-  width: 200px;
+  width: 210px;
+}
+.staff-type-col {
+  width: 120px;
 }
 .staff-name {
   font-weight: 600;
   white-space: nowrap;
 }
 .staff-type {
-  font-style: italic;
-  color: var(--theme-ice);
+  text-align: center;
 }
 .display-box {
   display: flex;
@@ -234,7 +211,7 @@ const formatTime = t => {
   border-radius: 6px;
   border: none;
   background: var(--accent-blue);
-  color: var(--theme-night);
+  color: var(--accent-purple);
   font-weight: 700;
 }
 .set-btn:hover {
@@ -245,5 +222,11 @@ const formatTime = t => {
   padding: 1rem;
   font-style: italic;
   color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .admin-panel h2 {
+    font-size: 1.7rem;
+  }
 }
 </style>

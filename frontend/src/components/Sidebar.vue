@@ -10,7 +10,7 @@
         <li @click="router.push('/trainer-appointments')">
           My Clients
         </li>
-        <li class="logout-btn" @click="logout">Logout</li>
+        <li class="logout-btn btn btn--blue" @click="logout">Logout</li>
       </template>
 
       <template v-else-if="roleID === 1">
@@ -19,7 +19,7 @@
         <li @click="navigate('exercises','/admin-dashboard')">Exercises</li>
         <li @click="navigate('meals','/admin-dashboard')">Meals</li>
         <li @click="navigate('schedule','/admin-dashboard')">Schedule</li>
-        <li class="logout-btn" @click="logout">Logout</li>
+        <li class="logout-btn btn btn--blue" @click="logout">Logout</li>
       </template>
 
       <template v-else-if="roleID === 2">
@@ -29,7 +29,7 @@
         <li @click="navigate('progress','/dashboard')">My Progress</li>
         <li @click="navigate('mycart','/dashboard')">My Cart</li>
         <li @click="navigate(null,'/trainers')">Trainers</li>
-        <li class="logout-btn" @click="logout">Logout</li>
+        <li class="logout-btn btn btn--blue" @click="logout">Logout</li>
       </template>
     </ul>
   </aside>
@@ -103,7 +103,8 @@ const logout = () => {
 .sidebar__links li {
   color: #d1d5db;
   font-weight: 500;
-  padding: 0.7rem 1rem;
+  font-size: var(--text-base);
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -123,10 +124,12 @@ const logout = () => {
 
 .logout-btn {
   margin-top: auto;
-  background-color: var(--accent-blue);
-  color: white;
   font-weight: 600;
   text-align: center;
+}
+
+.logout-btn.btn--blue {
+  color: var(--bg-card);
 }
 
 .logout-btn:hover {

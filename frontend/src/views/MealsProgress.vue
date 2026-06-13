@@ -395,7 +395,7 @@ export default {
 
 .save-btn {
   background: var(--accent-blue);
-  color: white;
+  color: var(--accent-purple);
   padding: 0.7rem 1.4rem;
   border-radius: 8px;
   font-weight: 600;

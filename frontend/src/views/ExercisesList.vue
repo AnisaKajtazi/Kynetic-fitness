@@ -1,11 +1,15 @@
 <template>
   <div class="exercises-wrapper">
-    <div class="admin-panel p-4 shadow rounded">
-      <h2 class="text-center mb-4">Exercises List</h2>
+    <div class="admin-panel admin-table-panel p-4 shadow rounded">
+      <div class="admin-table-header">
+        <div class="admin-table-title-block">
+          <h2>Exercises List</h2>
+        </div>
 
-      <button class="btn btn-primary mb-3" @click="openModal">
-        Add Exercise
-      </button>
+        <button class="btn btn-primary admin-create-btn" @click="openModal">
+          Create Exercise
+        </button>
+      </div>
 
       <ExerciseForm
         v-if="showForm"
@@ -14,28 +18,28 @@
         @saved="fetchExercises"
       />
 
-      <div class="toolbar d-flex justify-content-between align-items-center mb-3">
+      <div class="toolbar admin-table-toolbar admin-table-toolbar--meta d-flex justify-content-between align-items-center mb-3">
         <span class="table-count">{{ pagination ? pagination.total : exercises.length }} exercises</span>
         <input
           type="text"
           v-model="searchQuery"
           @input="fetchExercises"
-          class="form-control w-50"
+          class="form-control admin-search-input"
           placeholder="Search by exercise name..."
         />
       </div>
 
-      <div class="table-responsive mt-2">
-        <table class="table table-striped table-bordered align-middle text-center">
+      <div class="table-responsive admin-table-shell mt-2">
+        <table class="table admin-table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Level</th>
-              <th>Duration (sec)</th>
-              <th>Description</th>
-              <th>Image</th>
-              <th>Actions</th>
+              <th class="name-col">Name</th>
+              <th class="category-col">Category</th>
+              <th class="level-col">Level</th>
+              <th class="duration-col">Duration (sec)</th>
+              <th class="description-col">Description</th>
+              <th class="image-col">Image</th>
+              <th class="actions-col">Actions</th>
             </tr>
           </thead>
 
@@ -44,7 +48,21 @@
               <td>{{ e.name }}</td>
               <td>{{ e.category }}</td>
               <td>{{ e.level }}</td>
-              <td>{{ e.duration }}</td>
+              <td>
+                <input
+                  type="number"
+                  class="admin-inline-input"
+                  :value="e.duration ?? 0"
+                  min="0"
+                  max="300"
+                  step="1"
+                  inputmode="numeric"
+                  @keydown="blockIntegerKeys"
+                  @input="handleDurationInput(e, $event)"
+                  @change="saveDuration(e)"
+                  @blur="saveDuration(e)"
+                />
+              </td>
               <td>{{ e.description }}</td>
               <td>
                 <img
@@ -53,20 +71,18 @@
                   width="60"
                 />
               </td>
-              <td>
-                <button class="btn btn-warning btn-sm me-2" @click="editExercise(e)">
-                  Edit
-                </button>
-                <button class="btn btn-danger btn-sm" @click="deleteExercise(e.id)">
-                  Delete
-                </button>
+              <td class="actions-col">
+                <div class="admin-actions">
+                  <AdminActionButton variant="edit" title="Edit exercise" @click="editExercise(e)" />
+                  <AdminActionButton variant="delete" title="Delete exercise" @click="deleteExercise(e.id)" />
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-if="pagination" class="d-flex justify-content-center align-items-center mt-3">
+      <div v-if="pagination" class="admin-pagination d-flex align-items-center mt-3">
         <button 
           class="btn btn-secondary btn-sm me-2" 
           :disabled="!pagination.prev_page_url"
@@ -92,9 +108,10 @@
 <script>
 import api from "@/services/axios";
 import ExerciseForm from "./ExerciseForm.vue";
+import AdminActionButton from "@/components/AdminActionButton.vue";
 
 export default {
-  components: { ExerciseForm },
+  components: { ExerciseForm, AdminActionButton },
 
   data() {
     return {
@@ -103,7 +120,8 @@ export default {
       selectedExercise: null,
       searchQuery: "",
       perPage: 15,
-      pagination: null
+      pagination: null,
+      savingDurationIds: new Set()
     };
   },
 
@@ -120,6 +138,47 @@ export default {
     editExercise(exercise) {
       this.selectedExercise = { ...exercise };
       this.showForm = true;
+    },
+
+    clampInteger(value, min, max) {
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isNaN(parsed)) return min;
+      return Math.min(max, Math.max(min, parsed));
+    },
+
+    blockIntegerKeys(event) {
+      const blocked = ["e", "E", "+", "-"];
+      if (blocked.includes(event.key)) {
+        event.preventDefault();
+      }
+    },
+
+    handleDurationInput(exercise, event) {
+      const clamped = this.clampInteger(event.target.value, 0, 300);
+      exercise.duration = clamped;
+      event.target.value = clamped;
+    },
+
+    async saveDuration(exercise) {
+      const value = this.clampInteger(exercise.duration, 0, 300);
+      exercise.duration = value;
+
+      if (this.savingDurationIds.has(exercise.id)) return;
+      this.savingDurationIds.add(exercise.id);
+
+      try {
+        await api.put(`/exercises/${exercise.id}`, {
+          name: exercise.name,
+          description: exercise.description || "",
+          duration: value,
+          category: exercise.category || "",
+          level: exercise.level || ""
+        });
+      } catch (error) {
+        console.error("Error updating exercise duration:", error);
+      } finally {
+        this.savingDurationIds.delete(exercise.id);
+      }
     },
 
     closeForm() {
@@ -161,21 +220,6 @@ export default {
   color: var(--text-light);
 }
 
-.admin-panel {
-  width: 100%;
-  max-width: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-}
-
-.admin-panel h2 {
-  color: var(--theme-ice);
-  font-size: 2.2rem;
-  text-align: left !important;
-}
-
 .toolbar {
   gap: 1rem;
 }
@@ -185,103 +229,18 @@ export default {
   font-weight: 700;
 }
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  min-width: 1150px;
-  margin: 0;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-dark);
-  background: var(--bg-contrast);
-}
-
-.table > :not(caption) > * > * {
-  padding: 0.9rem 1rem;
-  background-color: transparent;
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-.table-dark th,
-.table thead th {
-  background: var(--theme-plum);
-  color: var(--theme-ice);
-  border-color: var(--border-dark);
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-  background-color: rgba(var(--theme-night-rgb), 0.28);
-}
-
-.table-striped > tbody > tr:nth-of-type(even) > * {
-  background-color: rgba(var(--theme-lavender-rgb), 0.08);
-}
-
-.btn-primary {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue);
-  color: var(--theme-night);
-  font-weight: 700;
-}
-
-.btn-warning {
-  background: var(--theme-lavender);
-  border-color: var(--theme-lavender);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-danger {
-  background: var(--theme-plum);
-  border-color: var(--theme-plum);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-secondary {
-  background: var(--bg-contrast);
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-td button {
-  margin-bottom: 4px;
-}
-
-.form-control {
-  max-width: 420px;
-  background: var(--bg-contrast);
-  border: 1px solid var(--border-dark);
-  color: var(--text-light);
-}
-
-.form-control::placeholder {
-  color: var(--text-dim);
-}
-
-.form-control:focus {
-  background: var(--bg-contrast);
-  border-color: var(--theme-ice);
-  color: var(--text-light);
-  box-shadow: 0 0 0 0.2rem rgba(var(--theme-ice-rgb), 0.18);
-}
+.name-col { width: 140px; }
+.category-col { width: 130px; }
+.level-col { width: 110px; }
+.duration-col { width: 120px; }
+.description-col { width: 260px; }
+.image-col { width: 90px; }
+.actions-col { width: 100px; }
 
 @media (max-width: 768px) {
   .toolbar {
     align-items: stretch !important;
     flex-direction: column;
-  }
-
-  .form-control {
-    max-width: none;
-    width: 100% !important;
   }
 }
 </style>

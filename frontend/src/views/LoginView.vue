@@ -133,26 +133,29 @@ export default {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 3rem;
-  max-width: 1000px;
-  padding: 3rem 2rem;
+  gap: 2.5rem;
+  max-width: 1180px;
+  padding: 2.5rem 2rem;
   width: 100%;
 }
 .login-text {
-  flex: 1 1 380px;
+  flex: 1 1 420px;
   color: var(--text-light);
   text-align: left;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
 }
 .login-text p {
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   color: var(--text-light);
-  opacity: 0.8;
-  max-width: 420px;
+  opacity: 0.9;
+  max-width: 480px;
+  line-height: 1.75;
 }
 .login-card {
-  flex: 1 1 360px;
-  padding: 3rem 2.5rem;
+  flex: 1 1 480px;
+  min-width: min(100%, 440px);
+  max-width: 520px;
+  padding: 2.75rem 3rem;
   border-radius: var(--radius-lg);
   background: linear-gradient(145deg, var(--bg-card), var(--bg-contrast));
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
@@ -164,14 +167,14 @@ export default {
   box-shadow: var(--shadow-lg);
 }
 .login-title {
-  font-size: var(--text-2xl);
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin-bottom: 0.6rem;
   color: var(--accent-blue);
   font-weight: 700;
 }
 .login-subtitle {
   color: var(--text-dim);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   margin-bottom: 2rem;
 }
 .form-group {
@@ -203,7 +206,7 @@ input::placeholder {
 .signup-text {
   margin-top: 1.8rem;
   color: var(--text-dim);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
 }
 .btn.full-width {
   width: 100%;
@@ -232,7 +235,8 @@ input::placeholder {
   }
   .login-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 520px;
+    min-width: 0;
   }
 }
 </style>

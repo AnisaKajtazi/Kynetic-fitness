@@ -130,15 +130,22 @@ const handleSubmit = async () => {
 
 .contact-card-local {
   background: var(--bg-card);
-  padding: 2.5rem 3rem;
+  padding: 1.75rem 3.25rem;
   border-radius: 1.5rem;
-  width: 90%;
-  max-width: 600px;
+  width: 92%;
+  max-width: 760px;
   text-align: center;
   box-shadow: 0 15px 40px rgba(0,0,0,0.4);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.30rem;
+  margin-top: 80px; 
+}
+
+.contact-card-local form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .input-group {
@@ -177,17 +184,33 @@ input:focus, textarea:focus {
 
 .btn-local {
   background: var(--accent-blue);
-  color: var(--text-strong);
+  color: var(--accent-purple);
   border: none;
-  padding: 0.9rem;
+  padding: 0.95rem 2.25rem;
   border-radius: 999px;
   font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+  min-width: 190px;
 }
 
 .btn-local:hover {
   background: var(--accent-lavender);
+}
+
+
+@media (max-width: 640px) {
+  .contact-card-local {
+    padding: 2rem 1.5rem;
+    width: 100%;
+  }
+
+  .btn-local {
+    width: 100%;
+    align-self: stretch;
+  }
 }
 </style>

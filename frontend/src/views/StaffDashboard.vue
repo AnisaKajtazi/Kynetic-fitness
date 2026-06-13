@@ -21,38 +21,42 @@
           </div>
 
           <div class="profile-details">
-            <p class="info-line">
-              <img :src="emailIcon" class="icon" />
-              <span class="label">Email:</span> {{ user.email }}
-            </p>
+            <div class="profile-column">
+              <p class="info-line">
+                <img :src="emailIcon" class="icon" />
+                <span class="label">Email:</span> {{ user.email }}
+              </p>
 
-            <p v-if="user.phone" class="info-line">
-              <img :src="phoneIcon" class="icon" />
-              <span class="label">Phone:</span> {{ user.phone }}
-            </p>
+              <p v-if="user.phone" class="info-line">
+                <img :src="phoneIcon" class="icon" />
+                <span class="label">Phone:</span> {{ user.phone }}
+              </p>
 
-            <p v-if="user.address" class="info-line">
-              <img :src="locationIcon" class="icon" />
-              <span class="label">Address:</span> {{ user.address }}
-            </p>
+              <p v-if="user.address" class="info-line">
+                <img :src="locationIcon" class="icon" />
+                <span class="label">Address:</span> {{ user.address }}
+              </p>
 
-            <p v-if="user.dob" class="info-line">
-              <img :src="calendarIcon" class="icon" />
-              <span class="label">DOB:</span> {{ formatDate(user.dob) }}
-            </p>
+              <p v-if="user.dob" class="info-line">
+                <img :src="calendarIcon" class="icon" />
+                <span class="label">DOB:</span> {{ formatDate(user.dob) }}
+              </p>
+            </div>
 
-            <p v-if="user.gender" class="info-line">
-              <img :src="genderIcon" class="icon" />
-              <span class="label">Gender:</span> {{ user.gender }}
-            </p>
+            <div class="profile-column">
+              <p v-if="user.gender" class="info-line">
+                <img :src="genderIcon" class="icon" />
+                <span class="label">Gender:</span> {{ user.gender }}
+              </p>
 
-            <p class="info-line">
-              <img :src="locationIcon" class="icon" />
-              <span class="label">Description:</span>
-              <span class="description-text">
-                {{ user.description ? user.description : 'No description added yet. Click Edit Profile to add your trainer bio.' }}
-              </span>
-            </p>
+              <p class="info-line info-line--description">
+                <img :src="locationIcon" class="icon" />
+                <span class="label">Description:</span>
+                <span class="description-text">
+                  {{ user.description ? user.description : 'No description added yet. Click Edit Profile to add your trainer bio.' }}
+                </span>
+              </p>
+            </div>
           </div>
 
           <button class="edit-btn" @click="toggleEdit">
@@ -97,7 +101,7 @@
               </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group form-group--full">
               <label for="description">Description:</label>
               <textarea id="description" v-model="user.description" rows="4" placeholder="Describe your specialties and training style"></textarea>
             </div>
@@ -245,10 +249,10 @@ const formatDate = (dateStr) => {
 
 .profile-card {
   width: 100%;
-  max-width: 800px;
+  max-width: 1240px;
   background: linear-gradient(145deg, var(--bg-card), var(--bg-card));
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 2.75rem 3.5rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
   color: #f9fafb;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -262,8 +266,8 @@ const formatDate = (dateStr) => {
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: 2.25rem;
+  margin-bottom: 2.25rem;
 }
 
 .photo-wrapper {
@@ -271,11 +275,12 @@ const formatDate = (dateStr) => {
 }
 
 .profile-photo {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--accent-blue);
+  cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -286,44 +291,62 @@ const formatDate = (dateStr) => {
 
 .profile-info h2 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: clamp(1.55rem, 3vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  max-width: 900px;
+  font-weight: 600;
+  color: #97dffc;
 }
 
 .profile-info .role {
-  color: #60a5fa;
+  color: var(--accent-blue);
   font-weight: 600;
-  margin-top: 0.25rem;
-  font-size: 1.1rem;
+  margin-top: 0.35rem;
+  font-size: var(--text-lg);
 }
 
 .profile-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 10rem;
+  margin-top: 1.75rem;
+}
+
+.profile-column {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 1rem;
+  gap: 2rem;
 }
 
 .info-line {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: var(--text-md);
+  line-height: 1.7;
 }
 
 .icon {
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .profile-details .label {
-  min-width: 90px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  margin-right: 0.3rem;
 }
 .description-text {
-  display: inline-block;
-  margin-left: 0.4rem;
+  display: inline;
+  margin-left: 0;
   color: #d1d5db;
-  max-width: calc(100% - 120px);
+  flex: 1;
+}
+.info-line--description {
+  align-items: flex-start;
 }
 .profile-form textarea {
   width: 100%;
@@ -337,15 +360,20 @@ const formatDate = (dateStr) => {
 }
 
 .edit-btn {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   width: 100%;
+  max-width: 320px;
   background-color: var(--accent-blue);
-  color: #f9fafb;
+  color: var(--accent-purple);
   font-weight: 600;
-  padding: 0.8rem;
+  font-size: var(--text-md);
+  padding: 0.85rem 1.25rem;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.25s ease;
+  border: none;
+  display: block;
+  margin-left: auto;
 }
 
 .edit-btn:hover {
@@ -354,11 +382,11 @@ const formatDate = (dateStr) => {
 
 .profile-form {
   margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
   background-color: var(--bg-card);
-  padding: 2rem;
+  padding: 2.25rem;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.6);
 }
@@ -366,25 +394,29 @@ const formatDate = (dateStr) => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .form-group label {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: var(--text-md);
   color: #60a5fa;
 }
 
 .form-group input,
 .form-group select {
-  padding: 0.6rem 1rem;
+  padding: 0.85rem 1rem;
   border-radius: 8px;
   border: none;
   outline: none;
-  font-size: 1rem;
+  font-size: var(--text-md);
   background-color: var(--bg-card);
   color: #f9fafb;
   transition: all 0.2s ease;
+}
+
+.form-group--full {
+  grid-column: 1 / -1;
 }
 
 .form-group input:focus,
@@ -393,14 +425,39 @@ const formatDate = (dateStr) => {
 }
 
 .save-btn {
-  margin-top: 1.2rem;
+  margin-top: 0.5rem;
+  grid-column: 1 / -1;
+  max-width: 320px;
   background-color: var(--accent-blue);
-  color: #f9fafb;
+  color: var(--accent-purple);
   font-weight: 600;
-  padding: 0.7rem 1.4rem;
+  font-size: var(--text-base);
+  padding: 0.85rem 1.25rem;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.25s ease;
+  border: none;
+}
+
+@media (max-width: 900px) {
+  .profile-details,
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-details {
+    gap: 1rem;
+  }
+
+  .profile-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .edit-btn,
+  .save-btn {
+    max-width: none;
+    margin-left: 0;
+  }
 }
 
 .save-btn:hover {

@@ -18,46 +18,51 @@
       </div>
 
       <div v-if="!editing" class="profile-details">
-        <p class="info-line">
-          <img :src="usernameIcon" class="icon" />
-          <span class="label">Username:</span> {{ user.username }}
-        </p>
-        <p class="info-line">
-          <img :src="emailIcon" class="icon" />
-          <span class="label">Email:</span> {{ user.email }}
-        </p>
-        <p v-if="user.phone" class="info-line">
-          <img :src="phoneIcon" class="icon" />
-          <span class="label">Phone:</span> {{ user.phone }}
-        </p>
-        <p v-if="user.address" class="info-line">
-          <img :src="locationIcon" class="icon" />
-          <span class="label">Address:</span> {{ user.address }}
-        </p>
-        <p v-if="user.dob" class="info-line">
-          <img :src="calendarIcon" class="icon" />
-          <span class="label">DOB:</span> {{ formatDate(user.dob) }}
-        </p>
-        <p v-if="user.gender" class="info-line">
-          <img :src="genderIcon" class="icon" />
-          <span class="label">Gender:</span> {{ user.gender }}
-        </p>
-        <p v-if="user.fitness_goal" class="info-line">
-          <img :src="goalIcon" class="icon" />
-          <span class="label">Fitness Goal:</span> {{ user.fitness_goal }}
-        </p>
-        <p v-if="user.activity_level" class="info-line">
-          <img :src="activityIcon" class="icon" />
-          <span class="label">Activity Level:</span> {{ user.activity_level }}
-        </p>
-        <p v-if="user.focus_area" class="info-line">
-          <img :src="focusIcon" class="icon" />
-          <span class="label">Focus Area:</span> {{ user.focus_area }}
-        </p>
-        <p v-if="user.training_days !== null" class="info-line">
-          <img :src="trainingIcon" class="icon" />
-          <span class="label">Training Days:</span> {{ user.training_days }}
-        </p>
+        <div class="profile-column">
+          <p class="info-line">
+            <img :src="usernameIcon" class="icon" />
+            <span class="label">Username:</span> {{ user.username }}
+          </p>
+          <p class="info-line">
+            <img :src="emailIcon" class="icon" />
+            <span class="label">Email:</span> {{ user.email }}
+          </p>
+          <p v-if="user.phone" class="info-line">
+            <img :src="phoneIcon" class="icon" />
+            <span class="label">Phone:</span> {{ user.phone }}
+          </p>
+          <p v-if="user.address" class="info-line">
+            <img :src="locationIcon" class="icon" />
+            <span class="label">Address:</span> {{ user.address }}
+          </p>
+          <p v-if="user.dob" class="info-line">
+            <img :src="calendarIcon" class="icon" />
+            <span class="label">DOB:</span> {{ formatDate(user.dob) }}
+          </p>
+        </div>
+
+        <div class="profile-column">
+          <p v-if="user.gender" class="info-line">
+            <img :src="genderIcon" class="icon" />
+            <span class="label">Gender:</span> {{ user.gender }}
+          </p>
+          <p v-if="user.fitness_goal" class="info-line">
+            <img :src="goalIcon" class="icon" />
+            <span class="label">Fitness Goal:</span> {{ user.fitness_goal }}
+          </p>
+          <p v-if="user.activity_level" class="info-line">
+            <img :src="activityIcon" class="icon" />
+            <span class="label">Activity Level:</span> {{ user.activity_level }}
+          </p>
+          <p v-if="user.focus_area" class="info-line">
+            <img :src="focusIcon" class="icon" />
+            <span class="label">Focus Area:</span> {{ user.focus_area }}
+          </p>
+          <p v-if="user.training_days !== null" class="info-line">
+            <img :src="trainingIcon" class="icon" />
+            <span class="label">Training Days:</span> {{ user.training_days }}
+          </p>
+        </div>
       </div>
 
       <button class="edit-btn" @click="toggleEdit">
@@ -261,15 +266,16 @@ function formatDate(d) {
 .profile-section {
   display: flex;
   justify-content: center;
-  padding: 3rem;
+  padding: 6rem 3rem 3rem;
+  width: 100%;
 }
 
 .profile-card {
-  max-width: 850px;
+  max-width: 1240px;
   width: 100%;
   background: linear-gradient(145deg, var(--bg-card), var(--bg-card));
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 2.75rem 3.5rem;
   color: var(--text-strong);
   box-shadow: 0 10px 30px rgba(0,0,0,0.7);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -282,9 +288,9 @@ function formatDate(d) {
 
 .profile-header {
   display: flex;
-  gap: 2rem;
+  gap: 2.25rem;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
 }
 
 .photo-wrapper {
@@ -292,8 +298,8 @@ function formatDate(d) {
 }
 
 .profile-photo {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--accent-blue);
@@ -307,35 +313,48 @@ function formatDate(d) {
 }
 
 .profile-info h2 {
+  font-size: clamp(1.55rem, 3vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  max-width: 900px;
   margin: 0;
-  font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
+  color: #97dffc;
 }
 
 .profile-info .role {
   color: var(--accent-blue);
   font-weight: 600;
-  margin-top: 0.25rem;
-  font-size: 1.1rem;
+  margin-top: 0.35rem;
+  font-size: var(--text-lg);
 }
 
 .profile-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 10rem;
+  margin-top: 1.75rem;
+}
+
+.profile-column {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 1rem;
+  gap: 2rem;
 }
 
 .info-line {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: var(--text-md);
+  line-height: 1.7;
 }
 
 .icon {
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .profile-details .label {
@@ -347,16 +366,23 @@ function formatDate(d) {
 .edit-btn,
 .save-btn,
 .photo-btn {
-  margin-top: 1rem;
-  padding: 0.7rem;
+  margin-top: 1.5rem;
+  padding: 0.85rem 1.25rem;
   width: 100%;
+  max-width: 320px;
   background: var(--accent-blue);
   border-radius: 10px;
   font-weight: bold;
-  color: var(--theme-navy);
+  font-size: var(--text-md);
+  color: var(--accent-purple);
   border: none;
   cursor: pointer;
   transition: background 0.25s ease;
+}
+
+.edit-btn {
+  display: block;
+  margin-left: auto;
 }
 
 .edit-btn:hover,
@@ -368,24 +394,56 @@ function formatDate(d) {
 
 .profile-form {
   margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
   background-color: var(--bg-card);
-  padding: 2rem;
+  padding: 2.25rem;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.6);
 }
 
 .profile-form input,
 .profile-form select {
-  padding: 0.6rem;
+  padding: 0.85rem 1rem;
   border-radius: 8px;
-  border: 1px solid rgba(var(--theme-sky-rgb), 0.16);
+  border: 1px solid rgba(var(--theme-ice-rgb), 0.16);
   outline: none;
   background-color: var(--bg-card);
   color: var(--text-strong);
+  font-size: var(--text-md);
   transition: all 0.2s ease;
+}
+
+.photo-btn,
+.save-btn {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .profile-details,
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-details {
+    gap: 1rem;
+  }
+
+  .profile-section {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .profile-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .edit-btn,
+  .save-btn,
+  .photo-btn {
+    max-width: none;
+    margin-left: 0;
+  }
 }
 
 .profile-form input:focus,

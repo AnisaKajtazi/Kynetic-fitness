@@ -237,7 +237,8 @@ export default {
 
 <style scoped>
 .progress-section {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
+  width: 100%;
 }
 
 .page-header {
@@ -255,7 +256,7 @@ export default {
 }
 
 .recommended {
-  max-width: 1100px;
+  max-width: 100%;
   margin: 0 auto 2rem auto;
   text-align: center;
 }
@@ -283,7 +284,7 @@ export default {
 }
 
 .meals-list {
-  max-width: 1000px;
+  max-width: 100%;
   margin: 0 auto 2rem auto;
 }
 
@@ -301,7 +302,7 @@ export default {
 
 .save-btn {
   background: var(--accent-blue);
-  color: white;
+  color: var(--accent-purple);
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   margin-top: 0.5rem;
@@ -321,7 +322,7 @@ export default {
 
 .chart-box {
   flex: 1 1 300px;
-  max-width: 420px;
+  max-width: 100%;
 }
 .chart-box canvas {
   width: 100% !important;

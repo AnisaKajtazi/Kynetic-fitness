@@ -211,7 +211,7 @@ const addAllToCart = async () => {
   background: var(--accent-lavender);
   padding: 6px 16px;
   border: none;
-  color: white;
+  color: var(--accent-purple);
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;

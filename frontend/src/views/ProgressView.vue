@@ -28,15 +28,21 @@ export default {
 .progress-page {
   width: 100%;
   max-width: none;
-  margin: 0;
-  padding: 5rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 2.5rem;
   color: var(--text-light);
+}
+
+@media (max-width: 900px) {
+  .progress-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
 }
 
 .text-color {
   color: var(--theme-ice);
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  margin-bottom: 0.75rem;
 }
 
 .page-subtitle {

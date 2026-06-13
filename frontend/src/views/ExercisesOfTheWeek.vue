@@ -138,21 +138,21 @@ const getImageUrl = (image) => {
 <style scoped>
 .week-page {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 5rem;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--page-padding-y) var(--page-padding-x);
   color: var(--text-light);
 }
 
 .text-color {
   color: #97dffc;
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  margin-bottom: 0.75rem;
 }
 
 .page-subtitle {
-  font-size: 1rem;
-  margin: 0 0 2rem;
+  font-size: var(--text-base);
+  margin: 0 0 1.75rem;
   color: var(--text-muted);
 }
 
@@ -180,24 +180,52 @@ const getImageUrl = (image) => {
 
 .items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
 }
 
 .exercise-card {
   background: var(--bg-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  padding: 1rem;
+  padding: 1.25rem;
   text-align: center;
+}
+
+.exercise-card h4 {
+  font-size: var(--text-md);
 }
 
 .exercise-img {
   width: 100%;
-  height: 160px;
+  height: 210px;
   object-fit: cover;
   border-radius: var(--radius);
   margin-bottom: 0.6rem;
+}
+
+@media (max-width: 1200px) {
+  .items {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .items {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card-actions {
@@ -233,7 +261,7 @@ const getImageUrl = (image) => {
 
 .btn--blue {
   background: var(--accent-blue);
-  color: white;
+  color: var(--accent-purple);
 }
 
 .btn--blue:hover {

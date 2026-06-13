@@ -186,25 +186,25 @@ watchEffect(() => {
 .meals-page {
   width: 100%;
   max-width: none;
-  margin: 0;
-  padding: 5rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 2.5rem;
   color: var(--text-light);
 }
 
 .hero {
   text-align: center;
-  margin-top: 40px;
-  margin-bottom: 50px;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
 }
 
 .category-section {
-  margin-bottom: 50px;
+  margin-bottom: 2rem;
   width: 100%;
 }
 
 .category-title {
-  font-size: 22px;
-  margin-bottom: 12px;
+  font-size: var(--text-xl);
+  margin-bottom: 1rem;
   font-weight: 700;
 }
 
@@ -215,9 +215,9 @@ watchEffect(() => {
 
 .slider {
   display: flex;
-  gap: 15px;
+  gap: 1rem;
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 0.5rem 0;
   scroll-behavior: smooth;
   width: 100%;
 }
@@ -227,14 +227,15 @@ watchEffect(() => {
 }
 
 .meal-card {
-  flex: 0 0 calc((100% - 60px) / 5);
-  min-width: 220px;
+  flex: 0 0 calc((100% - 72px) / 5);
+  min-width: 370px;
   height: auto;
-  border-radius: 12px;
+  border-radius: var(--radius);
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--bg-card);
 }
 
 .meal-card:hover {
@@ -244,31 +245,34 @@ watchEffect(() => {
 
 .meal-card img {
   width: 100%;
-  height: 150px;
+  height: 220px;
   object-fit: cover;
   display: block;
+  cursor: pointer;
 }
 
 .meal-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 8px;
+  padding: 1rem 0.85rem;
 }
 
 .meal-price {
   font-weight: 700;
+  font-size: var(--text-base);
   color: var(--accent-lavender);
 }
 
 .add-to-cart-btn {
-  background: var(--accent-lavender);
-  padding: 6px 12px;
-  border: none;
-  color: white;
-  border-radius: 6px;
+  background: var(--accent-blue);
+  padding: 0.70rem 0.85rem;
+  border: 2px;
+  color: var(--accent-purple);
+  border-radius: 50px;
   cursor: pointer;
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
+  font-weight: 600;
 }
 
 .add-to-cart-btn:hover {
@@ -329,16 +333,19 @@ watchEffect(() => {
 }
 
 .popup-content {
-  padding: 20px;
+  padding: 1.5rem 1.75rem;
+  font-size: var(--text-base);
 }
 
 .popup-content h2 {
-  margin-bottom: 10px;
+  margin-bottom: 0.75rem;
+  font-size: var(--text-xl);
 }
 
 .popup-content .desc {
-  margin-top: 15px;
-  color: #444;
+  margin-top: 1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
 }
 
 .close-btn {
@@ -369,7 +376,7 @@ watchEffect(() => {
 
 @media (max-width: 640px) {
   .meals-page {
-    padding: 1rem;
+    padding: 1rem 0.75rem 1.5rem;
   }
 
   .meal-card {

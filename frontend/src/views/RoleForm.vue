@@ -1,34 +1,34 @@
 <template>
-  <div class="modal-overlay">
-    <div class="modal-content">
+  <div class="admin-modal-overlay">
+    <div class="admin-modal-content">
       <h3 class="mb-3">{{ role ? "Edit Role" : "Add Role" }}</h3>
 
       <form @submit.prevent="handleSubmit">
 
-        <div class="form-row">
-          <div class="form-group">
+        <div class="admin-form-row">
+          <div class="admin-form-group">
             <label>Name</label>
             <input
               type="text"
-              class="form-control"
+              class="admin-form-control"
               v-model="formData.name"
               placeholder="Role name"
               required
             />
           </div>
 
-          <div class="form-group">
+          <div class="admin-form-group">
             <label>Description</label>
             <textarea
-              class="form-control"
+              class="admin-form-control"
               v-model="formData.description"
               placeholder="Role description"
               rows="3"
-            />
+            ></textarea>
           </div>
         </div>
 
-        <div class="d-flex justify-content-end mt-4">
+        <div class="admin-form-actions d-flex justify-content-end mt-4">
           <button type="button" class="btn btn-secondary me-2" @click="$emit('close')">
             Cancel
           </button>
@@ -96,32 +96,4 @@ export default {
 </script>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1050;
-}
-
-.modal-content {
-  background: white;
-  padding: 25px;
-  width: 600px;
-  max-width: 90%;
-  border-radius: 12px;
-}
-
-.form-row {
-  display: flex;
-  gap: 20px;
-}
-
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
 </style>

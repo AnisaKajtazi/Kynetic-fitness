@@ -356,7 +356,7 @@ onMounted(loadTrainers)
 
 .primary-btn {
   background: var(--accent-blue);
-  color: var(--text-strong);
+  color: var(--accent-purple);
 }
 
 .secondary-btn {

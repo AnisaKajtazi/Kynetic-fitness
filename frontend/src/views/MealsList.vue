@@ -1,9 +1,13 @@
 <template>
   <div class="meals-wrapper">
-    <div class="admin-panel p-4 shadow rounded">
-      <h2 class="text-center mb-4">Meals List</h2>
+    <div class="admin-panel admin-table-panel p-4 shadow rounded">
+      <div class="admin-table-header">
+        <div class="admin-table-title-block">
+          <h2>Meals List</h2>
+        </div>
 
-      <button class="btn btn-primary mb-3" @click="openModal()">Add Meal</button>
+        <button class="btn btn-primary admin-create-btn" @click="openModal()">Create Meal</button>
+      </div>
 
       <MealForm
         v-if="showForm"
@@ -12,33 +16,33 @@
         @saved="fetchMeals"
       />
 
-      <div class="toolbar d-flex justify-content-between align-items-center mb-3">
+      <div class="toolbar admin-table-toolbar admin-table-toolbar--meta d-flex justify-content-between align-items-center mb-3">
         <span class="table-count">{{ pagination ? pagination.total : meals.length }} meals</span>
         <input
           type="text"
           v-model="searchQuery"
           @input="fetchMeals"
-          class="form-control w-50"
+          class="form-control admin-search-input"
           placeholder="Search by meal name..."
         />
       </div>
 
-      <div class="table-responsive mt-2">
-        <table class="table table-striped table-bordered align-middle text-center">
+      <div class="table-responsive admin-table-shell mt-2">
+        <table class="table admin-table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Image</th>
-              <th>Price</th>
-              <th>Calories</th>
-              <th>Fitness Goal</th>
-              <th>Activity Level</th>
-              <th>Focus Area</th>
-              <th>Training Days</th>
-              <th>Actions</th>
+              <th class="id-col">ID</th>
+              <th class="name-col">Name</th>
+              <th class="description-col">Description</th>
+              <th class="category-col">Category</th>
+              <th class="image-col">Image</th>
+              <th class="price-col">Price</th>
+              <th class="calories-col">Calories</th>
+              <th class="goal-col">Fitness Goal</th>
+              <th class="activity-col">Activity Level</th>
+              <th class="focus-col">Focus Area</th>
+              <th class="training-col">Training Days</th>
+              <th class="actions-col">Actions</th>
             </tr>
           </thead>
 
@@ -55,26 +59,76 @@
                     width="60" 
                     />
               </td>
-              <td>{{ m.price }}</td>
-              <td>{{ m.calories }}</td>
-              <td>{{ m.fitness_goal }}</td>
-              <td>{{ m.activity_level }}</td>
-              <td>{{ m.focus_area }}</td>
-              <td>{{ m.training_days }}</td>
               <td>
-                <button @click="editMeal(m)" class="btn btn-warning btn-sm me-2">
-                  Edit
-                </button>
-                <button @click="deleteMeal(m.MealID)" class="btn btn-danger btn-sm">
-                  Delete
-                </button>
+                <div class="admin-money-field">
+                  <span class="currency-prefix">€</span>
+                  <input
+                    type="number"
+                    class="admin-inline-input admin-inline-input--wide"
+                    :value="formatMoneyInput(m.price)"
+                    min="0"
+                    max="9999.99"
+                    step="0.01"
+                    inputmode="decimal"
+                    @input="handlePriceInput(m, $event)"
+                    @change="saveMealField(m, 'price')"
+                    @blur="saveMealField(m, 'price')"
+                  />
+                </div>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  class="admin-inline-input"
+                  :value="m.calories ?? 0"
+                  min="1"
+                  max="5000"
+                  step="1"
+                  inputmode="numeric"
+                  @keydown="blockIntegerKeys"
+                  @input="handleCaloriesInput(m, $event)"
+                  @change="saveMealField(m, 'calories')"
+                  @blur="saveMealField(m, 'calories')"
+                />
+              </td>
+              <td>{{ m.fitness_goal }}</td>
+              <td>
+                <span
+                  v-if="m.activity_level"
+                  :class="['admin-badge', activityBadgeClass(m.activity_level)]"
+                >
+                  {{ activityInitial(m.activity_level) }}
+                </span>
+                <span v-else class="text-muted">—</span>
+              </td>
+              <td>{{ m.focus_area }}</td>
+              <td>
+                <input
+                  type="number"
+                  class="admin-inline-input"
+                  :value="m.training_days ?? 0"
+                  min="0"
+                  max="7"
+                  step="1"
+                  inputmode="numeric"
+                  @keydown="blockIntegerKeys"
+                  @input="handleTrainingDaysInput(m, $event)"
+                  @change="saveMealField(m, 'training_days')"
+                  @blur="saveMealField(m, 'training_days')"
+                />
+              </td>
+              <td class="actions-col">
+                <div class="admin-actions">
+                  <AdminActionButton variant="edit" title="Edit meal" @click="editMeal(m)" />
+                  <AdminActionButton variant="delete" title="Delete meal" @click="deleteMeal(m.MealID)" />
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-if="pagination" class="d-flex justify-content-center align-items-center mt-3">
+      <div v-if="pagination" class="admin-pagination d-flex align-items-center mt-3">
         <button 
           class="btn btn-secondary btn-sm me-2" 
           :disabled="!pagination.prev_page_url"
@@ -100,9 +154,10 @@
 <script>
 import api from "@/services/axios";
 import MealForm from "./MealForm.vue";
+import AdminActionButton from "@/components/AdminActionButton.vue";
 
 export default {
-  components: { MealForm },
+  components: { MealForm, AdminActionButton },
 
   data() {
     return {
@@ -111,7 +166,8 @@ export default {
       selectedMeal: null,
       searchQuery: "",
       perPage: 15,
-      pagination: null
+      pagination: null,
+      savingMealFields: new Set()
     };
   },
 
@@ -128,6 +184,88 @@ export default {
     editMeal(meal) {
       this.selectedMeal = { ...meal };
       this.showForm = true;
+    },
+
+    clampInteger(value, min, max) {
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isNaN(parsed)) return min;
+      return Math.min(max, Math.max(min, parsed));
+    },
+
+    clampDecimal(value, min, max) {
+      const parsed = Number.parseFloat(value);
+      if (Number.isNaN(parsed)) return min;
+      return Math.min(max, Math.max(min, parsed));
+    },
+
+    blockIntegerKeys(event) {
+      const blocked = ["e", "E", "+", "-"];
+      if (blocked.includes(event.key)) {
+        event.preventDefault();
+      }
+    },
+
+    activityInitial(value) {
+      const map = { low: "L", medium: "M", high: "H" };
+      return map[value] || value;
+    },
+
+    activityBadgeClass(value) {
+      const map = { low: "admin-badge--low", medium: "admin-badge--medium", high: "admin-badge--high" };
+      return map[value] || "admin-badge--muted";
+    },
+
+    formatMoneyInput(value) {
+      return value === null || value === undefined || value === "" ? "" : Number(value).toFixed(2);
+    },
+
+    handlePriceInput(meal, event) {
+      const clamped = this.clampDecimal(event.target.value, 0, 9999.99);
+      meal.price = clamped;
+      event.target.value = Number(clamped).toFixed(2);
+    },
+
+    handleCaloriesInput(meal, event) {
+      const clamped = this.clampInteger(event.target.value, 1, 5000);
+      meal.calories = clamped;
+      event.target.value = clamped;
+    },
+
+    handleTrainingDaysInput(meal, event) {
+      const clamped = this.clampInteger(event.target.value, 0, 7);
+      meal.training_days = clamped;
+      event.target.value = clamped;
+    },
+
+    async saveMealField(meal, field) {
+      const updateKey = `${meal.MealID}:${field}`;
+      if (this.savingMealFields.has(updateKey)) return;
+
+      const payload = {
+        name: meal.name,
+        description: meal.description || "",
+        category: meal.category || "",
+        price: this.clampDecimal(meal.price, 0, 9999.99),
+        calories: this.clampInteger(meal.calories, 1, 5000),
+        fitness_goal: meal.fitness_goal || "",
+        activity_level: meal.activity_level || "",
+        focus_area: meal.focus_area || "",
+        training_days: this.clampInteger(meal.training_days, 0, 7)
+      };
+
+      meal.price = payload.price;
+      meal.calories = payload.calories;
+      meal.training_days = payload.training_days;
+
+      this.savingMealFields.add(updateKey);
+
+      try {
+        await api.put(`/meals/${meal.MealID}`, payload);
+      } catch (error) {
+        console.error("Error updating meal field:", error);
+      } finally {
+        this.savingMealFields.delete(updateKey);
+      }
     },
 
     closeForm() {
@@ -169,21 +307,6 @@ export default {
   color: var(--text-light);
 }
 
-.admin-panel {
-  width: 100%;
-  max-width: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-}
-
-.admin-panel h2 {
-  color: var(--theme-ice);
-  font-size: 2.2rem;
-  text-align: left !important;
-}
-
 .toolbar {
   gap: 1rem;
 }
@@ -193,103 +316,35 @@ export default {
   font-weight: 700;
 }
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
+.id-col { width: 75px; }
+.name-col { width: 145px; }
+.description-col { width: 220px; }
+.category-col { width: 130px; }
+.image-col { width: 90px; }
+.price-col { width: 110px; }
+.calories-col { width: 110px; }
+.goal-col { width: 130px; }
+.activity-col { width: 95px; }
+.focus-col { width: 125px; }
+.training-col { width: 120px; }
+.actions-col { width: 100px; }
+
+.admin-money-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: center;
 }
 
-table {
-  width: 100%;
-  min-width: 1500px;
-  margin: 0;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-dark);
-  background: var(--bg-contrast);
-}
-
-.table > :not(caption) > * > * {
-  padding: 0.9rem 1rem;
-  background-color: transparent;
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-.table-dark th,
-.table thead th {
-  background: var(--theme-plum);
-  color: var(--theme-ice);
-  border-color: var(--border-dark);
+.currency-prefix {
+  color: var(--text-muted);
   font-weight: 800;
-  white-space: nowrap;
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-  background-color: rgba(var(--theme-night-rgb), 0.28);
-}
-
-.table-striped > tbody > tr:nth-of-type(even) > * {
-  background-color: rgba(var(--theme-lavender-rgb), 0.08);
-}
-
-.btn-primary {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue);
-  color: var(--theme-night);
-  font-weight: 700;
-}
-
-.btn-warning {
-  background: var(--theme-lavender);
-  border-color: var(--theme-lavender);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-danger {
-  background: var(--theme-plum);
-  border-color: var(--theme-plum);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-secondary {
-  background: var(--bg-contrast);
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-td button {
-  margin-bottom: 4px;
-}
-
-.form-control {
-  max-width: 420px;
-  background: var(--bg-contrast);
-  border: 1px solid var(--border-dark);
-  color: var(--text-light);
-}
-
-.form-control::placeholder {
-  color: var(--text-dim);
-}
-
-.form-control:focus {
-  background: var(--bg-contrast);
-  border-color: var(--theme-ice);
-  color: var(--text-light);
-  box-shadow: 0 0 0 0.2rem rgba(var(--theme-ice-rgb), 0.18);
 }
 
 @media (max-width: 768px) {
   .toolbar {
     align-items: stretch !important;
     flex-direction: column;
-  }
-
-  .form-control {
-    max-width: none;
-    width: 100% !important;
   }
 }
 </style>

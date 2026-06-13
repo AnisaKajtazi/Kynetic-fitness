@@ -254,12 +254,15 @@ export default {
 
 <style scoped>
 .exercises-page {
-  padding: 5rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 2rem 1rem 2.5rem;
 }
 
 .hero {
-  margin-bottom: 2rem;
-  padding-top: 50px;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
 }
 
 .hero-title {
@@ -268,7 +271,7 @@ export default {
 
 .hero-subtitle {
   text-align: center;
-  padding-bottom: 40px;
+  padding-bottom: 1.5rem;
 }
 
 .search-bar input {
@@ -295,10 +298,8 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
-  align-items: start;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
   width: 100%;
   margin: 0 auto;
 }
@@ -307,10 +308,13 @@ export default {
   background: var(--bg-card);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  padding: 1rem;
+  padding: 1.25rem;
   text-align: center;
   transition: all 0.3s ease;
-  width: 240px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .exercise-card:hover {
@@ -320,10 +324,20 @@ export default {
 
 .exercise-img {
   width: 100%;
-  height: 180px;
+  height: 210px;
   object-fit: cover;
   border-radius: var(--radius);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.exercise-info h4 {
+  font-size: var(--text-md);
+  margin-bottom: 0.25rem;
+}
+
+.exercise-info p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
 }
 
 .modal-overlay {
@@ -343,21 +357,50 @@ export default {
   background: var(--bg-card);
   padding: 2rem;
   border-radius: var(--radius-lg);
-  max-width: 500px;
+  max-width: 560px;
   width: 90%;
   text-align: left;
+  font-size: var(--text-base);
 }
 
 .modal-content img.modal-img {
   width: 100%;
-  height: 220px;
+  height: 260px;
   object-fit: cover;
   margin-bottom: 1rem;
 }
 
-@media (max-width: 600px) {
-  .exercise-card {
-    width: 100%;
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .exercises-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .grid {
+    gap: 0.9rem;
   }
 }
 </style>

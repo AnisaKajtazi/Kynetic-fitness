@@ -348,10 +348,14 @@ const handleSearch = async () => {
 const fetchTrainers = async () => {
   try {
     const response = await api.get('/trainers');
-    trainers.value = response.data.map((trainer) => ({
-      ...trainer,
-      fullName: `${trainer.name} ${trainer.surname}`.trim(),
-    }));
+
+    trainers.value = response.data
+      .filter(trainer => trainer.staff_type === 'trainer')
+      .map((trainer) => ({
+        ...trainer,
+        fullName: `${trainer.name} ${trainer.surname}`.trim(),
+      }));
+
   } catch (error) {
     console.error('Unable to load trainers:', error);
   }
@@ -646,7 +650,7 @@ const testimonials = [
 .services-wrapper  { 
   max-width: 100%; 
   margin: 0; 
-  padding: 3rem 2rem; 
+  padding: 3rem 8rem; 
 }
 .services-grid { 
   display: grid; 
@@ -661,8 +665,8 @@ const testimonials = [
   box-shadow: var(--shadow-sm); 
 }
 .service-icon { 
-  width: 150px; 
-  height: 150px; 
+  width: 250px; 
+  height: 250px; 
   object-fit: cover; 
   margin-bottom: 1rem; 
   border-radius: var(--radius-lg); 
@@ -866,8 +870,8 @@ const testimonials = [
   margin-bottom: 0.5rem; 
 }
 .testimonial-photo { 
-  width: 86px; 
-  height: 86px; 
+  width: 140px; 
+  height: 140px; 
   border-radius: 50%; 
   object-fit: cover; 
   border: 3px solid var(--accent-blue); 
@@ -955,7 +959,7 @@ const testimonials = [
 
 .btn--primary {
   background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue));
-  color: var(--text-strong);
+  color: var(--accent-purple);
   border: none;
   padding: 0.85rem 1.9rem;
   font-size: var(--text-base);

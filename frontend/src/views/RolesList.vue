@@ -1,9 +1,13 @@
 <template>
   <div class="roles-wrapper">
-    <div class="admin-panel p-4 shadow rounded">
-      <h2 class="text-center mb-4">Roles List</h2>
+    <div class="admin-panel admin-table-panel p-4 shadow rounded">
+      <div class="admin-table-header">
+        <div class="admin-table-title-block">
+          <h2>Roles List</h2>
+        </div>
 
-      <button class="btn btn-primary mb-3" @click="openModal()">Add Role</button>
+        <button class="btn btn-primary admin-create-btn" @click="openModal()">Create Role</button>
+      </div>
 
       <RoleForm
         v-if="showForm"
@@ -12,24 +16,24 @@
         @saved="fetchRoles"
       />
 
-      <div class="toolbar d-flex justify-content-between align-items-center mb-3">
+      <div class="toolbar admin-table-toolbar admin-table-toolbar--meta d-flex justify-content-between align-items-center mb-3">
         <span class="table-count">{{ pagination ? pagination.total : roles.length }} roles</span>
         <input
           type="text"
           v-model="searchQuery"
           @input="fetchRoles"
-          class="form-control w-50"
+          class="form-control admin-search-input"
           placeholder="Search by role name..."
         />
       </div>
 
-      <div class="table-responsive mt-2">
-        <table class="table table-striped table-bordered align-middle text-center">
+      <div class="table-responsive admin-table-shell mt-2">
+        <table class="table admin-table table-striped table-bordered align-middle text-center">
           <thead class="table-dark">
             <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Actions</th>
+              <th class="name-col">Name</th>
+              <th class="description-col">Description</th>
+              <th class="actions-col">Actions</th>
             </tr>
           </thead>
 
@@ -37,20 +41,18 @@
             <tr v-for="r in roles" :key="r.RoleID">
               <td>{{ r.name }}</td>
               <td>{{ r.description }}</td>
-              <td>
-                <button @click="editRole(r)" class="btn btn-warning btn-sm me-2">
-                  Edit
-                </button>
-                <button @click="deleteRole(r.RoleID)" class="btn btn-danger btn-sm">
-                  Delete
-                </button>
+              <td class="actions-col">
+                <div class="admin-actions">
+                  <AdminActionButton variant="edit" title="Edit role" @click="editRole(r)" />
+                  <AdminActionButton variant="delete" title="Delete role" @click="deleteRole(r.RoleID)" />
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-if="pagination" class="d-flex justify-content-center align-items-center mt-3">
+      <div v-if="pagination" class="admin-pagination d-flex align-items-center mt-3">
         <button 
           class="btn btn-secondary btn-sm me-2" 
           :disabled="!pagination.prev_page_url"
@@ -76,9 +78,10 @@
 <script>
 import api from "@/services/axios";
 import RoleForm from "./RoleForm.vue";
+import AdminActionButton from "@/components/AdminActionButton.vue";
 
 export default {
-  components: { RoleForm },
+  components: { RoleForm, AdminActionButton },
 
   data() {
     return {
@@ -145,21 +148,6 @@ export default {
   color: var(--text-light);
 }
 
-.admin-panel {
-  width: 100%;
-  max-width: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-}
-
-.admin-panel h2 {
-  color: var(--theme-ice);
-  font-size: 2.2rem;
-  text-align: left !important;
-}
-
 .toolbar {
   gap: 1rem;
 }
@@ -169,103 +157,14 @@ export default {
   font-weight: 700;
 }
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  min-width: 900px;
-  margin: 0;
-  overflow: hidden;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-dark);
-  background: var(--bg-contrast);
-}
-
-.table > :not(caption) > * > * {
-  padding: 0.9rem 1rem;
-  background-color: transparent;
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-.table-dark th,
-.table thead th {
-  background: var(--theme-plum);
-  color: var(--theme-ice);
-  border-color: var(--border-dark);
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) > * {
-  background-color: rgba(var(--theme-night-rgb), 0.28);
-}
-
-.table-striped > tbody > tr:nth-of-type(even) > * {
-  background-color: rgba(var(--theme-lavender-rgb), 0.08);
-}
-
-.btn-primary {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue);
-  color: var(--theme-night);
-  font-weight: 700;
-}
-
-.btn-warning {
-  background: var(--theme-lavender);
-  border-color: var(--theme-lavender);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-danger {
-  background: var(--theme-plum);
-  border-color: var(--theme-plum);
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.btn-secondary {
-  background: var(--bg-contrast);
-  border-color: var(--border-dark);
-  color: var(--text-light);
-}
-
-td button {
-  margin-bottom: 4px;
-}
-
-.form-control {
-  max-width: 420px;
-  background: var(--bg-contrast);
-  border: 1px solid var(--border-dark);
-  color: var(--text-light);
-}
-
-.form-control::placeholder {
-  color: var(--text-dim);
-}
-
-.form-control:focus {
-  background: var(--bg-contrast);
-  border-color: var(--theme-ice);
-  color: var(--text-light);
-  box-shadow: 0 0 0 0.2rem rgba(var(--theme-ice-rgb), 0.18);
-}
+.name-col { width: 220px; }
+.description-col { width: auto; }
+.actions-col { width: 100px; }
 
 @media (max-width: 768px) {
   .toolbar {
     align-items: stretch !important;
     flex-direction: column;
-  }
-
-  .form-control {
-    max-width: none;
-    width: 100% !important;
   }
 }
 </style>
