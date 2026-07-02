@@ -99,40 +99,54 @@
       <div class="about-wrapper">
         <h2 class="section-title text-center">About Us</h2>
         <div class="about-top">
-          <div class="about-copy">
-            <p class="about-text">
-              At Kynetic, we blend science-backed training, expert nutrition, and smart tracking into one seamless fitness experience. Our platform is built for busy people who want real results without guesswork.
-            </p>
-            <p class="about-text">
-              From guided workouts and meal plans to habit-building tools and progress insights, Kynetic helps you move with purpose every day. Your program adapts to your pace, goals, and lifestyle so you can stay motivated from week one.
-            </p>
-            <p class="about-text">
-              Every feature is designed to simplify your journey: intelligent workout scheduling, recovery reminders, clear progress charts, and motivational milestones that keep you engaged. We believe fitness should fit into your life, not interrupt it.
-            </p>
-            <p class="about-text">
-              This is the place where planning, performance, and recovery come together in a clean experience that evolves with you. Your routine becomes easier to follow, your energy stays consistent, and progress feels natural.
-            </p>
-            <p class="about-text">
-              Kynetic keeps every part of your routine connected, so you can focus on getting stronger without extra complexity.
-            </p>
-          </div>
-
           <div class="about-highlights">
-            <article :class="['about-card', 'about-card--enter-left', { 'about-card--active': aboutVisible }]">
-              <span class="about-card-icon">⚡</span>
-              <h4>Fast results without burnout</h4>
-              <p>Programs that deliver strength, mobility and endurance gains through smart progression, not random workouts.</p>
-            </article>
-            <article :class="['about-card', 'about-card--enter-right', { 'about-card--active': aboutVisible }]">
-              <span class="about-card-icon">🥗</span>
-              <h4>Nutrition that feels effortless</h4>
-              <p>Simple meal suggestions, quick prep options, and energy-first fuel designed for active lifestyles.</p>
-            </article>
-            <article :class="['about-card', 'about-card--enter-left', { 'about-card--active': aboutVisible }]">
-              <span class="about-card-icon">📈</span>
-              <h4>Progress you can see</h4>
-              <p>Clear habit tracking, weekly performance summaries, and motivating milestones that keep you moving forward.</p>
-            </article>
+            <div class="about-row about-row--right">
+              <div class="about-text-block">
+                <p class="about-text">
+                  At Kynetic, we blend science-backed training, expert nutrition, and smart tracking into one seamless fitness experience. Our platform is built for busy people who want real results without guesswork.
+                </p>
+                <p class="about-text">
+                  From guided workouts and meal plans to habit-building tools and progress insights, Kynetic helps you move with purpose every day. Your program adapts to your pace, goals, and lifestyle so you can stay motivated from week one.
+                </p>
+              </div>
+
+              <article :class="['about-card', 'about-card--enter-right', { 'about-card--active': aboutVisible }]">
+                <span class="about-card-icon">⚡</span>
+                <h4>Fast results without burnout</h4>
+                <p>Programs that deliver strength, mobility and endurance gains through smart progression, not random workouts.</p>
+              </article>
+            </div>
+
+            <div class="about-row about-row--left">
+              <article :class="['about-card', 'about-card--enter-left', { 'about-card--active': aboutVisible }]">
+                <span class="about-card-icon">🥗</span>
+                <h4>Nutrition that feels effortless</h4>
+                <p>Simple meal suggestions, quick prep options, and energy-first fuel designed for active lifestyles.</p>
+              </article>
+
+              <div class="about-text-block">
+                <p class="about-text">
+                  Every feature is designed to simplify your journey: intelligent workout scheduling, recovery reminders, clear progress charts, and motivational milestones that keep you engaged. We believe fitness should fit into your life, not interrupt it.
+                </p>
+                <p class="about-text">
+                  This is the place where planning, performance, and recovery come together in a clean experience that evolves with you. Your routine becomes easier to follow, your energy stays consistent, and progress feels natural.
+                </p>
+              </div>
+            </div>
+
+            <div class="about-row about-row--right">
+              <div class="about-text-block">
+                <p class="about-text">
+                  Kynetic keeps every part of your routine connected, so you can focus on getting stronger without extra complexity.
+                </p>
+              </div>
+
+              <article :class="['about-card', 'about-card--enter-right', { 'about-card--active': aboutVisible }]">
+                <span class="about-card-icon">📈</span>
+                <h4>Progress you can see</h4>
+                <p>Clear habit tracking, weekly performance summaries, and motivating milestones that keep you moving forward.</p>
+              </article>
+            </div>
           </div>
         </div>
       </div>
@@ -684,10 +698,7 @@ const testimonials = [
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .about-top {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
-  gap: 2rem;
-  align-items: start;
+  display: block;
   margin-top: 2rem;
 }
 .about-copy {
@@ -696,12 +707,29 @@ const testimonials = [
 .about-text { 
   font-size: var(--text-md); 
   line-height: 2.2; 
-  margin-bottom: 2.35rem; 
+  margin-bottom: 2rem; 
   color: #d7d9df;
 }
 .about-highlights {
   display: grid;
+  gap: 2.5rem;
+}
+.about-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
   gap: 1rem;
+}
+.about-row--right {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 420px);
+}
+.about-row--left {
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1.15fr);
+}
+.about-text-block {
+  display: grid;
+  gap: 1.5rem;
+  text-align: left;
 }
 .about-card {
   width: 100%;
@@ -728,7 +756,7 @@ const testimonials = [
 .about-card h4 {
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
-  color: var(--text-strong)fff;
+  color: var(--text-strong);
 }
 .about-card p {
   color: #c7cad0;
@@ -736,11 +764,12 @@ const testimonials = [
 }
 .about-card {
   width: 100%;
-  min-height: 130px;
+  max-width: 420px;
+  min-height: 180px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-left: 4px solid #97dffc;
-  padding: 1.4rem;
+  padding: 1.8rem;
   border-radius: 20px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
   opacity: 0;
@@ -752,19 +781,37 @@ const testimonials = [
 .about-card--enter-right.about-card--active {
   animation: slideInRight 1.2s ease-out both;
 }
-.about-card:nth-child(1) {
+.about-row--right .about-card {
+  justify-self: end;
+}
+.about-row--left .about-card {
+  justify-self: start;
+}
+.about-highlights .about-row:nth-child(1) .about-card {
   animation-delay: 0.08s;
 }
-.about-card:nth-child(2) {
+.about-highlights .about-row:nth-child(2) .about-card {
   animation-delay: 0.16s;
 }
-.about-card:nth-child(3) {
+.about-highlights .about-row:nth-child(3) .about-card {
   animation-delay: 0.24s;
+}
+@media (max-width: 900px) {
+  .about-row {
+    grid-template-columns: 1fr;
+  }
+  .about-row--right,
+  .about-row--left {
+    grid-template-columns: 1fr;
+  }
+  .about-card {
+    max-width: 100%;
+  }
 }
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-80px);
+    transform: translateX(-120px);
   }
   to {
     opacity: 1;
@@ -774,7 +821,7 @@ const testimonials = [
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(80px);
+    transform: translateX(120px);
   }
   to {
     opacity: 1;
