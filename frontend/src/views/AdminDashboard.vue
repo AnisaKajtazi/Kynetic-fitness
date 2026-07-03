@@ -79,8 +79,8 @@ export default {
 }
 
 .admin-dashboard__main {
-  margin-left: 230px;
-  width: calc(100vw - 230px);
+  margin-left: var(--sidebar-width);
+  width: calc(100vw - var(--sidebar-width));
   height: 100vh;
   padding: 2rem;
   overflow-y: auto;
@@ -93,8 +93,31 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 230px;
+  width: var(--sidebar-width);
   height: 100vh;
   z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .admin-dashboard :deep(.sidebar) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .admin-dashboard__main {
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+    border-left: none;
+  }
 }
 </style>

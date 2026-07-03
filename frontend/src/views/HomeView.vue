@@ -468,7 +468,7 @@ const testimonials = [
   color: #97dffc;
 }
 .hero__subtitle {
-  font-size: var(--text-lg);
+  font-size: clamp(1.4rem, 2vw, 1.65rem);
   max-width: 760px;
   margin: 0 auto;
   color: #97dffc;
@@ -538,9 +538,9 @@ const testimonials = [
   margin-top: 1.5rem;
 }
 .hero__cta .btn {
-  min-width: 190px;
-  padding: 1rem 1.8rem;
-  font-size: 1rem;
+  min-width: 200px;
+  padding: 1.1rem 1.95rem;
+  font-size: 1.2rem;
 }
 
 
@@ -856,8 +856,8 @@ const testimonials = [
   background: transparent;
 }
 .trainer-card {
-  flex: 0 0 320px;
-  min-width: 320px;
+  flex: 0 0 380px;
+  min-width: 380px;
   background: var(--bg-card); 
   padding: 1.75rem; 
   border-radius: var(--radius-lg); 

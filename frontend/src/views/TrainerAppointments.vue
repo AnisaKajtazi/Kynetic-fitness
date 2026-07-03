@@ -160,9 +160,9 @@ onMounted(loadClients)
 }
 
 .page-container {
-  margin-left: 240px;
+  margin-left: var(--sidebar-width);
   padding: 6rem;
-  width: calc(100% - 240px);
+  width: calc(100% - var(--sidebar-width));
 }
 
 .page-header {
@@ -333,6 +333,13 @@ onMounted(loadClients)
 @media (max-width: 768px) {
   .trainer-appointments-layout {
     flex-direction: column;
+  }
+
+  .trainer-appointments-layout :deep(.sidebar) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
   }
 
   .page-container {

@@ -77,11 +77,11 @@ const logout = () => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 240px;
+  width: var(--sidebar-width);
   height: 100vh;
   background-color: var(--bg-card);
   color: var(--text-strong);
-  padding: 6rem 1rem 1.5rem;
+  padding: 6rem 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);
@@ -108,7 +108,7 @@ const logout = () => {
   color: #d1d5db;
   font-weight: 500;
   font-size: var(--text-base);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.15rem;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;

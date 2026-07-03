@@ -31,12 +31,15 @@
           <tr v-for="item in cartItems" :key="item.cart_id">
 
             <td>
-              <input
-                type="checkbox"
-                :value="item.cart_id"
-                v-model="selectedItems"
-                :disabled="item.consumed === 1"
-              />
+              <label class="task-check">
+                <input
+                  type="checkbox"
+                  :value="item.cart_id"
+                  v-model="selectedItems"
+                  :disabled="item.consumed === 1"
+                />
+                <span></span>
+              </label>
             </td>
 
             <td>{{ item.item_name }}</td>
@@ -386,22 +389,74 @@ export default {
 .select-all-btn {
   background: var(--accent-lavender);
   color: white;
-  font-weight: 600;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
   cursor: pointer;
   border: none;
+  font-size: 1rem;
 }
 
 .save-btn {
   background: var(--accent-blue);
   color: var(--accent-purple);
-  padding: 0.7rem 1.4rem;
-  border-radius: 8px;
-  font-weight: 600;
-  margin-top: 1rem;
+  padding: 0.95rem 1.8rem;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-top: 1.25rem;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
+}
+
+.task-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  position: relative;
+}
+
+.task-check input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.task-check span {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--theme-lavender);
+  border-radius: 10px;
+  background: rgba(var(--theme-night-rgb), 0.35);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.task-check span::after {
+  content: "";
+  width: 10px;
+  height: 17px;
+  border: solid var(--theme-night);
+  border-width: 0 3px 3px 0;
+  margin: 5px auto 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.18s ease;
+}
+
+.task-check input:checked + span {
+  background: var(--theme-ice);
+  border-color: var(--theme-ice);
+  transform: scale(1.03);
+}
+
+.task-check input:checked + span::after {
+  transform: rotate(45deg) scale(1);
 }
 
 .charts {

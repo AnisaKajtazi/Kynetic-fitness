@@ -236,7 +236,7 @@ const formatDate = (dateStr) => {
 
 .dashboard-main {
   flex: 1;
-  margin-left: 240px;
+  margin-left: var(--sidebar-width);
   padding: 3rem;
   display: flex;
   justify-content: center;
@@ -441,6 +441,22 @@ const formatDate = (dateStr) => {
 }
 
 @media (max-width: 900px) {
+  .staff-dashboard {
+    flex-direction: column;
+  }
+
+  .staff-dashboard :deep(.sidebar) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .dashboard-main {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
   .profile-details,
   .profile-form {
     grid-template-columns: 1fr;

@@ -68,16 +68,16 @@ const currentSection = computed(() => sections[activeSection.value]);
   position: fixed;
   top: 0;
   left: 0;
-  width: 230px;
+  width: var(--sidebar-width);
   height: 100vh;
   z-index: 1000;
 }
 
 .dashboard__main {
   flex: 1;
-  margin-left: 230px;
+  margin-left: var(--sidebar-width);
   height: 100vh;
-  width: calc(100vw - 230px);
+  width: calc(100vw - var(--sidebar-width));
   background: var(--bg-card);
   padding: 2rem;
   overflow-y: auto;

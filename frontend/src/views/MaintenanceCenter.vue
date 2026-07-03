@@ -270,14 +270,14 @@ onMounted(fetchMaintenanceTasks)
   position: fixed;
   top: 0;
   left: 0;
-  width: 230px;
+  width: var(--sidebar-width);
   height: 100vh;
   z-index: 1000;
 }
 
 .maintenance-main {
-  margin-left: 230px;
-  width: calc(100vw - 230px);
+  margin-left: var(--sidebar-width);
+  width: calc(100vw - var(--sidebar-width));
   min-height: 100vh;
   padding: 5rem;
   overflow-y: auto;

@@ -59,9 +59,9 @@ onMounted(async () => {
 }
 
 .page-container {
-  margin-left: 240px;
+  margin-left: var(--sidebar-width);
   padding: 6rem;
-  width: calc(100vw - 240px);
+  width: calc(100vw - var(--sidebar-width));
 }
 
 .text-color{
@@ -89,5 +89,24 @@ onMounted(async () => {
 .unavailable {
   color: red;
   font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .staff-layout {
+    flex-direction: column;
+  }
+
+  .staff-layout :deep(.sidebar) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .page-container {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
 }
 </style>

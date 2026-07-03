@@ -47,7 +47,7 @@ export default {
 
 .page-subtitle {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 1.15rem;
   margin: 0 0 2rem;
 }
 </style>

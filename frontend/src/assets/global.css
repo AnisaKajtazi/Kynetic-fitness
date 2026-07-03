@@ -57,6 +57,7 @@
   --page-max-width: 1800px;
   --page-padding-x: 2.5rem;
   --page-padding-y: 3rem;
+  --sidebar-width: 340px;
 }
 
 
@@ -750,4 +751,3 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
 }
-

@@ -58,12 +58,12 @@
     </div>
 
     <div class="charts">
-      <div class="chart-box">
+      <div class="chart-box pie-chart">
         <h3>Exercises by Category (%)</h3>
         <canvas ref="categoryChart"></canvas>
       </div>
 
-      <div class="chart-box">
+      <div class="chart-box bar-chart">
         <h3>Reps per Day</h3>
         <canvas ref="durationChart"></canvas>
       </div>
@@ -185,8 +185,13 @@ export default {
           }]
         },
         options: {
+          responsive: true,
+          aspectRatio: 1.2,
           plugins: {
             legend: { position: "bottom" }
+          },
+          layout: {
+            padding: 10
           }
         }
       });
@@ -210,6 +215,7 @@ export default {
         },
         options: {
           responsive: true,
+          aspectRatio: 1.2,
           scales: {
             y: { beginAtZero: true }
           },
@@ -265,27 +271,56 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .exercise-card {
   background: var(--bg-card);
-  padding: 1rem;
-  border-radius: 10px;
-  width: 200px;
+  padding: 1.25rem;
+  border-radius: 14px;
+  width: 240px;
+  min-width: 240px;
   text-align: center;
 }
 
 .exercise-card img {
   width: 100%;
-  height: 160px;
+  height: 170px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
+}
+
+.exercise-card h4 {
+  font-size: 1.05rem;
+  margin: 0.9rem 0 0.4rem;
+}
+
+.exercise-card p {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.exercise-card .save-btn {
+  background: var(--accent-blue);
+  color: var(--accent-purple);
+  padding: 0.75rem 1.3rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+.exercise-card .save-btn:hover {
+  transform: translateY(-1px);
 }
 
 .meals-list {
-  max-width: 100%;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto 2rem auto;
+  overflow-x: auto;
 }
 
 .meals-list table {
@@ -322,12 +357,9 @@ export default {
 
 .chart-box {
   flex: 1 1 300px;
-  max-width: 100%;
+  max-width: 420px;
 }
-.chart-box canvas {
-  width: 100% !important;
-  min-height: 420px;
-}
+
 .chart-box h3 {
   text-align: center;
   margin-bottom: 1rem;

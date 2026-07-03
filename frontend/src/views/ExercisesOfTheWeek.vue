@@ -41,11 +41,14 @@
           </div>
 
           <div class="card-actions">
+            <label class="task-check">
             <input
               type="checkbox"
               v-model="item.completed"
               @change="toggle(item)"
             />
+            <span></span>
+          </label>
 
             <input
               type="number"
@@ -180,7 +183,7 @@ const getImageUrl = (image) => {
 
 .items {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
 }
 
@@ -232,37 +235,86 @@ const getImageUrl = (image) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
-}
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
 
-.reps-input {
-  width: 80px;
-  text-align: center;
-}
+  .task-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+  }
 
-.reps-label {
-  color: #9ca3af;
-}
+  .task-check input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
 
-.remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-}
+  .task-check span {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--theme-lavender);
+    border-radius: 10px;
+    background: rgba(var(--theme-night-rgb), 0.35);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
 
-.btn {
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
+  .task-check span::after {
+    content: "";
+    width: 10px;
+    height: 17px;
+    border: solid var(--theme-night);
+    border-width: 0 3px 3px 0;
+    margin: 5px auto 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.18s ease;
+  }
 
-.btn--blue {
-  background: var(--accent-blue);
-  color: var(--accent-purple);
-}
+  .task-check input:checked + span {
+    background: var(--theme-ice);
+    border-color: var(--theme-ice);
+    transform: scale(1.03);
+  }
+
+  .task-check input:checked + span::after {
+    transform: rotate(45deg) scale(1);
+  }
+
+  .reps-input {
+    width: 95px;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0.55rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .card-actions span {
+    color: #d1d5db;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 0.65rem 1.1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--accent-purple);
+  }
 
 .btn--blue:hover {
   background: #1d4ed8;
@@ -271,8 +323,8 @@ const getImageUrl = (image) => {
 .btn--red {
   background: var(--accent-plum);
   color: white;
-  font-size: 12px;
-  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  padding: 0.65rem 1.75rem;
 }
 
 .btn--red:hover {

@@ -211,15 +211,15 @@ onMounted(loadTrainers)
   position: fixed;
   top: 0;
   left: 0;
-  width: 230px;
+  width: var(--sidebar-width);
   height: 100vh;
   z-index: 1000;
 }
 
 .page-container {
-  margin-left: 230px;
+  margin-left: var(--sidebar-width);
   padding: 6rem;
-  width: calc(100vw - 230px);
+  width: calc(100vw - var(--sidebar-width));
   height: 100vh;
   overflow-y: auto;
   box-sizing: border-box;
@@ -264,19 +264,24 @@ onMounted(loadTrainers)
 
 .trainers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 1.75rem;
+  align-items: stretch;
+  max-width: 1850px;
+  margin: 0 auto;
 }
 
 .trainer-card {
   background: var(--bg-card);
-  padding: 1.5rem;
+  padding: 1.35rem;
   border-radius: var(--radius);
   border: 1px solid var(--border-dark);
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  min-width: 0;
 }
 
 .trainer-card.active {
@@ -293,20 +298,25 @@ onMounted(loadTrainers)
 
 .trainer-photo {
   width: 100%;
-  height: 280px;
+  max-width: 360px;
+  aspect-ratio: 1 / 1;
+  height: auto;
   object-fit: cover;
+  display: block;
   border-radius: var(--radius);
-  margin-bottom: 1rem;
+  margin: 0 auto 0.65rem;
 }
 
 .chat-btn {
   background: transparent;
   border: 1px solid var(--border-dark);
   color: var(--text-muted);
-  padding: 0.45rem 0.7rem;
-  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
   cursor: pointer;
   margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
 .chat-btn .badge {
@@ -329,29 +339,43 @@ onMounted(loadTrainers)
 }
 
 .trainer-card h3 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.15rem;
   color: var(--text-light);
 }
 
 .trainer-card h4 {
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
   color: var(--theme-ice);
 }
 
 .trainer-card p {
   color: var(--text-muted);
-  line-height: 1.7;
-  margin-bottom: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 0.35rem;
+  flex: 1;
+}
+
+@media (min-width: 1500px) {
+  .trainers-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1280px) {
+  .trainers-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
 }
 
 .primary-btn,
-.secondary-btn,
-.select-btn {
+  .secondary-btn,
+  .select-btn {
   border: none;
   border-radius: 999px;
-  padding: 0.85rem 1.4rem;
+  padding: 1rem 1.6rem;
   cursor: pointer;
   font-weight: 700;
+  font-size: 1rem;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -403,6 +427,11 @@ onMounted(loadTrainers)
     height: auto;
     padding: 1rem;
     border-left: none;
+  }
+
+  .trainers-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
   }
 
   .trainer-card.featured {

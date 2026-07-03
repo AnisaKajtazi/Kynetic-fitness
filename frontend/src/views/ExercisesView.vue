@@ -44,25 +44,27 @@
           <p>Level: {{ exercise.level }}</p>
         </div>
 
-        <button class="btn btn--blue" @click="viewDetails(exercise)">
-          View Details
-        </button>
+        <div class="exercise-actions">
+          <button class="btn btn--blue" @click="viewDetails(exercise)">
+            View Details
+          </button>
 
-        <button
-          v-if="canUseUserActions"
-          class="btn btn--red"
-          @click="toggleFavorite(exercise)"
-        >
-          <span v-if="exercise.is_favorite">💖</span>
-          <span v-else>🤍</span> Favorite
-        </button>
-        <button
-          v-if="canUseUserActions"
-          class="btn btn--green"
-          @click="addToDay(exercise)"
-        >
-          + Day
-        </button>
+          <button
+            v-if="canUseUserActions"
+            class="btn btn--red"
+            @click="toggleFavorite(exercise)"
+          >
+            <span v-if="exercise.is_favorite">💖</span>
+            <span v-else>🤍</span> Favorite
+          </button>
+          <button
+            v-if="canUseUserActions"
+            class="btn btn--green"
+            @click="addToDay(exercise)"
+          >
+            Add To Today
+          </button>
+        </div>
       </div>
     </section>
 
@@ -322,6 +324,35 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.exercise-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: auto;
+}
+
+.exercise-actions .btn {
+  width: 100%;
+}
+
+.btn--red {
+  background: var(--accent-plum);
+  color: var(--text-strong);
+}
+
+.btn--red:hover {
+  background: var(--accent-plum);
+}
+
+.btn--green {
+  background: var(--accent-lavender);
+  color: var(--text-strong);
+}
+
+.btn--green:hover {
+  background: var(--accent-lavender);
 }
 
 .exercise-card:hover {

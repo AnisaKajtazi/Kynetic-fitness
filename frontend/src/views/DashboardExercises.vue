@@ -17,17 +17,21 @@
           :alt="exercise.name"
           class="exercise-img"
         />
-        <h4>{{ exercise.name }}</h4>
-        <p>Category: {{ exercise.category || 'Uncategorized' }}</p>
-        <p>Level: {{ exercise.level || 'Beginner' }}</p>
+        <div class="exercise-info">
+          <h4>{{ exercise.name }}</h4>
+          <p>Category: {{ exercise.category || 'Uncategorized' }}</p>
+          <p>Level: {{ exercise.level || 'Beginner' }}</p>
+        </div>
 
-        <button
-          v-if="isLoggedIn"
-          @click="removeFavorite(exercise)"
-          class="btn-favorite"
-        >
-          <span>💖</span> Remove
-        </button>
+        <div class="exercise-actions">
+          <button
+            v-if="isLoggedIn"
+            @click="removeFavorite(exercise)"
+            class="btn btn--red"
+          >
+            <span>💖</span> Remove
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -109,36 +113,41 @@ export default {
 
 <style scoped>
 .dashboard-exercises {
-  max-width: var(--page-max-width);
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: var(--page-padding-y) var(--page-padding-x);
+  padding: 2rem 1rem 2.5rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .exercise-card {
   background: var(--bg-card);
-  padding: 1.25rem;
   border-radius: var(--radius);
-  text-align: center;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.exercise-card h4 {
+.exercise-info h4 {
   font-size: var(--text-md);
-  margin: 0.5rem 0 0.35rem;
+  margin-bottom: 0.25rem;
 }
 
-.exercise-card p {
+.exercise-info p {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  margin-bottom: 0.25rem;
 }
 
 .exercise-card:hover {
@@ -154,13 +163,24 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.btn-favorite {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: var(--text-accent);
-  display: inline;
+.exercise-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.exercise-actions .btn {
+  width: 100%;
+}
+
+.btn--red {
+  background: var(--accent-plum);
+  color: var(--text-strong);
+}
+
+.btn--red:hover {
+  background: var(--accent-plum);
 }
 .text-color{
   color: #97dffc;
