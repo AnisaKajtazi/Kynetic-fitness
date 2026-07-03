@@ -58,6 +58,8 @@
   --page-padding-x: 2.5rem;
   --page-padding-y: 3rem;
   --sidebar-width: 340px;
+  --navbar-height: 64px;
+  --page-top-with-navbar: calc(var(--navbar-height) + 1.5rem);
 }
 
 

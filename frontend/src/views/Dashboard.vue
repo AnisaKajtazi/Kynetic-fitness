@@ -79,7 +79,7 @@ const currentSection = computed(() => sections[activeSection.value]);
   height: 100vh;
   width: calc(100vw - var(--sidebar-width));
   background: var(--bg-card);
-  padding: 2rem;
+  padding: var(--page-top-with-navbar) 2rem 2rem;
   overflow-y: auto;
   box-sizing: border-box;
   border-left: 1px solid var(--border-dark);
@@ -91,15 +91,24 @@ const currentSection = computed(() => sections[activeSection.value]);
   height: auto;
 }
 
+.dashboard__main :deep(.my-cart-page),
+.dashboard__main :deep(.progress-page),
+.dashboard__main :deep(.order-success-page) {
+  padding-top: 0;
+}
+
 @media (max-width: 1024px) {
   .dashboard__main {
-    padding: 1.5rem;
+    padding: var(--page-top-with-navbar) 1.5rem 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+    padding-top: var(--navbar-height);
   }
 
   .dashboard :deep(.sidebar) {

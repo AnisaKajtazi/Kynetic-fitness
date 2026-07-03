@@ -13,7 +13,7 @@
 
 <style scoped>
 .order-error-page {
-  padding: 6rem 2rem 2rem;
+  padding: var(--page-top-with-navbar) 2rem 2rem;
   text-align: center;
 }
 </style>

@@ -190,7 +190,7 @@ watchEffect(() => {
   width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 2rem 1rem 2.5rem;
+  padding: var(--page-top-with-navbar) 1rem 2.5rem;
   color: var(--text-light);
 }
 
@@ -379,7 +379,7 @@ watchEffect(() => {
 
 @media (max-width: 640px) {
   .meals-page {
-    padding: 1rem 0.75rem 1.5rem;
+    padding: var(--page-top-with-navbar) 0.75rem 1.5rem;
   }
 
   .meal-card {

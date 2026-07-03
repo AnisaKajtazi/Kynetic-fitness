@@ -109,7 +109,7 @@ onMounted(() => {
 
 <style scoped>
 .trainers-page {
-  padding: 2rem;
+  padding: var(--page-top-with-navbar) 2rem 2rem;
   background: var(--bg-dark);
   min-height: 100vh;
 }
@@ -117,7 +117,6 @@ onMounted(() => {
 .hero {
   text-align: center;
   margin-bottom: 3rem;
-  padding-top: 2rem;
 }
 
 .hero-title {

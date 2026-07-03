@@ -162,8 +162,8 @@ watch(() => route.query.peer, (p) => {
 
 <style scoped>
 .chat-layout { display: flex; width: 100%; min-height: 100vh; background: var(--bg-dark); }
-.chat-container { margin-left: 240px; width: calc(100% - 240px); padding: 2rem; }
-.chat-inner { display: flex; gap: 1rem; height: calc(100vh - 6rem); }
+.chat-container { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: var(--page-top-with-navbar) 2rem 2rem; }
+.chat-inner { display: flex; gap: 1rem; height: calc(100vh - var(--page-top-with-navbar) - 2rem); }
 .chat-sidebar { width: 320px; background: var(--bg-card); border-radius: 12px; padding: 1rem; overflow: auto; }
 .chat-sidebar ul { list-style: none; padding: 0; margin: 0; }
 .chat-sidebar li { display: flex; gap: .75rem; padding: .5rem; border-radius: 8px; cursor: pointer; align-items: center; }

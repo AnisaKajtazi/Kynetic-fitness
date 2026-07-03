@@ -94,6 +94,7 @@ onMounted(async () => {
 @media (max-width: 768px) {
   .staff-layout {
     flex-direction: column;
+    padding-top: var(--navbar-height);
   }
 
   .staff-layout :deep(.sidebar) {

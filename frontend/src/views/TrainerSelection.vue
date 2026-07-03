@@ -412,6 +412,7 @@ onMounted(loadTrainers)
     flex-direction: column;
     height: auto;
     overflow: visible;
+    padding-top: var(--navbar-height);
   }
 
   .trainer-selection-layout :deep(.sidebar) {

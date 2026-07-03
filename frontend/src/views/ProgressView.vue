@@ -29,13 +29,13 @@ export default {
   width: 100%;
   max-width: none;
   margin: 0 auto;
-  padding: 2rem 1rem 2.5rem;
+  padding: var(--page-top-with-navbar) 1rem 2.5rem;
   color: var(--text-light);
 }
 
 @media (max-width: 900px) {
   .progress-page {
-    padding: 1.25rem 0.75rem 2rem;
+    padding: var(--page-top-with-navbar) 0.75rem 2rem;
   }
 }
 

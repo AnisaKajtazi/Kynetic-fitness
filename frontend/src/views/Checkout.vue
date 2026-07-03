@@ -110,7 +110,7 @@ onMounted(fetchCart);
 
 <style scoped>
 .checkout-page {
-  padding: 1.5rem;
+  padding: var(--page-top-with-navbar) 1.5rem 1.5rem;
 }
 
 .checkout-item {

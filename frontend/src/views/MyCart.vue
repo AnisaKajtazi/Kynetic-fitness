@@ -146,7 +146,7 @@ const checkout = async () => {
 .my-cart-page {
   max-width: var(--page-max-width);
   margin: 0 auto;
-  padding: var(--page-padding-y) var(--page-padding-x);
+  padding: var(--page-top-with-navbar) var(--page-padding-x) var(--page-padding-y);
 }
 
 .text-color{

@@ -237,7 +237,7 @@ const formatDate = (dateStr) => {
 .dashboard-main {
   flex: 1;
   margin-left: var(--sidebar-width);
-  padding: 3rem;
+  padding: var(--page-top-with-navbar) 3rem 3rem;
   display: flex;
   justify-content: center;
 }
@@ -443,6 +443,7 @@ const formatDate = (dateStr) => {
 @media (max-width: 900px) {
   .staff-dashboard {
     flex-direction: column;
+    padding-top: var(--navbar-height);
   }
 
   .staff-dashboard :deep(.sidebar) {

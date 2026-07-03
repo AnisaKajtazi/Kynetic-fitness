@@ -411,6 +411,7 @@ onMounted(fetchMaintenanceTasks)
 @media (max-width: 768px) {
   .maintenance-layout {
     flex-direction: column;
+    padding-top: var(--navbar-height);
   }
 
   .maintenance-layout :deep(.sidebar) {

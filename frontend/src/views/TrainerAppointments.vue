@@ -333,6 +333,7 @@ onMounted(loadClients)
 @media (max-width: 768px) {
   .trainer-appointments-layout {
     flex-direction: column;
+    padding-top: var(--navbar-height);
   }
 
   .trainer-appointments-layout :deep(.sidebar) {
