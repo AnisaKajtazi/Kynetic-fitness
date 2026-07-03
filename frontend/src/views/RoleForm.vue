@@ -44,6 +44,7 @@
 
 <script>
 import axios from "axios";
+import { showError } from "@/stores/notifications";
 const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
@@ -88,7 +89,7 @@ export default {
         this.$emit("close");
       } catch (error) {
         console.error("Error saving role:", error);
-        alert("Error saving role");
+        showError("Error saving role.");
       }
     },
   },

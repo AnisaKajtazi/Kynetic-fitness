@@ -49,6 +49,7 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { loggedIn } from '@/stores/auth';
+import { showError } from '@/stores/notifications';
 
 const cartItems = ref([]);
 const loading = ref(true);
@@ -69,7 +70,7 @@ const fetchCart = async () => {
     cartItems.value = res.data;
   } catch (err) {
     console.error('Error fetching cart:', err);
-    alert('Failed to load cart');
+    showError('Failed to load cart.');
   } finally {
     loading.value = false;
   }
@@ -93,13 +94,13 @@ const confirmCheckout = async () => {
     if (res.data.url) {
       window.location.href = res.data.url;
     } else {
-      alert('Stripe session failed. Try again.');
+      showError('Stripe session failed. Try again.');
       processing.value = false;
     }
 
   } catch (err) {
     console.error('Checkout failed:', err);
-    alert('Checkout failed. Try again.');
+    showError('Checkout failed. Try again.');
     processing.value = false;
   }
 };

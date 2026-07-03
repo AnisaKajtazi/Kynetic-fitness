@@ -14,14 +14,14 @@
         <li><a href="#" @click.prevent="scrollToSection('about-us')">About Us</a></li>
         <li><RouterLink to="/exercises">Exercises</RouterLink></li>
         <li><RouterLink to="/meals">Meals</RouterLink></li>
-        <li><RouterLink to="/contact">Contact</RouterLink></li>
+        <li v-if="!isAdmin"><RouterLink to="/contact">Contact</RouterLink></li>
 
         <li v-if="isUser"><RouterLink to="/dashboard">My Zone</RouterLink></li>   
 
         <li v-if="isStaff"><RouterLink to="/staff-dashboard">Staff Zone</RouterLink></li>
 
         <li v-if="isGuest"><RouterLink to="/login">Login</RouterLink></li>
-        <li v-else>
+        <li v-else-if="!isAdmin">
           <RouterLink to="/chats" class="chat-link">
             <span
               class="chat-icon"
@@ -38,9 +38,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { isUser, isStaff, isGuest } from '@/stores/auth'
+import { isUser, isStaff, isAdmin, isGuest } from '@/stores/auth'
 import api from '@/services/axios'
 import chatIcon from '@/icons/conversation.png'
 
@@ -69,21 +69,33 @@ const scrollToSection = async (id) => {
 }
 
 const totalUnread = ref(0)
+let unreadInterval = null
 
 const loadUnread = async () => {
+  if (isAdmin.value || isGuest.value || !localStorage.getItem('token')) return
+
   try {
     const res = await api.get('chat/conversations')
     const conv = res.data || []
     const total = conv.reduce((acc, c) => acc + (c.unread_count || 0), 0)
     totalUnread.value = total
   } catch (e) {
-    console.error('Error loading unread', e)
+    if (e.response?.status === 401 && unreadInterval) {
+      clearInterval(unreadInterval)
+      unreadInterval = null
+    }
   }
 }
 
 onMounted(() => {
-  loadUnread()
-  setInterval(loadUnread, 5000)
+  if (!isAdmin.value && !isGuest.value && localStorage.getItem('token')) {
+    loadUnread()
+    unreadInterval = setInterval(loadUnread, 5000)
+  }
+})
+
+onUnmounted(() => {
+  if (unreadInterval) clearInterval(unreadInterval)
 })
 </script>
 

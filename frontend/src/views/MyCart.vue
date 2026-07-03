@@ -50,6 +50,8 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { loggedIn } from '@/stores/auth';
+import { showSuccess, showError } from '@/stores/notifications';
+import { requestConfirmation } from '@/stores/confirmation';
 
 const cartItems = ref([]);
 const loading = ref(true);
@@ -69,7 +71,7 @@ const fetchCart = async () => {
     cartItems.value = res.data;
   } catch (err) {
     console.error('Error fetching cart:', err);
-    alert('Failed to load cart');
+    showError('Failed to load cart.');
   } finally {
     loading.value = false;
   }
@@ -90,7 +92,7 @@ const updateQuantity = async (item, newQty) => {
     item.quantity = newQty;
   } catch (err) {
     console.error('Error updating quantity:', err);
-    alert('Failed to update quantity');
+    showError('Failed to update quantity.');
   }
 };
 
@@ -102,7 +104,7 @@ const removeFromCart = async (meal_id) => {
     cartItems.value = cartItems.value.filter(item => item.meal_id !== meal_id);
   } catch (err) {
     console.error('Error removing item:', err);
-    alert('Failed to remove item');
+    showError('Failed to remove item.');
   }
 };
 
@@ -113,7 +115,14 @@ const totalPrice = computed(() => {
 onMounted(fetchCart);
 
 const checkout = async () => {
-  if (!confirm('Are you sure you want to proceed to checkout?')) return;
+  const confirmed = await requestConfirmation({
+    title: 'Confirm Checkout',
+    message: 'Are you sure you want to proceed to checkout?',
+    detail: 'Your current cart will be submitted for processing.',
+    confirmText: 'Checkout',
+    variant: 'primary',
+  });
+  if (!confirmed) return;
 
   try {
     const res = await axios.post(
@@ -122,12 +131,12 @@ const checkout = async () => {
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
 
-    alert(`Checkout successful! Your order ID: ${res.data.order_id}`);
+    showSuccess(`Checkout successful. Your order ID: ${res.data.order_id}`);
 
     cartItems.value = [];
   } catch (err) {
     console.error('Checkout error:', err);
-    alert(err.response?.data?.message || 'Checkout failed');
+    showError(err.response?.data?.message || 'Checkout failed.');
   }
 };
 

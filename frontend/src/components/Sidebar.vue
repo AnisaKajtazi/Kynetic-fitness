@@ -7,8 +7,11 @@
       <template v-if="roleID === 3">
         <li @click="router.push('/staff-dashboard')">Dashboard</li>
         <li @click="router.push('/my-schedule')">My Schedule</li>
-        <li @click="router.push('/trainer-appointments')">
+        <li v-if="staffType === 'trainer'" @click="router.push('/trainer-appointments')">
           My Clients
+        </li>
+        <li v-else-if="staffType === 'maintenance'" @click="router.push('/maintenance-center')">
+          Maintenance Center
         </li>
         <li class="logout-btn btn btn--blue" @click="logout">Logout</li>
       </template>
@@ -19,6 +22,7 @@
         <li @click="navigate('exercises','/admin-dashboard')">Exercises</li>
         <li @click="navigate('meals','/admin-dashboard')">Meals</li>
         <li @click="navigate('schedule','/admin-dashboard')">Schedule</li>
+        <li @click="navigate('maintenance','/admin-dashboard')">Maintenance</li>
         <li class="logout-btn btn btn--blue" @click="logout">Logout</li>
       </template>
 
@@ -44,12 +48,12 @@ const emit = defineEmits(['changeSection'])
 const router = useRouter()
 const route = useRoute()
 const roleID = ref(null)
-const isTrainer = ref(false)
+const staffType = ref('')
 
 onMounted(() => {
   roleID.value = Number(localStorage.getItem('role'))
   const user = JSON.parse(localStorage.getItem('user'))
-  isTrainer.value = user?.roleName === 'Trainer'
+  staffType.value = user?.staff_type || ''
 })
 
 const navigate = (section, path) => {

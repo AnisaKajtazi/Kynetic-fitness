@@ -7,6 +7,7 @@ import StaffSchedule from '../views/StaffSchedule.vue'
 import StaffDashboard from '../views/StaffDashboard.vue'
 import TrainerSelection from '../views/TrainerSelection.vue'
 import TrainerAppointments from '../views/TrainerAppointments.vue'
+import MaintenanceCenter from '../views/MaintenanceCenter.vue'
 import AdminSchedule from '../views/AdminSchedule.vue'
 import Checkout from '../views/Checkout.vue'
 import ChatView from '../views/ChatView.vue'
@@ -29,7 +30,8 @@ const routes = [
   { path: '/my-cart', name: 'my-cart', component: MyCart, meta: { requiresAuth: true } },
   { path: '/staff-dashboard', name: 'staff-dashboard', component: StaffDashboard, meta: { requiresAuth: true, role: 3 } },
   { path: '/my-schedule', name: 'my-schedule', component: StaffSchedule, meta: { requiresAuth: true, role: 3 } },
-  { path: '/trainer-appointments', name: 'trainer-appointments', component: TrainerAppointments, meta: { requiresAuth: true, role: 3 } },
+  { path: '/trainer-appointments', name: 'trainer-appointments', component: TrainerAppointments, meta: { requiresAuth: true, role: 3, staffType: 'trainer' } },
+  { path: '/maintenance-center', name: 'maintenance-center', component: MaintenanceCenter, meta: { requiresAuth: true, role: 3, staffType: 'maintenance' } },
   { path: '/trainers', name: 'trainers', component: TrainerSelection, meta: { requiresAuth: true, role: 2 } },
   { path: '/chats', name: 'chats', component: ChatView, meta: { requiresAuth: true } },
   { path: '/staff-schedule', name: 'staff-schedule', component: AdminSchedule, meta: { requiresAuth: true, role: 1 } },
@@ -58,6 +60,11 @@ router.beforeEach((to, from, next) => {
     } else {
       if (to.meta.role !== role) return next('/')
     }
+  }
+
+  if (to.meta.staffType) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    if (user.staff_type !== to.meta.staffType) return next('/')
   }
 
   next()

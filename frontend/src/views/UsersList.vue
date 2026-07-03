@@ -142,6 +142,8 @@
 import api from "@/services/axios";
 import UserForm from "./UserForm.vue";
 import AdminActionButton from "@/components/AdminActionButton.vue";
+import { requestConfirmation } from "@/stores/confirmation";
+import { showSuccess, showError } from "@/stores/notifications";
 
 const BASE_URL = api.defaults.baseURL;
 const IMG_BASE = BASE_URL.replace(/\/api\/?$/, "");
@@ -254,11 +256,22 @@ export default {
     },
 
     async deleteUser(id) {
-      if (!confirm("Delete this user?")) return;
+      const confirmed = await requestConfirmation({
+        title: "Delete User",
+        message: "Are you sure you want to delete this user?",
+        detail: "This action cannot be undone.",
+        confirmText: "Delete",
+      });
+      if (!confirmed) return;
 
-      await api.delete(`/users/${id}`);
-
-      this.fetchUsers();
+      try {
+        await api.delete(`/users/${id}`);
+        showSuccess("User deleted successfully.");
+        this.fetchUsers();
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        showError("User could not be deleted.");
+      }
     },
 
     async fetchUsers(page = 1) {

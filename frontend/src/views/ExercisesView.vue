@@ -49,7 +49,7 @@
         </button>
 
         <button
-          v-if="isLoggedIn"
+          v-if="canUseUserActions"
           class="btn btn--red"
           @click="toggleFavorite(exercise)"
         >
@@ -57,7 +57,7 @@
           <span v-else>🤍</span> Favorite
         </button>
         <button
-          v-if="isLoggedIn"
+          v-if="canUseUserActions"
           class="btn btn--green"
           @click="addToDay(exercise)"
         >
@@ -88,6 +88,7 @@ import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { loggedIn } from "../stores/auth";
 import api from "../services/axios";
+import { showSuccess, showWarning } from "@/stores/notifications";
 
 export default {
   name: "Exercises",
@@ -105,6 +106,10 @@ export default {
   computed: {
     isLoggedIn() {
       return loggedIn.value;
+    },
+
+    canUseUserActions() {
+      return this.isLoggedIn && Number(localStorage.getItem("role")) === 2;
     },
 
     uniqueCategories() {
@@ -142,7 +147,7 @@ export default {
           is_favorite: false,
         }));
 
-        if (this.isLoggedIn) {
+        if (this.canUseUserActions) {
           await this.fetchFavorites();
         }
 
@@ -180,7 +185,7 @@ export default {
     },
 
     async toggleFavorite(exercise) {
-      if (!this.isLoggedIn) return;
+      if (!this.canUseUserActions) return;
 
       try {
         if (exercise.is_favorite) {
@@ -198,6 +203,8 @@ export default {
     },
 
     async addToDay(exercise) {
+      if (!this.canUseUserActions) return;
+
       try {
         const today = new Date().toLocaleDateString("en-US", {
           weekday: "long",
@@ -210,9 +217,9 @@ export default {
       });
 
       if (res.data.already_exists) {
-        alert("Already added ⚠️ (reps updated)");
+        showWarning("Already added. Reps updated.");
       } else {
-        alert("Added to today's plan ✅");
+        showSuccess("Added to today's plan.");
       }
 
       } catch (err) {
@@ -239,7 +246,7 @@ export default {
     this.fetchExercises();
 
     watch(loggedIn, async (newVal) => {
-      if (newVal) {
+      if (newVal && this.canUseUserActions) {
         await this.fetchFavorites();
       } else {
         this.exercises = this.exercises.map((ex) => ({

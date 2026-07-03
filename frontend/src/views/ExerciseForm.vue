@@ -97,6 +97,7 @@
 
 <script>
 import axios from "axios";
+import { showError } from "@/stores/notifications";
 const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
@@ -176,7 +177,7 @@ export default {
     this.$emit("close");
   } catch (error) {
     console.error(error.response || error);
-    alert(error.response?.data?.message || "Error saving exercise");
+    showError(error.response?.data?.message || "Error saving exercise.");
   }
 }
 ,

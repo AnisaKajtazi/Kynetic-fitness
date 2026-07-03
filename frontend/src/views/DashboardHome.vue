@@ -139,6 +139,7 @@
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { showSuccess, showError } from "@/stores/notifications";
 
 const router = useRouter();
 const API = "http://127.0.0.1:8000/api";
@@ -249,11 +250,11 @@ async function saveProfile() {
     photoFile.value = null;
     photoPreview.value = null;
 
-    alert("Profile updated successfully ✅");
+    showSuccess("Profile updated successfully.");
 
   } catch (err) {
     console.log("ERROR:", err.response?.data);
-    alert("Error updating profile ❌");
+    showError("Error updating profile.");
   }
 }
 

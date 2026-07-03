@@ -14,6 +14,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\ExerciseProgressController;
 use App\Http\Controllers\ExercisesOfTheWeekController;
+use App\Http\Controllers\MaintenanceTaskController;
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::get('/', 'index'); 
@@ -101,6 +102,14 @@ Route::prefix('staff-schedule') ->middleware('jwt.auth')->controller(StaffSchedu
         Route::post('/staff/{userId}', 'setWeeklySchedule');
         Route::post('/reset-week', 'resetWeek');
     });
+
+Route::prefix('maintenance-tasks')->middleware('jwt.auth')->controller(MaintenanceTaskController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::post('/issues', 'storeIssue');
+    Route::put('/issues/{maintenanceTask}', 'updateIssue');
+    Route::delete('/issues/{maintenanceTask}', 'destroyIssue');
+    Route::patch('/{maintenanceTask}/completion', 'updateCompletion');
+});
 
 Route::prefix('progress')->middleware('jwt.auth')->controller(ProgressController::class)->group(function () {
     Route::get('/stats', 'getStats');

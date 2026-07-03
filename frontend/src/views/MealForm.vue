@@ -127,6 +127,7 @@
 
 <script>
 import axios from "axios";
+import { showError } from "@/stores/notifications";
 const BASE_URL = "http://127.0.0.1:8000/api";
 
 export default {
@@ -202,7 +203,7 @@ export default {
         this.$emit("close");
       } catch (err) {
         console.error("Meal save error:", err.response?.data || err);
-        alert("Error saving meal");
+        showError("Error saving meal.");
       }
     },
   },

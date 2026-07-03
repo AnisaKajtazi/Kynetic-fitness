@@ -43,6 +43,7 @@
 <script>
 import axios from "axios";
 import { loggedIn, setLoggedIn } from "@/stores/auth";
+import { showError, showWarning } from "@/stores/notifications";
 
 const BASE_URL = "http://127.0.0.1:8000/api"; // Backend URL
 
@@ -58,7 +59,7 @@ export default {
   methods: {
     async handleLogin() {
       if (!this.username || !this.password) {
-        alert("Please enter both username and password.");
+        showWarning("Please enter both username and password.");
         return;
       }
 
@@ -94,16 +95,16 @@ export default {
           const message = error.response.data?.message || "Login failed.";
 
           if (status === 401) {
-            alert("Invalid username or password.");
+            showError("Invalid username or password.");
           } else if (status === 404) {
-            alert("Backend endpoint not found. Check your URL.");
+            showError("Backend endpoint not found. Check your URL.");
           } else {
-            alert(message);
+            showError(message);
           }
         } else if (error.request) {
-          alert("No response from server. Is backend running?");
+          showError("No response from server. Is backend running?");
         } else {
-          alert("Login error: " + error.message);
+          showError("Login error: " + error.message);
         }
       } finally {
         this.loading = false;

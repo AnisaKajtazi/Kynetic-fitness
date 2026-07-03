@@ -2,6 +2,8 @@
 import { RouterView, useRoute } from 'vue-router'
 import { computed } from 'vue'
 import Navbar from './components/Navbar.vue'
+import NotificationToasts from './components/NotificationToasts.vue'
+import ConfirmationModal from './components/ConfirmationModal.vue'
 
 const route = useRoute()
 const showNavbar = computed(() => !route.path.startsWith('/admin'))
@@ -13,6 +15,8 @@ const showNavbar = computed(() => !route.path.startsWith('/admin'))
     <main>
       <RouterView />
     </main>
+    <NotificationToasts />
+    <ConfirmationModal />
   </div>
 </template>
 

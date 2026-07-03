@@ -53,6 +53,7 @@
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { loggedIn } from "../stores/auth";
+import { showSuccess, showError } from "@/stores/notifications";
 
 const meals = ref([]);
 const loading = ref(true);
@@ -132,10 +133,10 @@ const addAllToCart = async () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
-    alert("All personalized meals added to cart!");
+    showSuccess("All personalized meals added to cart.");
   } catch (err) {
     console.error("Error adding all to cart:", err);
-    alert("Failed to add meals to cart");
+    showError("Failed to add meals to cart.");
   }
 };
 </script>

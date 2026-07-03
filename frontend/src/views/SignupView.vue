@@ -138,6 +138,7 @@
 
 <script>
 import api from "@/services/axios";
+import { showSuccess, showError, showWarning } from "@/stores/notifications";
 
 export default {
   name: "SignUpView",
@@ -166,18 +167,18 @@ export default {
     nextStep() {
       if (this.step === 1) {
         if (!this.form.username || !this.form.email || !this.form.password || !this.form.confirmPassword) {
-          alert("Please fill in all fields before continuing.");
+          showWarning("Please fill in all fields before continuing.");
           return;
         }
         if (this.form.password !== this.form.confirmPassword) {
-          alert("Passwords do not match.");
+          showWarning("Passwords do not match.");
           return;
         }
       }
 
       if (this.step === 2) {
         if (!this.form.name || !this.form.surname || !this.form.gender || !this.form.dob || !this.form.phone || !this.form.address) {
-          alert("Please complete all personal details before continuing.");
+          showWarning("Please complete all personal details before continuing.");
           return;
         }
       }
@@ -192,7 +193,7 @@ export default {
 
     async submitForm() {
       if (!this.form.fitness_goal || !this.form.activity_level || !this.form.training_days || !this.form.focus_area) {
-        alert("Please complete all fitness details before submitting.");
+        showWarning("Please complete all fitness details before submitting.");
         return;
       }
 
@@ -218,15 +219,15 @@ export default {
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        alert("Account created successfully!");
+        showSuccess("Account created successfully.");
         this.$router.push("/login");
       } catch (error) {
         console.error("Signup error:", error.response?.data || error);
         if (error.response?.data?.errors) {
           console.log("Validation errors:", error.response.data.errors);
-          alert("Validation error: Check console for details.");
+          showError("Validation error. Check console for details.");
         } else {
-          alert(error.response?.data?.message || "Sign up failed.");
+          showError(error.response?.data?.message || "Sign up failed.");
         }
       }
     },

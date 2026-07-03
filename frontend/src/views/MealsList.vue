@@ -155,6 +155,8 @@
 import api from "@/services/axios";
 import MealForm from "./MealForm.vue";
 import AdminActionButton from "@/components/AdminActionButton.vue";
+import { requestConfirmation } from "@/stores/confirmation";
+import { showSuccess, showError } from "@/stores/notifications";
 
 export default {
   components: { MealForm, AdminActionButton },
@@ -273,11 +275,22 @@ export default {
     },
 
     async deleteMeal(id) {
-      if (!confirm("Delete this meal?")) return;
+      const confirmed = await requestConfirmation({
+        title: "Delete Meal",
+        message: "Are you sure you want to delete this meal?",
+        detail: "This action cannot be undone.",
+        confirmText: "Delete",
+      });
+      if (!confirmed) return;
 
-      await api.delete(`/meals/${id}`);
-
-      this.fetchMeals();
+      try {
+        await api.delete(`/meals/${id}`);
+        showSuccess("Meal deleted successfully.");
+        this.fetchMeals();
+      } catch (error) {
+        console.error("Error deleting meal:", error);
+        showError("Meal could not be deleted.");
+      }
     },
 
     async fetchMeals(page = 1) {

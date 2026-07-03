@@ -298,6 +298,7 @@ import { useRouter } from 'vue-router';
 import api from '@/services/axios';
 import '@/assets/global.css';
 import searchIcon from '@/icons/search.png';
+import { showInfo, showError } from '@/stores/notifications';
 
 import exercise1 from '@/img/exercise1.jpg';
 import exercise2 from '@/img/exercise2.jpg';
@@ -349,13 +350,13 @@ const handleSearch = async () => {
     } else if (type === 'trainer' && item) {
       router.push(`/trainers-browse?id=${item.UserID || item.id}`).catch(() => {});
     } else {
-      alert('No results found. Try searching for exercises, meals, or trainers.');
+      showInfo('No results found. Try searching for exercises, meals, or trainers.');
     }
 
     searchQuery.value = '';
   } catch (error) {
     console.error('Search error:', error);
-    alert('Search failed. Please try again.');
+    showError('Search failed. Please try again.');
   }
 };
 

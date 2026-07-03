@@ -41,6 +41,7 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import api from '../services/axios';
+import { showSuccess, showError } from '@/stores/notifications';
 
 const roleId = ref(null);
 const staffType = ref('');
@@ -92,13 +93,13 @@ const handleSubmit = async () => {
       position: roleId.value === 3 ? staffType.value : null
     });
 
-    alert('Message sent successfully ✅');
+    showSuccess('Message sent successfully.');
 
     Object.keys(form).forEach(k => form[k]='');
 
   } catch(err) {
     console.error('Error submitting contact:', err.response || err);
-    alert('Failed to send message!');
+    showError('Failed to send message.');
   }
 };
 </script>

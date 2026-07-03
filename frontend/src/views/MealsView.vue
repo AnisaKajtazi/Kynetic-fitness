@@ -38,7 +38,7 @@
                 </span>
 
                 <button
-                  v-if="isLoggedIn"
+                  v-if="canAddToCart"
                   class="add-to-cart-btn"
                   @click.stop="addToCart(meal)"
                 >
@@ -81,6 +81,7 @@
 import { ref, onMounted, computed, watchEffect } from "vue";
 import axios from "axios";
 import { loggedIn } from "../stores/auth";
+import { showSuccess, showError } from "@/stores/notifications";
 
 const meals = ref([]);
 const loading = ref(false);
@@ -89,6 +90,8 @@ const sliderRefs = ref([]);
 const defaultImage = "https://cdn-icons-png.flaticon.com/512/706/706195.png";
 
 const isLoggedIn = computed(() => loggedIn.value);
+const currentRole = computed(() => Number(localStorage.getItem("role")));
+const canAddToCart = computed(() => isLoggedIn.value && currentRole.value === 2);
 
 onMounted(() => {
   fetchMeals();
@@ -143,12 +146,12 @@ const scrollRight = (index) => {
 };
 
 const addToCart = async (meal) => {
-  if (!isLoggedIn.value) return;
+  if (!canAddToCart.value) return;
 
   const mealId = Number(meal.MealID ?? meal.meal_id);
   if (!mealId) {
     console.error("Meal ID missing", meal);
-    alert("Meal ID not found!");
+    showError("Meal ID not found.");
     return;
   }
 
@@ -170,10 +173,10 @@ const addToCart = async (meal) => {
       }
     );
     console.log("Add to cart response:", res.data);
-    alert(`${meal.name} added to cart!`);
+    showSuccess(`${meal.name} added to cart.`);
   } catch (err) {
     console.error("Error adding to cart:", err.response?.data || err);
-    alert("Failed to add to cart");
+    showError("Failed to add to cart.");
   }
 };
 

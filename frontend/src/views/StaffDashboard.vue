@@ -119,6 +119,7 @@ import { ref, onMounted } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import { useRouter } from "vue-router";
 import api from "@/services/axios";
+import { showSuccess, showError } from "@/stores/notifications";
 
 const router = useRouter();
 const user = ref({});
@@ -209,10 +210,10 @@ const saveProfile = async () => {
     editing.value = false;
     photoPreview.value = null;
     photoFile.value = null;
-    alert("Profile updated successfully!");
+    showSuccess("Profile updated successfully.");
   } catch (error) {
     console.error("Error updating profile:", error);
-    alert("Failed to update profile.");
+    showError("Failed to update profile.");
   }
 };
 

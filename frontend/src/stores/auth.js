@@ -20,6 +20,7 @@ export function setLoggedIn(value, role = null) {
 // Reactive computed helpers
 export const isUser = computed(() => loggedIn.value && roleID.value === 2)
 export const isStaff = computed(() => loggedIn.value && roleID.value === 3)
+export const isAdmin = computed(() => loggedIn.value && roleID.value === 1)
 export const isGuest = computed(() => !loggedIn.value)
 
 // Initialize auth from localStorage (kur app starton)

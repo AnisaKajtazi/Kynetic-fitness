@@ -64,6 +64,7 @@ import { ref, onMounted } from 'vue'
 import Sidebar from '@/components/Sidebar.vue'
 import api from '@/services/axios'
 import { useRouter } from 'vue-router'
+import { showSuccess, showError } from '@/stores/notifications'
 
 const router = useRouter()
 const trainers = ref([])
@@ -169,10 +170,10 @@ const chooseTrainer = async (trainer) => {
     user.value = res.data
     localStorage.setItem('user', JSON.stringify(user.value))
     selectedTrainer.value = trainer
-    alert('Trainer selected successfully.')
+    showSuccess('Trainer selected successfully.')
   } catch (error) {
     console.error('Error choosing trainer:', error)
-    alert('Could not select this trainer. Please try again.')
+    showError('Could not select this trainer. Please try again.')
   }
 }
 
@@ -187,10 +188,10 @@ const clearSelection = async () => {
     user.value = res.data
     localStorage.setItem('user', JSON.stringify(user.value))
     selectedTrainer.value = null
-    alert('Trainer selection cleared.')
+    showSuccess('Trainer selection cleared.')
   } catch (error) {
     console.error('Error clearing selection:', error)
-    alert('Could not clear selection. Please try again.')
+    showError('Could not clear selection. Please try again.')
   }
 }
 

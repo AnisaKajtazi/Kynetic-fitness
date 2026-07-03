@@ -79,6 +79,8 @@
 import api from "@/services/axios";
 import RoleForm from "./RoleForm.vue";
 import AdminActionButton from "@/components/AdminActionButton.vue";
+import { requestConfirmation } from "@/stores/confirmation";
+import { showSuccess, showError } from "@/stores/notifications";
 
 export default {
   components: { RoleForm, AdminActionButton },
@@ -114,11 +116,22 @@ export default {
     },
 
     async deleteRole(id) {
-      if (!confirm("Delete this role?")) return;
+      const confirmed = await requestConfirmation({
+        title: "Delete Role",
+        message: "Are you sure you want to delete this role?",
+        detail: "This action cannot be undone.",
+        confirmText: "Delete",
+      });
+      if (!confirmed) return;
 
-      await api.delete(`/roles/${id}`);
-
-      this.fetchRoles();
+      try {
+        await api.delete(`/roles/${id}`);
+        showSuccess("Role deleted successfully.");
+        this.fetchRoles();
+      } catch (error) {
+        console.error("Error deleting role:", error);
+        showError("Role could not be deleted.");
+      }
     },
 
     async fetchRoles(page = 1) {

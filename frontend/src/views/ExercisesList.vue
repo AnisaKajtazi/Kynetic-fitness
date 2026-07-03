@@ -109,6 +109,8 @@
 import api from "@/services/axios";
 import ExerciseForm from "./ExerciseForm.vue";
 import AdminActionButton from "@/components/AdminActionButton.vue";
+import { requestConfirmation } from "@/stores/confirmation";
+import { showSuccess, showError } from "@/stores/notifications";
 
 export default {
   components: { ExerciseForm, AdminActionButton },
@@ -186,11 +188,22 @@ export default {
     },
 
     async deleteExercise(id) {
-      if (!confirm("Delete this exercise?")) return;
+      const confirmed = await requestConfirmation({
+        title: "Delete Exercise",
+        message: "Are you sure you want to delete this exercise?",
+        detail: "This action cannot be undone.",
+        confirmText: "Delete",
+      });
+      if (!confirmed) return;
 
-      await api.delete(`/exercises/${id}`);
-
-      this.fetchExercises();
+      try {
+        await api.delete(`/exercises/${id}`);
+        showSuccess("Exercise deleted successfully.");
+        this.fetchExercises();
+      } catch (error) {
+        console.error("Error deleting exercise:", error);
+        showError("Exercise could not be deleted.");
+      }
     },
 
     async fetchExercises(page = 1) {

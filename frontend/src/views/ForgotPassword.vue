@@ -42,6 +42,7 @@
 
 <script>
 import api from "@/services/axios";
+import { showSuccess, showError, showWarning } from "@/stores/notifications";
 
 export default {
   name: "ForgotPasswordView",
@@ -54,7 +55,7 @@ export default {
   methods: {
     async handleForgotPassword() {
       if (!this.email) {
-        alert("Please enter your email.");
+        showWarning("Please enter your email.");
         return;
       }
 
@@ -65,11 +66,11 @@ export default {
           email: this.email,
         });
 
-        alert(response.data.message || "Reset link sent! Check your email.");
+        showSuccess(response.data.message || "Reset link sent. Check your email.");
         this.email = "";
       } catch (error) {
         console.error(error);
-        alert(
+        showError(
           error.response?.data?.message ||
             "An error occurred. Please try again later."
         );

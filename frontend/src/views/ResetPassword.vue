@@ -49,6 +49,7 @@
 
 <script>
 import api from "@/services/axios";
+import { showSuccess, showError, showWarning } from "@/stores/notifications";
 
 export default {
   name: "ResetPasswordView",
@@ -62,17 +63,17 @@ export default {
   methods: {
     async handleResetPassword() {
       if (!this.password || !this.confirmPassword) {
-        alert("Please fill in both fields.");
+        showWarning("Please fill in both fields.");
         return;
       }
       if (this.password !== this.confirmPassword) {
-        alert("Passwords do not match.");
+        showWarning("Passwords do not match.");
         return;
       }
 
       const token = this.$route.query.token;
       if (!token) {
-        alert("Invalid or missing reset token.");
+        showError("Invalid or missing reset token.");
         return;
       }
 
@@ -85,13 +86,13 @@ export default {
           password_confirmation: this.confirmPassword,
         });
 
-        alert(response.data.message || "Password reset successfully!");
+        showSuccess(response.data.message || "Password reset successfully.");
         this.password = "";
         this.confirmPassword = "";
         this.$router.push("/login");
       } catch (error) {
         console.error(error);
-        alert(
+        showError(
           error.response?.data?.message ||
             "An error occurred. Please try again later."
         );

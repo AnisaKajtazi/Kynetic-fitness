@@ -58,6 +58,7 @@
 import { ref, onMounted } from 'vue'
 import api from '@/services/axios'
 import AdminActionButton from '@/components/AdminActionButton.vue'
+import { showError } from '@/stores/notifications'
 
 const staffList = ref([])
 const weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
@@ -116,7 +117,7 @@ const setTime = async (userId, index) => {
     await api.post(`staff-schedule/staff/${userId}`, { schedule: [payload] })
   } catch (err) {
     console.error('Error saving schedule:', err)
-    alert('Failed to save schedule for ' + d.day)
+    showError('Failed to save schedule for ' + d.day)
   }
 }
 

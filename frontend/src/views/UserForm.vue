@@ -71,6 +71,7 @@
 
 <script>
 import axios from 'axios'
+import { showError } from '@/stores/notifications'
 
 export default {
   props: ['user'],
@@ -273,9 +274,10 @@ export default {
       } catch (error) {
         if (error.response && error.response.data) {
           console.error('Error saving user:', error.response.data)
-          alert(JSON.stringify(error.response.data.errors || error.response.data.message))
+          showError(JSON.stringify(error.response.data.errors || error.response.data.message))
         } else {
           console.error('Error saving user:', error)
+          showError('Error saving user.')
         }
       }
     },

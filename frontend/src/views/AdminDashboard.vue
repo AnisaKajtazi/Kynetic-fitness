@@ -18,6 +18,7 @@ import RolesList from './RolesList.vue'
 import ExercisesList from './ExercisesList.vue'
 import MealsList from './MealsList.vue'
 import AdminSchedule from './AdminSchedule.vue'
+import AdminMaintenance from './AdminMaintenance.vue'
 
 export default {
   name: 'AdminDashboard',
@@ -27,7 +28,8 @@ export default {
     RolesList,
     ExercisesList,
     MealsList, 
-    AdminSchedule
+    AdminSchedule,
+    AdminMaintenance
   },
   data() {
     return {
@@ -55,6 +57,7 @@ export default {
         exercises: ExercisesList,
         meals: MealsList,
         schedule: AdminSchedule,
+        maintenance: AdminMaintenance,
       }
     },
 
